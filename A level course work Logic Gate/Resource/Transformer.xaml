@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<DrawingBrush x:Key="Transformer" Stretch="Uniform">
+		<DrawingBrush.Drawing>
+			<DrawingGroup ClipGeometry="F1 M 0,0L 47.1667,0L 47.1667,41.3333L 0,41.3333L 0,0">
+				<DrawingGroup.Children>
+					<GeometryDrawing Geometry="F1 M -7.81253,-9.57095L 60.1875,-9.57095L 60.1875,44.179L -7.81253,44.179L -7.81253,-9.57095 Z ">
+						<GeometryDrawing.Pen>
+							<Pen LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 32.2079,9.59897L 32.6875,9.59897L 32.6875,33.5156L 32.2082,33.5156">
+						<GeometryDrawing.Pen>
+							<Pen LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 18.6309,33.5156L 18.1042,33.5156L 18.1042,9.59897L 18.6458,9.59897">
+						<GeometryDrawing.Pen>
+							<Pen LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 18.1459,9.55728C 18.1459,6.3356 21.4011,3.72397 25.4167,3.72397C 29.4323,3.72397 32.6875,6.3356 32.6875,9.55728">
+						<GeometryDrawing.Pen>
+							<Pen LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 32.6979,33.4479C 32.6979,36.6696 29.4333,39.2812 25.4063,39.2812C 21.3793,39.2812 18.1147,36.6696 18.1147,33.4479">
+						<GeometryDrawing.Pen>
+							<Pen LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 42.6455,20.9271L 32.7345,20.9271">
+						<GeometryDrawing.Pen>
+							<Pen LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 33.1615,28.4584L 42.6453,28.4388">
+						<GeometryDrawing.Pen>
+							<Pen LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 42.6302,13.7498L 32.7865,13.7448">
+						<GeometryDrawing.Pen>
+							<Pen LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 18.0468,20.9271L 7.25082,20.9271">
+						<GeometryDrawing.Pen>
+							<Pen LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+				</DrawingGroup.Children>
+			</DrawingGroup>
+		</DrawingBrush.Drawing>
+	</DrawingBrush>
+</ResourceDictionary>

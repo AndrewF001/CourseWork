@@ -1,0 +1,20 @@
+﻿<Application x:Class="A_level_course_work_Logic_Gate.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:A_level_course_work_Logic_Gate"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resource/And_Gate_F.xaml"/>
+                <ResourceDictionary Source="Resource/Nand_Gate_F.xaml"/>
+                <ResourceDictionary Source="Resource/Nor_Gate_F.xaml"/>
+                <ResourceDictionary Source="Resource/Not_Gate_F.xaml"/>
+                <ResourceDictionary Source="Resource/Or_Gate_F.xaml"/>
+                <ResourceDictionary Source="Resource/Xnor_Gate_F.xaml"/>
+                <ResourceDictionary Source="Resource/Xor_Gate_F.xaml"/>
+                <ResourceDictionary Source="Resource/Transformer.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
