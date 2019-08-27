@@ -17,18 +17,18 @@ namespace A_level_course_work_Logic_Gate
         public int Type { get; set; }
         public Rectangle Rect { get; set; }
         public MainWindow _MainWind { get; set; }
-        public Gate_Class(string Tag,MainWindow MainWind)
+        public Gate_Class(string Tag,MainWindow MainWind,double _Scale_Factor)
         {
             _MainWind = MainWind;
-            Setup(Tag);
+            Setup(Tag,_Scale_Factor);
             _MainWind.Main_Canvas.Children.Add(Rect);
             Rect_Move(Mouse.GetPosition(MainWind.Main_Grid));
         }
-
-        public void Setup(string _Tag)
+        //Basically the constructor
+        public void Setup(string _Tag,double _Scale_Factor)
         {
             //scale factor
-            Rect = new Rectangle { Height = 75, Width = 115, Stroke = Brushes.Black, Fill = Application.Current.Resources[_Tag] as Brush };
+            Rect = new Rectangle { Height = 75*_Scale_Factor, Width = 115*_Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources[_Tag] as Brush };
             //Calc Tag
             switch(_Tag)
             {
@@ -61,13 +61,12 @@ namespace A_level_course_work_Logic_Gate
             }
         }
 
-
+        //change Rectangle location.
         public void Rect_Move(Point Pos)
         {
             Canvas.SetLeft(Rect, Pos.X);
             Canvas.SetTop(Rect, Pos.Y);
         }
-
 
     }
 }

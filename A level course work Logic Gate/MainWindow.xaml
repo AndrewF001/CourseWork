@@ -16,7 +16,7 @@
 
         <Border Name="Canvas_Border" Loaded="Canvas_Border_Loaded"  BorderBrush="Black" BorderThickness="1.5" Margin="24,21,21.333,24" ClipToBounds="True"  Grid.Column="1"/>
 
-        <Canvas x:Name="Main_Canvas" Grid.ColumnSpan="2"  >
+        <Canvas x:Name="Main_Canvas" Grid.ColumnSpan="2" MouseLeftButtonUp="Main_Canvas_MouseLeftButtonUp"    >
             <DockPanel Width="100">
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="_File">
@@ -36,7 +36,7 @@
             <Button x:Name="Run_Button" Content="Run" Canvas.Left="10" Canvas.Top="23" Width="45" Height="31" />
             <Label Content="MS" Canvas.Left="96" Canvas.Top="26" Width="26"/>
             <TextBox x:Name="Delay_Lable" Height="22" Canvas.Left="60" TextWrapping="Wrap" Text="1" Canvas.Top="30" Width="40"/>
-            <Button x:Name="Link_Button" Content="Link" Canvas.Left="10" Canvas.Top="95" Width="115" Height="31"/>
+            <Button x:Name="Link_Button" Content="Drag" Canvas.Left="10" Canvas.Top="95" Width="115" Height="31" Click="Link_Button_Click"/>
             <Button x:Name="Input_Output_Button" Content="Input/Output" Canvas.Left="10" Canvas.Top="59" Width="115" Height="31"/>
             <Rectangle x:Name="And_Button" Tag="And_Gate_L" Fill="{StaticResource ResourceKey=And_Gate_L}" Height="57" Canvas.Left="10" Stroke="Black" Canvas.Top="131" Width="73" MouseLeftButtonDown="Rect_Button_MouseLeftButtonDown"  />
             <Rectangle x:Name="Nand_Button" Tag="Nand_Gate_L" Fill="{StaticResource ResourceKey=Nand_Gate_L}" Height="57" Canvas.Left="88" Stroke="Black" Canvas.Top="131" Width="73" MouseLeftButtonDown="Rect_Button_MouseLeftButtonDown" />
