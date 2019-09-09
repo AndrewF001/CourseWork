@@ -9,13 +9,14 @@ using System.Windows.Shapes;
 
 namespace A_level_course_work_Logic_Gate
 {
-    public enum Drag_State  : byte { Null,Main_Can,Sub_Can}
+    public enum Drag_State  : byte { Null,Main_Can,Sub_Can,Link_Mode_Sub}
     
 
     public partial class MainWindow : Window
     {
         //varaibles that need to be accessed all around the code
         public List<Gate_Class> Gate_List { get; set; }
+        public List<Line_Class> Line_List { get; set; }
 
         //program info
         public bool Drag { get; set; } = false;
@@ -30,13 +31,14 @@ namespace A_level_course_work_Logic_Gate
                 {
                     Drag = false;
                 }
-                else if(value==Drag_State.Sub_Can || value == Drag_State.Main_Can)
+                else if(value==Drag_State.Sub_Can || value == Drag_State.Main_Can||value ==Drag_State.Link_Mode_Sub)
                 {
                     Drag = true;
                 }
                 drag_mode = value;
             }
         }
+        public int Linking_ID { get; set; } = 0;
         //UI elements that can't be added in the XAML
         public Canvas_Class Sub_Canvas { get; set; }
         public Rectangle BackGround_Rect { get; set; }
@@ -46,7 +48,7 @@ namespace A_level_course_work_Logic_Gate
         {            
             InitializeComponent();
             Gate_List = new List<Gate_Class>();
-            
+            Line_List = new List<Line_Class>();            
         }
 
         private void Canvas_Border_Loaded(object sender, RoutedEventArgs e)
@@ -82,6 +84,10 @@ namespace A_level_course_work_Logic_Gate
             {
                 Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Sub_Canvas));
             }
+            else if(Drag&& Drag_Mode == Drag_State.Link_Mode_Sub)
+            {
+                Line_List[Drag_Num].Track_Mouse();
+            }
         }
         //event for cancling dragging in whole window
         private void Main_Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -96,6 +102,11 @@ namespace A_level_course_work_Logic_Gate
                 bool check = (Pos_Rect.X < 0 || Pos_Rect.X > 4000 || Pos_Rect.Y < 0 || Pos_Rect.Y > 4000) ||
                    (Pos_Border.X < 0 || Pos_Border.X > Canvas_Border.ActualWidth || Pos_Border.Y < 0 || Pos_Border.Y > Canvas_Border.ActualHeight) ? false : true;
 
+
+                if (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) check = false;
+                
+
+
                 Main_Canvas.Children.Remove(Gate_List[Drag_Num].Rect);                
                 Drag_Mode = Drag_State.Null;
                 if (check)
@@ -107,6 +118,7 @@ namespace A_level_course_work_Logic_Gate
                 {
                     Gate_List.RemoveAt(Drag_Num);
                 }
+
             }
         }
         //Flip between the 2 states of the program
@@ -125,6 +137,7 @@ namespace A_level_course_work_Logic_Gate
                     Link_Button.Content = "Link";
                 }
             }
+            Console.WriteLine(Link);
         }
     }
 }
