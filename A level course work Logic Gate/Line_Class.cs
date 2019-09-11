@@ -18,6 +18,7 @@ namespace A_level_course_work_Logic_Gate
         public Line_Class(int _Output_ID, Canvas_Class Sub_Canvas)
         {
             _Sub_Canvas = Sub_Canvas;
+            _Sub_Canvas.Children.Add(UI_Line);                
             Output_ID = _Output_ID;
         }
 

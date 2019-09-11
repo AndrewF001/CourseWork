@@ -88,13 +88,14 @@ namespace A_level_course_work_Logic_Gate
                     Old_Rect_Y = Canvas.GetTop(_MainWind.Gate_List[_MainWind.Drag_Num].Rect);
                 }
             }
-            else if (!_MainWind.Drag && _MainWind.Link)
+            else if (!_MainWind.Drag && _MainWind.Link && detected!=-1)
             {
                 _MainWind.Linking_ID = detected;
                 _MainWind.Drag_Mode = Drag_State.Link_Mode_Sub;
                 _MainWind.Drag_Num = _MainWind.Line_List.Count();
                 _MainWind.Line_List.Add(new Line_Class(detected,_MainWind.Sub_Canvas));
-                _MainWind.Sub_Canvas.Children.Add(_MainWind.Line_List.Last().UI_Line);
+                Link_Output_Aline(detected);
+                //location
             }
         }
         //Re-drag drop
@@ -115,7 +116,10 @@ namespace A_level_course_work_Logic_Gate
                 _MainWind.Drag_Mode = Drag_State.Null;
                 if(detection!=-1&& detection != _MainWind.Linking_ID)
                 {
+                    //location
+                    Link_Input_Aline();
                     _MainWind.Line_List[_MainWind.Drag_Num].Track_Mouse();
+
                     _MainWind.Line_List[_MainWind.Drag_Num].UI_Line.Stroke = Brushes.Black;
                 }
                 else
@@ -142,5 +146,43 @@ namespace A_level_course_work_Logic_Gate
             }
             return Detected;
         }
+        public void Link_Output_Aline(int Clicked)
+        {
+            // make the X1 and Y1 a function;
+            if(_MainWind.Gate_List[Clicked].Type==7)
+            {
+                if (_MainWind.Gate_List[Clicked].Output_1_ID == -1)
+                {
+                    _MainWind.Line_List.Last().UI_Line.X1 = Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 75;
+                    _MainWind.Line_List.Last().UI_Line.Y1 = Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 23.8;
+                }
+                else if (_MainWind.Gate_List[Clicked].Output_2_ID == -1)
+                {
+                    _MainWind.Line_List.Last().UI_Line.X1 = Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 85;
+                    _MainWind.Line_List.Last().UI_Line.Y1 = Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 36;
+                }
+                else if (_MainWind.Gate_List[Clicked].Output_3_ID == -1)
+                {
+                    _MainWind.Line_List.Last().UI_Line.X1 = Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 85;
+                    _MainWind.Line_List.Last().UI_Line.Y1 = Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 45;
+                }
+            }
+            else if(_MainWind.Gate_List[Clicked].Type == 2)
+            {
+                _MainWind.Line_List.Last().UI_Line.X1 = Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 109.5;
+                _MainWind.Line_List.Last().UI_Line.Y1 = Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 36;
+            }
+            else
+            {
+                _MainWind.Line_List.Last().UI_Line.X1 = Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 115;
+                _MainWind.Line_List.Last().UI_Line.Y1 = Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 35.7;
+            }
+        }
+
+        public void Link_Input_Aline()
+        {
+
+        }
+
     }
 }
