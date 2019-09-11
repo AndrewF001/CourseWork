@@ -9,19 +9,35 @@ using System.Windows.Shapes;
 
 namespace A_level_course_work_Logic_Gate
 {
-    public enum Drag_State  : byte { Null,Main_Can,Sub_Can,Link_Mode_Sub}
+    public enum Drag_State  { Null,Main_Can,Sub_Can,Link_Mode_Sub}
     
 
     public partial class MainWindow : Window
     {
         //varaibles that need to be accessed all around the code
-        public List<Gate_Class> Gate_List { get; set; }
-        public List<Line_Class> Line_List { get; set; }
+        public List<Gate_Class> Gate_List { get; set; } = new List<Gate_Class>();
+        public List<Line_Class> Line_List { get; set; } = new List<Line_Class>();
 
         //program info
         public bool Drag { get; set; } = false;
         public int Drag_Num { get; set; } = 0;
-        public bool Link { get; set; } = false;
+        private bool _link = false;
+        public bool Link
+        { get { return _link; }
+            set
+            {
+                _link = value;
+                if(_link)
+                {
+                    Link_Button.Content = "Link";
+                }
+                else if(!_link)
+                {
+                    Link_Button.Content = "Drag";
+                }
+            }
+        }
+
         private Drag_State drag_mode = Drag_State.Null;
         public Drag_State Drag_Mode
         { get { return drag_mode; }
@@ -46,9 +62,7 @@ namespace A_level_course_work_Logic_Gate
         //code when the program loads up
         public MainWindow()
         {            
-            InitializeComponent();
-            Gate_List = new List<Gate_Class>();
-            Line_List = new List<Line_Class>();            
+            InitializeComponent();         
         }
 
         private void Canvas_Border_Loaded(object sender, RoutedEventArgs e)
@@ -129,15 +143,12 @@ namespace A_level_course_work_Logic_Gate
                 if (Link)
                 {
                     Link = false;
-                    Link_Button.Content = "Drag";
                 }
                 else
                 {
                     Link = true;
-                    Link_Button.Content = "Link";
                 }
             }
-            Console.WriteLine(Link);
         }
     }
 }

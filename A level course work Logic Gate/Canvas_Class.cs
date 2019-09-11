@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,15 +10,14 @@ namespace A_level_course_work_Logic_Gate
 {
     public class Canvas_Class : Canvas
     {
-        public double Old_Pos_X { get; set; } = 0;
-        public double Old_Pos_Y { get; set; } = 0;
+        public Point Old_Pos { get; set; } = new Point();
         public double Scale_Factor { get; set; } = 1;
-        public double Old_Rect_X { get; set; } = 0;
-        public double Old_Rect_Y { get; set; } = 0;
+        public Point Old_Rect { get; set; }
 
         public MainWindow _MainWind { get; set; }
         public Canvas_Class(MainWindow MainWind)
         {
+            Old_Rect = new Point();
             _MainWind = MainWind;
             Background = Brushes.Gray;
         }
@@ -27,12 +27,11 @@ namespace A_level_course_work_Logic_Gate
             Point Pos = Mouse.GetPosition(_MainWind.Sub_Canvas);
             if (e.LeftButton == MouseButtonState.Pressed && !_MainWind.Drag)
             {
-                double X_Difference = Pos.X - Old_Pos_X;
-                double Y_Difference = Pos.Y - Old_Pos_Y;
+                double X_Difference = Pos.X - Old_Pos.X;
+                double Y_Difference = Pos.Y - Old_Pos.Y;
                 Sub_Canvas_Translation(X_Difference, Y_Difference);
             }
-            Old_Pos_X = Pos.X;
-            Old_Pos_Y = Pos.Y;
+            Old_Pos = Pos;
         }
         
         private void Sub_Canvas_Translation(double X_Difference, double Y_Difference)
@@ -81,11 +80,10 @@ namespace A_level_course_work_Logic_Gate
             if (!_MainWind.Drag && !_MainWind.Link)
             {
                 if (detected != -1)
-                {                    
+                {
                     _MainWind.Drag_Num = detected;
                     _MainWind.Drag_Mode = Drag_State.Sub_Can;
-                    Old_Rect_X = Canvas.GetLeft(_MainWind.Gate_List[_MainWind.Drag_Num].Rect);
-                    Old_Rect_Y = Canvas.GetTop(_MainWind.Gate_List[_MainWind.Drag_Num].Rect);
+                    Old_Rect = new Point(Convert.ToDouble(Canvas.GetLeft(_MainWind.Gate_List[_MainWind.Drag_Num].Rect)), Convert.ToDouble(Canvas.GetTop(_MainWind.Gate_List[_MainWind.Drag_Num].Rect)));
                 }
             }
             else if (!_MainWind.Drag && _MainWind.Link && detected!=-1)
@@ -106,8 +104,8 @@ namespace A_level_course_work_Logic_Gate
                 _MainWind.Drag_Mode = Drag_State.Null;
                 if(Rect_detection(_MainWind.Gate_List[_MainWind.Drag_Num].Rect.Width, _MainWind.Gate_List[_MainWind.Drag_Num].Rect.Height, _MainWind.Drag_Num) !=-1)
                 {
-                    Canvas.SetLeft(_MainWind.Gate_List[_MainWind.Drag_Num].Rect, Old_Rect_X);
-                    Canvas.SetTop(_MainWind.Gate_List[_MainWind.Drag_Num].Rect,Old_Rect_Y);
+                    Canvas.SetLeft(_MainWind.Gate_List[_MainWind.Drag_Num].Rect, Old_Rect.X);
+                    Canvas.SetTop(_MainWind.Gate_List[_MainWind.Drag_Num].Rect,Old_Rect.Y);
                 }
             }
             else if(_MainWind.Drag && _MainWind.Link)
