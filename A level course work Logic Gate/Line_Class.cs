@@ -28,5 +28,16 @@ namespace A_level_course_work_Logic_Gate
             UI_Line.X2 = Pos.X;
             UI_Line.Y2 = Pos.Y;
         }
+
+        public void Change_X1_Y1(double X, double Y)
+        {
+            UI_Line.X1 = X;
+            UI_Line.Y1 = Y;
+        }
+        public void Change_X2_Y2(double X, double Y)
+        {
+            UI_Line.X2 = X;
+            UI_Line.Y2 = Y;
+        }
     }
 }

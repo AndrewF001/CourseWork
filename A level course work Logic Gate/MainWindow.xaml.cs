@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 namespace A_level_course_work_Logic_Gate
 {
     public enum Drag_State  { Null,Main_Can,Sub_Can,Link_Mode_Sub}
-    
+    public enum Input_Type  { Null, Gate, Button }
 
     public partial class MainWindow : Window
     {
@@ -43,14 +43,24 @@ namespace A_level_course_work_Logic_Gate
         { get { return drag_mode; }
             set
             {
-                if(value==Drag_State.Null)
+                switch(value)
                 {
-                    Drag = false;
+                    case (Drag_State.Null):
+                        Drag = false;
+                        break;
+                    default:
+                        Drag = true;
+                        break;
                 }
-                else if(value==Drag_State.Sub_Can || value == Drag_State.Main_Can||value ==Drag_State.Link_Mode_Sub)
-                {
-                    Drag = true;
-                }
+                
+                //if(value==Drag_State.Null)
+                //{
+                //    Drag = false;
+                //}
+                //else if(value==Drag_State.Sub_Can || value == Drag_State.Main_Can||value ==Drag_State.Link_Mode_Sub)
+                //{
+                //    Drag = true;
+                //}
                 drag_mode = value;
             }
         }
@@ -90,18 +100,37 @@ namespace A_level_course_work_Logic_Gate
         //Whole event for dragging objects in the whole window
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            if(Drag&&Drag_Mode==Drag_State.Main_Can)
+            if(Drag)
             {
-                Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Main_Grid));
+                switch (drag_mode)
+                {
+                    case Drag_State.Main_Can:
+                        Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Main_Grid));
+                        break;
+                    case Drag_State.Sub_Can:
+                        Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Sub_Canvas));
+                        break;
+                    case Drag_State.Link_Mode_Sub:
+                        Line_List[Drag_Num].Track_Mouse();
+                        break;
+                }
+
+
+
             }
-            else if(Drag&& Drag_Mode == Drag_State.Sub_Can)
-            {
-                Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Sub_Canvas));
-            }
-            else if(Drag&& Drag_Mode == Drag_State.Link_Mode_Sub)
-            {
-                Line_List[Drag_Num].Track_Mouse();
-            }
+
+            //if(Drag&&Drag_Mode==Drag_State.Main_Can)
+            //{
+            //    Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Main_Grid));
+            //}
+            //else if(Drag&& Drag_Mode == Drag_State.Sub_Can)
+            //{
+            //    Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Sub_Canvas));
+            //}
+            //else if(Drag&& Drag_Mode == Drag_State.Link_Mode_Sub)
+            //{
+            //    Line_List[Drag_Num].Track_Mouse();
+            //}
         }
         //event for cancling dragging in whole window
         private void Main_Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -114,17 +143,20 @@ namespace A_level_course_work_Logic_Gate
 
                 //checks if it's in side the border and if it's inside the area that is allowed in the border.
                 bool check = (Pos_Rect.X < 0 || Pos_Rect.X > 4000 || Pos_Rect.Y < 0 || Pos_Rect.Y > 4000) ||
-                   (Pos_Border.X < 0 || Pos_Border.X > Canvas_Border.ActualWidth || Pos_Border.Y < 0 || Pos_Border.Y > Canvas_Border.ActualHeight) ? false : true;
+                   (Pos_Border.X < 0 || Pos_Border.X > Canvas_Border.ActualWidth || Pos_Border.Y < 0 || Pos_Border.Y > Canvas_Border.ActualHeight)
+                   || (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) ? false : true;
 
 
-                if (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) check = false;
+                //if (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) check = false;
                 
 
 
                 Main_Canvas.Children.Remove(Gate_List[Drag_Num].Rect);                
-                Drag_Mode = Drag_State.Null;
+                Drag_Mode = Drag_State.Null;                
                 if (check)
                 {
+                    Gate_List[Drag_Num].Rect.Width = Gate_List[Drag_Num].Rect.Width / Sub_Canvas.Scale_Factor;
+                    Gate_List[Drag_Num].Rect.Height = Gate_List[Drag_Num].Rect.Height / Sub_Canvas.Scale_Factor;
                     Sub_Canvas.Children.Add(Gate_List[Drag_Num].Rect);
                     Gate_List[Drag_Num].Rect_Move(Pos_Sub);
                 }

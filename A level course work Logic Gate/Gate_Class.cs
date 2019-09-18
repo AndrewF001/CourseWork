@@ -3,30 +3,25 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
 using System.Windows.Input;
+using System.Collections.Generic;
 
 namespace A_level_course_work_Logic_Gate
 {
     public class Gate_Class
-    {        
+    {
         public int ID { get; set; }
         public int Type { get; set; }
         public Rectangle Rect { get; set; }
         public MainWindow _MainWind { get; set; }
 
         //data storages for the input and output
-        public enum Input_Type : byte { Null,Gate,Button}
-        public bool Input_1 { get; set; } = false;
-        public int Input_1_ID { get; set; } = -1;
-        public Input_Type Input_1_Type { get; set; } = Input_Type.Null;
-        public bool Input_2 { get; set; } = false;
-        public int Input_2_ID { get; set; } = -1;
-        public Input_Type Input_2_Type { get; set; } = Input_Type.Null;
+
+        public Input_Class[] Input { get; set; } = new Input_Class[] { new Input_Class(), new Input_Class() }; 
+
         //Gate output Bit
         public bool Gate_Bit { get; set; } = false;
         //if equal -1 then the output is null
-        public int Output_1_ID { get; set; } = -1;
-        public int Output_2_ID { get; set; } = -1;
-        public int Output_3_ID { get; set; } = -1;
+        public int[] Output_ID { get; set; } = new int[] { -1, -1, -1 };
 
 
         public Gate_Class(string Tag,MainWindow MainWind,double _Scale_Factor)
