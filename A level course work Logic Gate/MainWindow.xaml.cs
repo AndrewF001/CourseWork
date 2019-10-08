@@ -10,10 +10,11 @@ using System.Windows.Shapes;
 namespace A_level_course_work_Logic_Gate
 {
     public enum Drag_State  { Null,Main_Can,Sub_Can,Link_Mode_Sub}
-    public enum Input_Type  { Null, Gate, Button }
-
+    public enum IO_Type  { Null, Gate, IO }
+     
     public partial class MainWindow : Window
     {
+        
         //varaibles that need to be accessed all around the code
         public List<Gate_Class> Gate_List { get; set; } = new List<Gate_Class>();
         public List<Line_Class> Line_List { get; set; } = new List<Line_Class>();
@@ -76,7 +77,7 @@ namespace A_level_course_work_Logic_Gate
         }
 
         private void Canvas_Border_Loaded(object sender, RoutedEventArgs e)
-        {
+        {            
             Sub_Canvas = new Canvas_Class(this);
             Canvas_Border.Child = Sub_Canvas;
 
@@ -109,6 +110,7 @@ namespace A_level_course_work_Logic_Gate
                         break;
                     case Drag_State.Sub_Can:
                         Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Sub_Canvas));
+                        Gate_List[Drag_Num].Move_IO();
                         break;
                     case Drag_State.Link_Mode_Sub:
                         Line_List[Drag_Num].Track_Mouse();

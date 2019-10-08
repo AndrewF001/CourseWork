@@ -9,7 +9,7 @@ namespace A_level_course_work_Logic_Gate
 {
     public class Gate_Class
     {
-        public int ID { get; set; }
+        //public int ID { get; set; }
         public int Type { get; set; }
         public Rectangle Rect { get; set; }
         public MainWindow _MainWind { get; set; }
@@ -20,8 +20,9 @@ namespace A_level_course_work_Logic_Gate
 
         //Gate output Bit
         public bool Gate_Bit { get; set; } = false;
-        //if equal -1 then the output is null
-        public int[] Output_ID { get; set; } = new int[] { -1, -1, -1 };
+
+        public Output_Class[] Output { get; set; } = new Output_Class[] { new Output_Class(), new Output_Class(), new Output_Class() };
+
 
 
         public Gate_Class(string Tag,MainWindow MainWind,double _Scale_Factor)
@@ -73,6 +74,25 @@ namespace A_level_course_work_Logic_Gate
         {
             Canvas.SetLeft(Rect, Pos.X);
             Canvas.SetTop(Rect, Pos.Y);
+        }
+
+
+        public void Move_IO()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if(Output[i].Output_ID!=-1)
+                {
+                    _MainWind.Line_List[Output[i].Line_ID].Link_Output_Aline(this);
+                }
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                if (Input[i].Input_ID != -1)
+                {
+                    _MainWind.Line_List[Input[i].Line_ID].Link_Input_Aline(this);
+                }
+            }
         }
 
     }

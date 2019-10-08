@@ -4,15 +4,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace A_level_course_work_Logic_Gate
 {
     public class Canvas_Class : Canvas
-    {
+    {        
         public Point Old_Pos { get; set; } = new Point();
         public double Scale_Factor { get; set; } = 1;
         public Point Old_Rect { get; set; } = new Point();
+
 
         public MainWindow _MainWind { get; set; }
 
@@ -36,7 +36,7 @@ namespace A_level_course_work_Logic_Gate
             Transforms_Group.Children.Add(Translate_Action);
             Transforms_Group.Children.Add(Scale_Action);
 
-            this.RenderTransform = Transforms_Group;
+            RenderTransform = Transforms_Group;
         }
         //Move canvas event
         protected override void OnMouseMove(MouseEventArgs e)
@@ -141,15 +141,24 @@ namespace A_level_course_work_Logic_Gate
             else if (!_MainWind.Drag && _MainWind.Link && detected!=-1)
             {                
                 _MainWind.Linking_ID = detected;
-                _MainWind.Drag_Mode = Drag_State.Link_Mode_Sub;
                 _MainWind.Drag_Num = _MainWind.Line_List.Count();
                 _MainWind.Line_List.Add(new Line_Class(detected,this));
                 _MainWind.Line_List.Last().Track_Mouse();
-                int X = Link_Output_Vaildation(detected);
+                _MainWind.Line_List.Last().Input_ID=detected;
+                _MainWind.Line_List.Last().Output_Num = Link_Output_Vaildation(detected);
                 //if X == -2 then there was no aviable output for the new link to be made(already deleted the last line)
-                if (X != -2)
-                    Link_Output_Aline(detected, _MainWind.Drag_Num, X);
-                
+                if (_MainWind.Line_List.Last().Output_Num != -2)
+                {
+                    _MainWind.Drag_Mode = Drag_State.Link_Mode_Sub;
+                    _MainWind.Gate_List[detected].Output[_MainWind.Line_List.Last().Output_Num].Line_ID = _MainWind.Drag_Num;
+                    _MainWind.Line_List[_MainWind.Drag_Num].Link_Output_Aline(_MainWind.Gate_List[detected]);
+                }
+                else
+                {
+                    Children.Remove(_MainWind.Line_List[_MainWind.Drag_Num].UI_Line);
+                    _MainWind.Line_List.RemoveAt(_MainWind.Drag_Num);
+                }
+
             }
         }
         //Re-drag drop
@@ -163,6 +172,7 @@ namespace A_level_course_work_Logic_Gate
                 {
                     SetLeft(_MainWind.Gate_List[_MainWind.Drag_Num].Rect, Old_Rect.X);
                     SetTop(_MainWind.Gate_List[_MainWind.Drag_Num].Rect,Old_Rect.Y);
+                    _MainWind.Gate_List[_MainWind.Drag_Num].Move_IO();
                 }
             }
             else if(_MainWind.Drag && _MainWind.Link)
@@ -172,22 +182,22 @@ namespace A_level_course_work_Logic_Gate
                 _MainWind.Drag_Mode = Drag_State.Null;
                 if (detection != -1 && detection != _MainWind.Linking_ID)
                 {
-                    //location
-                    //_MainWind.Line_List[_MainWind.Drag_Num].Track_Mouse();
                     X = Link_Input_Vaildation(detection);
-                    //_MainWind.Line_List[_MainWind.Drag_Num].UI_Line.Stroke = Brushes.Black;
-                }
-                
-                if(X!=-1)
-                {
-                    Link_Input_Aline(detection, X);
-                    //Children.Remove(_MainWind.Line_List[_MainWind.Drag_Num].UI_Line);
-                    //_MainWind.Line_List.RemoveAt(_MainWind.Drag_Num);
                 }
                 else
                 {
                     Children.Remove(_MainWind.Line_List[_MainWind.Drag_Num].UI_Line);
                     _MainWind.Line_List.RemoveAt(_MainWind.Drag_Num);
+                }
+
+                if (X!=-1)
+                {
+                    _MainWind.Line_List[_MainWind.Drag_Num].Input_ID = detection;
+                    _MainWind.Line_List[_MainWind.Drag_Num].Input_Num = X;
+                    _MainWind.Line_List[_MainWind.Drag_Num].Link_Input_Aline(_MainWind.Gate_List[detection]);
+                    _MainWind.Gate_List[detection].Input[X].Input_ID = _MainWind.Linking_ID;
+                    _MainWind.Gate_List[detection].Input[X].Line_ID = _MainWind.Drag_Num;
+                    _MainWind.Gate_List[_MainWind.Linking_ID].Output[_MainWind.Line_List.Last().Output_Num].Output_ID = detection;
                 }
             }
         }
@@ -209,7 +219,7 @@ namespace A_level_course_work_Logic_Gate
 
         public int Link_Output_Vaildation(int Clicked)
         {
-            int Output = -1;
+            int Output = 0;
             Point Pos = Mouse.GetPosition(this);
             if (_MainWind.Gate_List[Clicked].Type == 7)
             {
@@ -220,36 +230,36 @@ namespace A_level_course_work_Logic_Gate
                     //it will set it to it's output number
                     Output = 0;
                     //however if it is already taken then it will overright it and make it a fall number
-                    if(_MainWind.Gate_List[Clicked].Output_ID[0]!=-1)
+                    if(_MainWind.Gate_List[Clicked].Output[0].Output_ID!=-1)
                         Output = -2;                 
                 }
                 else if(Pos.Y> GetTop(_MainWind.Gate_List[Clicked].Rect) + 29 && Pos.Y < GetTop(_MainWind.Gate_List[Clicked].Rect) + 43)
                 {
                     Output = 1;
-                    if (_MainWind.Gate_List[Clicked].Output_ID[1] != -1)
+                    if (_MainWind.Gate_List[Clicked].Output[1].Output_ID != -1)
                          Output = -2;
                 }
                 else if(Pos.Y > GetTop(_MainWind.Gate_List[Clicked].Rect) + 43)
                 {
                     Output = 2;
-                    if (_MainWind.Gate_List[Clicked].Output_ID[2] != -1)
+                    if (_MainWind.Gate_List[Clicked].Output[2].Output_ID != -1)
                         Output = -2;
                 }
                 //if the above failed then it will enter this if statement
                 if (Output == -2)
                 {
                     //this will check each output and try and find a available output                    
-                    if(_MainWind.Gate_List[Clicked].Output_ID[0] == -1)
+                    if(_MainWind.Gate_List[Clicked].Output[0].Output_ID == -1)
                         Output = 0;
-                    else if (_MainWind.Gate_List[Clicked].Output_ID[1] == -1)
+                    else if (_MainWind.Gate_List[Clicked].Output[1].Output_ID == -1)
                         Output = 1;
-                    else if (_MainWind.Gate_List[Clicked].Output_ID[2] == -1)
+                    else if (_MainWind.Gate_List[Clicked].Output[2].Output_ID == -1)
                         Output = 2;
                 }
             }
             else
             {
-                if(_MainWind.Gate_List[Clicked].Output_ID[0]!=-1)
+                if(_MainWind.Gate_List[Clicked].Output[0].Output_ID!=-1)
                     Output = -2;
             }
 
@@ -262,35 +272,35 @@ namespace A_level_course_work_Logic_Gate
         }
 
         //click is the ID of the gate that has been clicked on, ID is the ID of the line in the list, output if for the special gate and is used when moving a gate and the line needs to follow it
-        public void Link_Output_Aline(int Clicked, int ID,int Output)
-        {
-            //special gate class with 3 exit
-            if(_MainWind.Gate_List[Clicked].Type==7)
-            {
-                if (Output==0)
-                {
-                    _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 75, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 23.8);
-                }
-                else if (Output == 1)
-                {
-                    _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 75, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 36);
-                }
-                else if (Output == 2)
-                {
-                    _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 75, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 51);
-                }
-            }
-            //not gate
-            else if(_MainWind.Gate_List[Clicked].Type == 2)
-            {
-                _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 109.5, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 36);
-            }
-            //every other gate
-            else
-            {
-                _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 115, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 35.7);
-            }
-        }
+        //public void Link_Output_Aline(int Clicked, int ID,int Output)
+        //{
+        //    //special gate class with 3 exit
+        //    if(_MainWind.Gate_List[Clicked].Type==7)
+        //    {
+        //        if (Output==0)
+        //        {
+        //            _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 75, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 23.8);
+        //        }
+        //        else if (Output == 1)
+        //        {
+        //            _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 75, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 36);
+        //        }
+        //        else if (Output == 2)
+        //        {
+        //            _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 75, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 51);
+        //        }
+        //    }
+        //    //not gate
+        //    else if(_MainWind.Gate_List[Clicked].Type == 2)
+        //    {
+        //        _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 109.5, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 36);
+        //    }
+        //    //every other gate
+        //    else
+        //    {
+        //        _MainWind.Line_List[ID].Change_X1_Y1(Canvas.GetLeft(_MainWind.Gate_List[Clicked].Rect) + 115, Canvas.GetTop(_MainWind.Gate_List[Clicked].Rect) + 35.7);
+        //    }
+        //}
 
         public int Link_Input_Vaildation(int Clicked)
         {
@@ -336,34 +346,34 @@ namespace A_level_course_work_Logic_Gate
             return Output;
         }
 
-        public void Link_Input_Aline(int Clicked, int Input_ID)
-        {            
-            _MainWind.Line_List[_MainWind.Drag_Num].UI_Line.Stroke = Brushes.Black;
-            //not input is in the center of the gate compare to the other gates
-            if (_MainWind.Gate_List[Clicked].Type==2)
-            {
-                _MainWind.Line_List[_MainWind.Drag_Num].Change_X2_Y2(GetLeft(_MainWind.Gate_List[Clicked].Rect)+5, GetTop(_MainWind.Gate_List[Clicked].Rect) + 38);
-            }
-            //this is similar to the not gate but because it's a sqaure not a rectangle it needed to be moved in the X axis more
-            else if(_MainWind.Gate_List[Clicked].Type == 7)
-            {
-                _MainWind.Line_List[_MainWind.Drag_Num].Change_X2_Y2(GetLeft(_MainWind.Gate_List[Clicked].Rect) + 12.5, GetTop(_MainWind.Gate_List[Clicked].Rect) + 38);
-            }
-            //the rest all follow the setup for the and gate
-            else
-            {
-                if(Input_ID==0)
-                {
-                    _MainWind.Line_List[_MainWind.Drag_Num].Change_X2_Y2(GetLeft(_MainWind.Gate_List[Clicked].Rect), GetTop(_MainWind.Gate_List[Clicked].Rect) + 15);
-                }
-                //else if not needed here but Input_ID isn't a secure variable type.
-                else if(Input_ID==1)
-                {
-                    _MainWind.Line_List[_MainWind.Drag_Num].Change_X2_Y2(GetLeft(_MainWind.Gate_List[Clicked].Rect), GetTop(_MainWind.Gate_List[Clicked].Rect) + 62);
-                }
-            }
+        //public void Link_Input_Aline(int Clicked, int Input_ID)
+        //{            
+        //    _MainWind.Line_List[_MainWind.Drag_Num].UI_Line.Stroke = Brushes.Black;
+        //    //not input is in the center of the gate compare to the other gates
+        //    if (_MainWind.Gate_List[Clicked].Type==2)
+        //    {
+        //        _MainWind.Line_List[_MainWind.Drag_Num].Change_X2_Y2(GetLeft(_MainWind.Gate_List[Clicked].Rect)+5, GetTop(_MainWind.Gate_List[Clicked].Rect) + 38);
+        //    }
+        //    //this is similar to the not gate but because it's a sqaure not a rectangle it needed to be moved in the X axis more
+        //    else if(_MainWind.Gate_List[Clicked].Type == 7)
+        //    {
+        //        _MainWind.Line_List[_MainWind.Drag_Num].Change_X2_Y2(GetLeft(_MainWind.Gate_List[Clicked].Rect) + 12.5, GetTop(_MainWind.Gate_List[Clicked].Rect) + 38);
+        //    }
+        //    //the rest all follow the setup for the and gate
+        //    else
+        //    {
+        //        if(Input_ID==0)
+        //        {
+        //            _MainWind.Line_List[_MainWind.Drag_Num].Change_X2_Y2(GetLeft(_MainWind.Gate_List[Clicked].Rect), GetTop(_MainWind.Gate_List[Clicked].Rect) + 15);
+        //        }
+        //        //else if not needed here but Input_ID isn't a secure variable type.
+        //        else if(Input_ID==1)
+        //        {
+        //            _MainWind.Line_List[_MainWind.Drag_Num].Change_X2_Y2(GetLeft(_MainWind.Gate_List[Clicked].Rect), GetTop(_MainWind.Gate_List[Clicked].Rect) + 62);
+        //        }
+        //    }
 
-        }
+        //}
 
     }
 }
