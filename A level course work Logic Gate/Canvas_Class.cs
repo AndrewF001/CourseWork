@@ -151,12 +151,15 @@ namespace A_level_course_work_Logic_Gate
 
                 if (X!=-1)
                 {
+
                     _MainWind.Line_List[_MainWind.Drag_Num].Input_ID = detection;
                     _MainWind.Line_List[_MainWind.Drag_Num].Input_Num = X;
                     _MainWind.Line_List[_MainWind.Drag_Num].Link_Input_Aline(_MainWind.Gate_List[detection]);
+                    _MainWind.Gate_List[detection].Input[X].Input_Type = IO_Type.Gate;
                     _MainWind.Gate_List[detection].Input[X].Input_ID = _MainWind.Linking_ID;
                     _MainWind.Gate_List[detection].Input[X].Line_ID = _MainWind.Drag_Num;
                     _MainWind.Gate_List[_MainWind.Linking_ID].Output[_MainWind.Line_List.Last().Output_Num].Output_ID = detection;
+                    _MainWind.Gate_List[_MainWind.Linking_ID].Output[_MainWind.Line_List.Last().Output_Num].Output_Type = IO_Type.Gate;
                 }
                 else if(X==-1)
                 {
@@ -175,7 +178,7 @@ namespace A_level_course_work_Logic_Gate
                 Gate_Class Rect = _MainWind.Gate_List[i];
                 double Rect_X = Canvas.GetLeft(_MainWind.Gate_List[i].Rect);
                 double Rect_Y = Canvas.GetTop(_MainWind.Gate_List[i].Rect);
-                if (Pos_Sub.X+Width > Rect_X && Pos_Sub.X < Rect_X + Rect.Rect.Width && Pos_Sub.Y+Height > Rect_Y && Pos_Sub.Y < Rect_Y + Rect.Rect.Height&&i!=Drag_Num)
+                if (Pos_Sub.X+Width > Rect_X && Pos_Sub.X < Rect_X + Rect.Rect.Width && Pos_Sub.Y+Height > Rect_Y && Pos_Sub.Y < Rect_Y + Rect.Rect.Height&&i!=Drag_Num && Rect.Alive)
                     Detected = i;
             }
             return Detected;
@@ -311,7 +314,7 @@ namespace A_level_course_work_Logic_Gate
                                 {
                                     if (_MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_ID == detection)
                                     {
-                                        _MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_ID = -1;
+                                        _MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type = IO_Type.Null;
                                     }
                                 }
                             }
@@ -325,7 +328,7 @@ namespace A_level_course_work_Logic_Gate
                                 {
                                     if (_MainWind.Gate_List[_MainWind.Gate_List[detection].Input[i].Input_ID].Output[x].Output_ID == detection)
                                     {
-                                        _MainWind.Gate_List[_MainWind.Gate_List[detection].Input[i].Input_ID].Output[x].Output_ID = -1;
+                                        _MainWind.Gate_List[_MainWind.Gate_List[detection].Input[i].Input_ID].Output[x].Output_Type = IO_Type.Null;
                                     }
                                 }
                             }

@@ -18,7 +18,8 @@ namespace A_level_course_work_Logic_Gate
         //varaibles that need to be accessed all around the code
         public List<Gate_Class> Gate_List { get; set; } = new List<Gate_Class>();
         public List<Line_Class> Line_List { get; set; } = new List<Line_Class>();
-
+        public List<Button> Input_Button { get; set; } = new List<Button>();
+        public List<TextBlock> Output_Box { get; set; } = new List<TextBlock>();
         //program info
         public bool Drag { get; set; } = false;
         public int Drag_Num { get; set; } = 0;
@@ -54,14 +55,6 @@ namespace A_level_course_work_Logic_Gate
                         break;
                 }
                 
-                //if(value==Drag_State.Null)
-                //{
-                //    Drag = false;
-                //}
-                //else if(value==Drag_State.Sub_Can || value == Drag_State.Main_Can||value ==Drag_State.Link_Mode_Sub)
-                //{
-                //    Drag = true;
-                //}
                 drag_mode = value;
             }
         }
@@ -181,6 +174,37 @@ namespace A_level_course_work_Logic_Gate
                 else
                 {
                     Link = true;
+                }
+            }
+        }
+
+        private void Input_Output_Button_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < Gate_List.Count; i++)
+            {
+                if(Gate_List[i].Alive)
+                {
+                    if(Gate_List[i].Input[0].Input_Type==IO_Type.Null)
+                    {
+
+                    }
+                    if (Gate_List[i].Input[1].Input_Type == IO_Type.Null && (Gate_List[i].Type != 2||Gate_List[i].Type != 7))
+                    {
+
+                    }
+
+                    if(Gate_List[i].Output[0].Output_Type== IO_Type.Null)
+                    {
+
+                    }
+                    if(Gate_List[i].Output[1].Output_Type==IO_Type.Null && Gate_List[i].Type!=2)
+                    {
+
+                    }
+                    if (Gate_List[i].Output[2].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
+                    {
+
+                    }
                 }
             }
         }
