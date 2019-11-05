@@ -48,24 +48,24 @@ namespace A_level_course_work_Logic_Gate
             //not input is in the center of the gate compare to the other gates
             if (Gate.Type == 2)
             {
-                this.Change_X2_Y2(Canvas.GetLeft(Gate.Rect) + 5, Canvas.GetTop(Gate.Rect) + 38);
+                Change_X2_Y2(Canvas.GetLeft(Gate.Rect) + 5, Canvas.GetTop(Gate.Rect) + 38);
             }
             //this is similar to the not gate but because it's a sqaure not a rectangle it needed to be moved in the X axis more
             else if (Gate.Type == 7)
             {
-                this.Change_X2_Y2(Canvas.GetLeft(Gate.Rect) + 12.5, Canvas.GetTop(Gate.Rect) + 38);
+                Change_X2_Y2(Canvas.GetLeft(Gate.Rect) + 12.5, Canvas.GetTop(Gate.Rect) + 38);
             }
             //the rest all follow the setup for the and gate
             else
             {
                 if (Input_Num == 0)
                 {
-                    this.Change_X2_Y2(Canvas.GetLeft(Gate.Rect), Canvas.GetTop(Gate.Rect) + 15);
+                    Change_X2_Y2(Canvas.GetLeft(Gate.Rect), Canvas.GetTop(Gate.Rect) + 15);
                 }
                 //else if not needed here but Input_ID isn't a secure variable type.
                 else if (Input_Num == 1)
                 {
-                    this.Change_X2_Y2(Canvas.GetLeft(Gate.Rect), Canvas.GetTop(Gate.Rect) + 62);
+                    Change_X2_Y2(Canvas.GetLeft(Gate.Rect), Canvas.GetTop(Gate.Rect) + 62);
                 }
             }
 
@@ -78,26 +78,26 @@ namespace A_level_course_work_Logic_Gate
             {
                 if (Output_Num == 0)
                 {
-                    this.Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 23.8);
+                    Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 23.8);
                 }
                 else if (Output_Num == 1)
                 {
-                    this.Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 36);
+                    Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 36);
                 }
                 else if (Output_Num == 2)
                 {
-                    this.Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 51);
+                    Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 51);
                 }
             }
             //not gate
             else if (Gate.Type == 2)
             {
-                this.Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 109.5, Canvas.GetTop(Gate.Rect) + 36);
+                Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 109.5, Canvas.GetTop(Gate.Rect) + 36);
             }
             //every other gate
             else
             {
-                this.Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 115, Canvas.GetTop(Gate.Rect) + 35.7);
+                Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 115, Canvas.GetTop(Gate.Rect) + 35.7);
             }
         }
 
