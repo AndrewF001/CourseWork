@@ -13,12 +13,14 @@ namespace A_level_course_work_Logic_Gate
         public int Output_Num { get; set; } = 1; //this should only change if the gate type is the multiple output(type 7)
         public int Input_ID { get; set; } = -1;
         public int Input_Num { get; set; } = -1;
-        
-        public Canvas_Class _Sub_Canvas { get; set; } 
-        public Line_Class(int _Output_ID, Canvas_Class Sub_Canvas)
+        public MainWindow _MainWind { get; set; }
+
+        public Canvas_Class _Sub_Canvas { get; set; }
+        public Line_Class(int _Output_ID, MainWindow MainWind)
         {
-            _Sub_Canvas = Sub_Canvas;
-            _Sub_Canvas.Children.Add(UI_Line);                
+            _MainWind = MainWind;
+            _Sub_Canvas = _MainWind.Sub_Canvas;
+            _Sub_Canvas.Children.Add(UI_Line);
             Output_ID = _Output_ID;
         }
 
@@ -41,65 +43,18 @@ namespace A_level_course_work_Logic_Gate
         }
 
 
-
-        public void Link_Input_Aline(Gate_Class Gate)
+        //change this so that the values are generic and then just have it so that the X and Y coords are changed directly and don't need the method to do it.(A lot of work :(
+        public void Link_Input_Aline_Line(Gate_Class Gate)
         {
             UI_Line.Stroke = Brushes.Black;
-            //not input is in the center of the gate compare to the other gates
-            if (Gate.Type == 2)
-            {
-                Change_X2_Y2(Canvas.GetLeft(Gate.Rect) + 5, Canvas.GetTop(Gate.Rect) + 38);
-            }
-            //this is similar to the not gate but because it's a sqaure not a rectangle it needed to be moved in the X axis more
-            else if (Gate.Type == 7)
-            {
-                Change_X2_Y2(Canvas.GetLeft(Gate.Rect) + 12.5, Canvas.GetTop(Gate.Rect) + 38);
-            }
-            //the rest all follow the setup for the and gate
-            else
-            {
-                if (Input_Num == 0)
-                {
-                    Change_X2_Y2(Canvas.GetLeft(Gate.Rect), Canvas.GetTop(Gate.Rect) + 15);
-                }
-                //else if not needed here but Input_ID isn't a secure variable type.
-                else if (Input_Num == 1)
-                {
-                    Change_X2_Y2(Canvas.GetLeft(Gate.Rect), Canvas.GetTop(Gate.Rect) + 62);
-                }
-            }
-
+            double[] hold = _MainWind.Link_Input_Aline(Gate, Input_Num);
+            Change_X2_Y2(hold[0], hold[1]);
         }
 
-        public void Link_Output_Aline(Gate_Class Gate)
+        public void Link_Output_Aline_Line(Gate_Class Gate)
         {
-            //special gate class with 3 exit
-            if (Gate.Type == 7)
-            {
-                if (Output_Num == 0)
-                {
-                    Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 23.8);
-                }
-                else if (Output_Num == 1)
-                {
-                    Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 36);
-                }
-                else if (Output_Num == 2)
-                {
-                    Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 51);
-                }
-            }
-            //not gate
-            else if (Gate.Type == 2)
-            {
-                Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 109.5, Canvas.GetTop(Gate.Rect) + 36);
-            }
-            //every other gate
-            else
-            {
-                Change_X1_Y1(Canvas.GetLeft(Gate.Rect) + 115, Canvas.GetTop(Gate.Rect) + 35.7);
-            }
+            double[] hold = _MainWind.Link_Output_Aline(Gate, Output_Num);
+            Change_X1_Y1(hold[0], hold[1]);
         }
-
     }
 }

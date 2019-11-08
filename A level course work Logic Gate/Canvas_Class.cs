@@ -41,6 +41,14 @@ namespace A_level_course_work_Logic_Gate
         //Move canvas event
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            int hold = Rect_detection(0, 0, -1);
+            if (hold != _MainWind.Last_ID_For_Rect && hold !=-1)
+            {
+                _MainWind.Last_ID_For_Rect = hold;
+                _MainWind.Gate_List[hold].Output_Rect_Status(hold);
+            }
+
+
             if (MovingCanvas)
             {
                 Translate_Action.X += (e.GetPosition(this).X - Old_Pos.X);
@@ -106,7 +114,7 @@ namespace A_level_course_work_Logic_Gate
             {                
                 _MainWind.Linking_ID = detected;
                 _MainWind.Drag_Num = _MainWind.Line_List.Count();
-                _MainWind.Line_List.Add(new Line_Class(detected,this));
+                _MainWind.Line_List.Add(new Line_Class(detected,_MainWind));
                 _MainWind.Line_List.Last().Track_Mouse();
                 _MainWind.Line_List.Last().Input_ID=detected;
                 _MainWind.Line_List.Last().Output_Num = Link_Output_Vaildation(detected);
@@ -115,7 +123,7 @@ namespace A_level_course_work_Logic_Gate
                 {
                     _MainWind.Drag_Mode = Drag_State.Link_Mode_Sub;
                     _MainWind.Gate_List[detected].Output[_MainWind.Line_List.Last().Output_Num].Line_ID = _MainWind.Drag_Num;
-                    _MainWind.Line_List[_MainWind.Drag_Num].Link_Output_Aline(_MainWind.Gate_List[detected]);
+                    _MainWind.Line_List[_MainWind.Drag_Num].Link_Output_Aline_Line(_MainWind.Gate_List[detected]);
                 }
                 else
                 {
@@ -154,7 +162,7 @@ namespace A_level_course_work_Logic_Gate
 
                     _MainWind.Line_List[_MainWind.Drag_Num].Input_ID = detection;
                     _MainWind.Line_List[_MainWind.Drag_Num].Input_Num = X;
-                    _MainWind.Line_List[_MainWind.Drag_Num].Link_Input_Aline(_MainWind.Gate_List[detection]);
+                    _MainWind.Line_List[_MainWind.Drag_Num].Link_Input_Aline_Line(_MainWind.Gate_List[detection]);
                     _MainWind.Gate_List[detection].Input[X].Input_Type = IO_Type.Gate;
                     _MainWind.Gate_List[detection].Input[X].Input_ID = _MainWind.Linking_ID;
                     _MainWind.Gate_List[detection].Input[X].Line_ID = _MainWind.Drag_Num;
@@ -283,7 +291,7 @@ namespace A_level_course_work_Logic_Gate
             {
                 if (Pos.Y < GetTop(_MainWind.Gate_List[Clicked].Rect) + 37)
                 {
-                    Input_Slot = 0;
+                    Input_Slot = 0;                    
                 }
                 else
                 {
@@ -296,32 +304,38 @@ namespace A_level_course_work_Logic_Gate
 
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
+            //checks you're not dragging
             if(!_MainWind.Drag)
             {
+                //sees if you acutally right click on something
                 int detection = Rect_detection(0, 0, -1);
                 if (detection!=-1)
-                {
+                { //see which mode of the program you're in because each one will have a different action
                     if(!_MainWind.Link)
-                    {
+                    {    //completely romoves the gate.
                         _MainWind.Gate_List[detection].Alive = false;
-                        _MainWind.Sub_Canvas.Children.Remove(_MainWind.Gate_List[detection].Rect);
-                        for (int i = 0; i < 3; i++)
+                        Children.Remove(_MainWind.Gate_List[detection].Rect);
+                        for (int i = 0; i < 3; i++)  //this is for each output of the gate after it's been removed
                         {
-                            if(_MainWind.Gate_List[detection].Output[i].Output_ID!= -1)
-                            {
+                            if(_MainWind.Gate_List[detection].Output[i].Output_Type == IO_Type.Gate)
+                            { //removes the line "connecting" the 2 gates.
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Output[i].Line_ID].UI_Line);
-                                for (int x = 0; x < 2; x++)
+                                for (int x = 0; x < 2; x++) // this is to determin which input the gate is connected to
                                 {
-                                    if (_MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_ID == detection)
-                                    {
+                                    if (_MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_ID == detection && _MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type == IO_Type.Gate)
+                                    { //changes the state of the gate it's connected to too null so that it can accept another input.
                                         _MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type = IO_Type.Null;
                                     }
                                 }
                             }
+                            else if(_MainWind.Gate_List[detection].Output[i].Output_Type == IO_Type.IO)
+                            {
+                                //remove the ellipses from the canvas in the output_Circle list with the ID in the 
+                            }
                         }
-                        for (int i = 0; i < 2; i++)
+                        for (int i = 0; i < 2; i++) //does the same but for input
                         {
-                            if (_MainWind.Gate_List[detection].Input[i].Input_ID != -1)
+                            if (_MainWind.Gate_List[detection].Input[i].Input_Type == IO_Type.Gate)
                             {
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Input[i].Line_ID].UI_Line);
                                 for (int x = 0; x < 3; x++)
@@ -332,9 +346,13 @@ namespace A_level_course_work_Logic_Gate
                                     }
                                 }
                             }
+                            else if (_MainWind.Gate_List[detection].Input[i].Input_Type == IO_Type.IO)
+                            {
+                                //remove the button from the canvas in the input_button list with the ID in the 
+                            }
                         }
                     }
-                    else if(_MainWind.Link)
+                    else if(_MainWind.Link) //if in linked mode then it should act as tho you're doing the oppersite of adding a connection.
                     {
                         int Output_Num = Output_Slot(detection);
                         if (_MainWind.Gate_List[detection].Output[Output_Num].Output_ID != -1)
@@ -343,11 +361,11 @@ namespace A_level_course_work_Logic_Gate
                             {
                                 if(_MainWind.Gate_List[_MainWind.Gate_List[detection].Output[Output_Num].Output_ID].Input[i].Input_ID==detection)
                                 {
-                                    _MainWind.Gate_List[_MainWind.Gate_List[detection].Output[Output_Num].Output_ID].Input[i].Input_ID = -1;
+                                    _MainWind.Gate_List[_MainWind.Gate_List[detection].Output[Output_Num].Output_ID].Input[i].Input_Type = IO_Type.Null;
                                 }
                             }
-                            _MainWind.Gate_List[detection].Output[Output_Num].Output_ID = -1;
                             _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Output[Output_Num].Line_ID].UI_Line);
+                            _MainWind.Gate_List[detection].Output[Output_Num].Output_Type = IO_Type.Null;
                         }
                     }
 

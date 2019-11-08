@@ -14,12 +14,15 @@ namespace A_level_course_work_Logic_Gate
      
     public partial class MainWindow : Window
     {
+        //delete this varaible after testing!
+        public int Last_ID_For_Rect { get; set; } = -1;
         
         //varaibles that need to be accessed all around the code
         public List<Gate_Class> Gate_List { get; set; } = new List<Gate_Class>();
         public List<Line_Class> Line_List { get; set; } = new List<Line_Class>();
-        public List<Button> Input_Button { get; set; } = new List<Button>();
-        public List<TextBlock> Output_Box { get; set; } = new List<TextBlock>();
+        //make these custom classes
+        public List<Input_Button> Input_Button_List { get; set; } = new List<Input_Button>();
+        public List<Output_Circle> Output_Circle_List { get; set; } = new List<Output_Circle>();
         //program info
         public bool Drag { get; set; } = false;
         public int Drag_Num { get; set; } = 0;
@@ -59,6 +62,7 @@ namespace A_level_course_work_Logic_Gate
             }
         }
         public int Linking_ID { get; set; } = 0;
+        public bool IO_Active { get; set; } = false;
         //UI elements that can't be added in the XAML
         public Canvas_Class Sub_Canvas { get; set; }
         public Rectangle BackGround_Rect { get; set; }
@@ -94,6 +98,7 @@ namespace A_level_course_work_Logic_Gate
         //Whole event for dragging objects in the whole window
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
+
             if(Drag)
             {
                 switch (drag_mode)
@@ -109,23 +114,7 @@ namespace A_level_course_work_Logic_Gate
                         Line_List[Drag_Num].Track_Mouse();
                         break;
                 }
-
-
-
             }
-
-            //if(Drag&&Drag_Mode==Drag_State.Main_Can)
-            //{
-            //    Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Main_Grid));
-            //}
-            //else if(Drag&& Drag_Mode == Drag_State.Sub_Can)
-            //{
-            //    Gate_List[Drag_Num].Rect_Move(Mouse.GetPosition(Sub_Canvas));
-            //}
-            //else if(Drag&& Drag_Mode == Drag_State.Link_Mode_Sub)
-            //{
-            //    Line_List[Drag_Num].Track_Mouse();
-            //}
         }
         //event for cancling dragging in whole window
         private void Main_Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -180,33 +169,123 @@ namespace A_level_course_work_Logic_Gate
 
         private void Input_Output_Button_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < Gate_List.Count; i++)
+            if (IO_Active)
             {
-                if(Gate_List[i].Alive)
+                IO_Active = false;
+            }
+            else
+            {
+                IO_Active = true;
+                for (int i = 0; i < Gate_List.Count; i++)
                 {
-                    if(Gate_List[i].Input[0].Input_Type==IO_Type.Null)
+                    if (Gate_List[i].Alive)
                     {
+                        if (Gate_List[i].Input[0].Input_Type == IO_Type.Null)
+                        {
+                            Input_Assignment(i,0);
+                        }
+                        if (Gate_List[i].Input[1].Input_Type == IO_Type.Null && Gate_List[i].Type != 2 && Gate_List[i].Type != 7)
+                        {
+                            Input_Assignment(i,1);
+                        }
 
-                    }
-                    if (Gate_List[i].Input[1].Input_Type == IO_Type.Null && (Gate_List[i].Type != 2||Gate_List[i].Type != 7))
-                    {
 
-                    }
-
-                    if(Gate_List[i].Output[0].Output_Type== IO_Type.Null)
-                    {
-
-                    }
-                    if(Gate_List[i].Output[1].Output_Type==IO_Type.Null && Gate_List[i].Type!=2)
-                    {
-
-                    }
-                    if (Gate_List[i].Output[2].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
-                    {
-
+                        if (Gate_List[i].Output[0].Output_Type == IO_Type.Null)
+                        {
+                            Output_Assignment(i, 0);
+                        }
+                        if (Gate_List[i].Output[1].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
+                        {
+                            Output_Assignment(i, 1);
+                        }
+                        if (Gate_List[i].Output[2].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
+                        {
+                            Output_Assignment(i, 2);
+                        }
                     }
                 }
             }
         }
+
+        public void Input_Assignment(int i,int Port)
+        {
+            Input_Button_List.Add(new Input_Button(this, i, Port));
+            Input_Button_List.Last().Aline_Box(Gate_List[i]);
+            Gate_List[i].Input[Port].Input_Type = IO_Type.IO;
+            Gate_List[i].Input[Port].Input_ID = Input_Button_List.Count - 1;
+        }
+
+        public void Output_Assignment(int i, int Port)
+        {
+            Output_Circle_List.Add(new Output_Circle(this, i, Port));
+            Output_Circle_List.Last().Aline_Circle(Gate_List[i]);
+            Gate_List[i].Output[Port].Output_Type = IO_Type.IO;
+            Gate_List[i].Output[Port].Output_ID = Output_Circle_List.Count - 1;
+        }
+
+
+
+
+        public double[] Link_Input_Aline(Gate_Class Gate, int Input_Num)
+        {
+            //UI_Line.Stroke = Brushes.Black;
+            //not input is in the center of the gate compare to the other gates
+            if (Gate.Type == 2)
+            {
+                return new double[] {Canvas.GetLeft(Gate.Rect) + 5, Canvas.GetTop(Gate.Rect) + 38 };
+            }
+            //this is similar to the not gate but because it's a sqaure not a rectangle it needed to be moved in the X axis more
+            else if (Gate.Type == 7)
+            {
+                return new double[] { Canvas.GetLeft(Gate.Rect) + 12.5, Canvas.GetTop(Gate.Rect) + 38 };
+            }
+            //the rest all follow the setup for the and gate
+            else
+            {
+                if (Input_Num == 0)
+                {
+                    return new double[] { Canvas.GetLeft(Gate.Rect), Canvas.GetTop(Gate.Rect) + 15 };
+                }
+                //else if not needed here but Input_ID isn't a secure variable type.
+                else if (Input_Num == 1)
+                {
+                    return new double[] { Canvas.GetLeft(Gate.Rect), Canvas.GetTop(Gate.Rect) + 62 };
+                }
+            }
+            return new double[] { -1, -1 };
+
+        }
+
+        public double [] Link_Output_Aline(Gate_Class Gate,int Output_Num)
+        {
+            //special gate class with 3 exit
+            if (Gate.Type == 7)
+            {
+                if (Output_Num == 0)
+                {
+                    return new double[] { Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 23.8 };
+                }
+                else if (Output_Num == 1)
+                {
+                    return new double[] { Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 36 };
+                }
+                else if (Output_Num == 2)
+                {
+                    return new double[] { Canvas.GetLeft(Gate.Rect) + 75, Canvas.GetTop(Gate.Rect) + 51 };
+                }
+            }
+            //not gate
+            else if (Gate.Type == 2)
+            {
+                return new double[] { Canvas.GetLeft(Gate.Rect) + 109.5, Canvas.GetTop(Gate.Rect) + 36 };
+            }
+            //every other gate
+            else
+            {
+                return new double[] { Canvas.GetLeft(Gate.Rect) + 115, Canvas.GetTop(Gate.Rect) + 35.7 };
+            }
+            return new double[] { -1,-1};
+        }
+
     }
 }

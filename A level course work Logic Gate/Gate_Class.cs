@@ -4,6 +4,7 @@ using System.Windows.Shapes;
 using System.Windows;
 using System.Windows.Input;
 using System.Collections.Generic;
+using System;
 
 namespace A_level_course_work_Logic_Gate
 {
@@ -82,19 +83,43 @@ namespace A_level_course_work_Logic_Gate
         {
             for (int i = 0; i < 3; i++)
             {
-                if(Output[i].Output_ID!=-1)
+                if(Output[i].Output_Type == IO_Type.Gate)
                 {
-                    _MainWind.Line_List[Output[i].Line_ID].Link_Output_Aline(this);
+                    _MainWind.Line_List[Output[i].Line_ID].Link_Output_Aline_Line(this);
+                }
+                else if(Output[i].Output_Type == IO_Type.IO)
+                {
+                    _MainWind.Output_Circle_List[Output[i].Output_ID].Aline_Circle(this);
                 }
             }
             for (int i = 0; i < 2; i++)
             {
-                if (Input[i].Input_ID != -1)
+                if (Input[i].Input_Type==IO_Type.Gate)
                 {
-                    _MainWind.Line_List[Input[i].Line_ID].Link_Input_Aline(this);
+                    _MainWind.Line_List[Input[i].Line_ID].Link_Input_Aline_Line(this);
+                }
+                else if(Input[i].Input_Type == IO_Type.IO)
+                {
+                    _MainWind.Input_Button_List[Input[i].Input_ID].Aline_Box(this);
                 }
             }
         }
 
+        //delete
+        public void Output_Rect_Status(int ID)
+        {
+            Console.WriteLine("Rect ID : {0}\nType : {1}\nAlive : {2}\nGate Bit : {3}", ID,Type,Alive,Gate_Bit);
+            Console.WriteLine("\n       Input 0");
+            Input[0].Output_Status();
+            Console.WriteLine("\n       Input 1");
+            Input[1].Output_Status();
+            Console.WriteLine("\n       Output 0");
+            Output[0].Output_Status();
+            Console.WriteLine("\n       Output 1");
+            Output[1].Output_Status();
+            Console.WriteLine("\n       Output 2");
+            Output[2].Output_Status();
+            Console.WriteLine("\n\n\n\n");
+        }
     }
 }

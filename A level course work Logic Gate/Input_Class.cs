@@ -48,5 +48,10 @@ namespace A_level_course_work_Logic_Gate
         {
             Input_Type = IO_Type.Null;
         }
+        //delete
+        public void Output_Status()
+        {
+            Console.WriteLine("Input Bit : {0}\nInput ID : {1}\nInput Type : {2}\nLine ID : {3}", Input_bit, Input_ID, Input_Type, Line_ID);
+        }
     }
 }
