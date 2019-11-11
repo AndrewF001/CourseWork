@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,6 +26,7 @@ namespace A_level_course_work_Logic_Gate
         public List<Output_Circle> Output_Circle_List { get; set; } = new List<Output_Circle>();
         //program info
         public bool Drag { get; set; } = false;
+        public int Delay_Intervals { get; set; } = 1;
         public int Drag_Num { get; set; } = 0;
         private bool _link = false;
         public bool Link
@@ -287,5 +289,63 @@ namespace A_level_course_work_Logic_Gate
             return new double[] { -1,-1};
         }
 
+        private void Delay_Lable_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if(Delay_Lable.Text=="")
+                {
+                    Delay_Intervals = 0;
+                    Delay_Lable.Text = "0";
+                }
+                Delay_Intervals = Convert.ToInt32(Delay_Lable.Text);
+            }
+            catch
+            {
+                Delay_Lable.Text = Convert.ToString(Delay_Intervals);
+            }
+        }
+
+
+
+        /// <summary>
+        ///  This is the main part of the logical part of the program. It's also the simulator that runs with
+        ///  multithreading.
+        /// </summary>
+
+
+
+        private void Run_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void System_Clean_Up(object sender, RoutedEventArgs e)
+        {
+            int i=0;
+            Progress_Bar_Window New_Window = new Progress_Bar_Window(9999, i);
+            Thread Test_Thread = new Thread(() => test_method(New_Window));
+            Test_Thread.Start();
+            Canvas.SetLeft(New_Window, Width / 2);
+            Canvas.SetTop(New_Window, Height / 2);
+            New_Window.ShowDialog();
+            
+
+        }
+        
+        private void test_method(Progress_Bar_Window _New_Window)
+        {
+            for (int i = 0; i < 10000; i++)
+            {
+                _New_Window.Dispatcher.Invoke(() =>
+                {
+                    _New_Window.Bar.Value = i;
+                });
+            }
+            _New_Window.Dispatcher.Invoke(() =>
+            {
+                _New_Window.Close();
+            });
+        }
     }
 }
