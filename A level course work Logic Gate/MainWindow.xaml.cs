@@ -324,7 +324,7 @@ namespace A_level_course_work_Logic_Gate
         {
             int i=0;
             Progress_Bar_Window New_Window = new Progress_Bar_Window(9999, i);
-            Thread Test_Thread = new Thread(() => test_method(New_Window));
+            Thread Test_Thread = new Thread(() => test_method(New_Window,this));
             Test_Thread.Start();
             Canvas.SetLeft(New_Window, Width / 2);
             Canvas.SetTop(New_Window, Height / 2);
@@ -333,10 +333,15 @@ namespace A_level_course_work_Logic_Gate
 
         }
         
-        private void test_method(Progress_Bar_Window _New_Window)
+        private void test_method(Progress_Bar_Window _New_Window,MainWindow _MainWind)
         {
+            List<Gate_Class> _Gate_List = _MainWind.Gate_List;
             for (int i = 0; i < 10000; i++)
             {
+
+
+
+
                 _New_Window.Dispatcher.Invoke(() =>
                 {
                     _New_Window.Bar.Value = i;
@@ -345,6 +350,10 @@ namespace A_level_course_work_Logic_Gate
             _New_Window.Dispatcher.Invoke(() =>
             {
                 _New_Window.Close();
+            });
+            _MainWind.Dispatcher.Invoke(() =>
+            {
+                _MainWind.Gate_List = _Gate_List;
             });
         }
     }
