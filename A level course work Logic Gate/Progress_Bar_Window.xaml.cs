@@ -42,5 +42,8 @@ namespace A_level_course_work_Logic_Gate
             Bar.Maximum = Max;
             Value = _Value;
         }
+
+       
+
     }
 }

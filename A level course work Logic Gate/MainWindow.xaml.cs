@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -69,11 +70,22 @@ namespace A_level_course_work_Logic_Gate
         public Canvas_Class Sub_Canvas { get; set; }
         public Rectangle BackGround_Rect { get; set; }
 
+
+
+
+        private BackgroundWorker _worker = new BackgroundWorker();
+        Progress_Bar_Window New_Window = new Progress_Bar_Window(100, 0);
+
         //code when the program loads up
         public MainWindow()
         {            
-            InitializeComponent();         
+            InitializeComponent();      
+            _worker.DoWork += WorkerDoWork;
+            _worker.RunWorkerCompleted += WorkerRunWorkerCompleted;
         }
+
+
+
 
         private void Canvas_Border_Loaded(object sender, RoutedEventArgs e)
         {            
@@ -320,19 +332,53 @@ namespace A_level_course_work_Logic_Gate
 
         }
 
+
+
+
         private void System_Clean_Up(object sender, RoutedEventArgs e)
         {
+          
+             _worker.RunWorkerAsync();
+            New_Window.ShowDialog();
+
+            /*
             int i=0;
-            Progress_Bar_Window New_Window = new Progress_Bar_Window(9999, i);
+          
             Thread Test_Thread = new Thread(() => test_method(New_Window));
             Test_Thread.Start();
             Canvas.SetLeft(New_Window, Width / 2);
             Canvas.SetTop(New_Window, Height / 2);
             New_Window.ShowDialog();
-            
+            */
 
         }
+
+
+        private void WorkerDoWork(object sender, DoWorkEventArgs e)
+        {
+               
+            for(int i = 0; i < 100; i++){
+                System.Threading.Thread.Sleep(100);
+                
+
+
+
+                Dispatcher.Invoke(() => { New_Window.Value = i; });
+            }
+        }
         
+        private void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            New_Window.Close();
+        }
+
+
+
+
+
+
+
+
         private void test_method(Progress_Bar_Window _New_Window)
         {
             for (int i = 0; i < 10000; i++)
