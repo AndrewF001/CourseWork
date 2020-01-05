@@ -343,8 +343,13 @@ namespace A_level_course_work_Logic_Gate
 
             /*
             int i=0;
+<<<<<<< HEAD
           
             Thread Test_Thread = new Thread(() => test_method(New_Window));
+=======
+            Progress_Bar_Window New_Window = new Progress_Bar_Window(9999, i);
+            Thread Test_Thread = new Thread(() => test_method(New_Window,this));
+>>>>>>> 8b75bbc82eddf790e8fd7fc9a661b0dfd4157be6
             Test_Thread.Start();
             Canvas.SetLeft(New_Window, Width / 2);
             Canvas.SetTop(New_Window, Height / 2);
@@ -367,6 +372,7 @@ namespace A_level_course_work_Logic_Gate
             }
         }
         
+<<<<<<< HEAD
         private void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             New_Window.Close();
@@ -380,9 +386,17 @@ namespace A_level_course_work_Logic_Gate
 
 
         private void test_method(Progress_Bar_Window _New_Window)
+=======
+        private void test_method(Progress_Bar_Window _New_Window,MainWindow _MainWind)
+>>>>>>> 8b75bbc82eddf790e8fd7fc9a661b0dfd4157be6
         {
+            List<Gate_Class> _Gate_List = _MainWind.Gate_List;
             for (int i = 0; i < 10000; i++)
             {
+
+
+
+
                 _New_Window.Dispatcher.Invoke(() =>
                 {
                     _New_Window.Bar.Value = i;
@@ -391,6 +405,10 @@ namespace A_level_course_work_Logic_Gate
             _New_Window.Dispatcher.Invoke(() =>
             {
                 _New_Window.Close();
+            });
+            _MainWind.Dispatcher.Invoke(() =>
+            {
+                _MainWind.Gate_List = _Gate_List;
             });
         }
     }
