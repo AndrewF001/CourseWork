@@ -30,6 +30,7 @@ namespace A_level_course_work_Logic_Gate
         public int Delay_Intervals { get; set; } = 1;
         public int Drag_Num { get; set; } = 0;
         private bool _link = false;
+        private bool Sim_Running { get; set; } = false;
         public bool Link
         { get { return _link; }
             set
@@ -74,7 +75,9 @@ namespace A_level_course_work_Logic_Gate
 
 
         private BackgroundWorker _worker = new BackgroundWorker();
-        Progress_Bar_Window Progress_Window = new Progress_Bar_Window(0);
+        private BackgroundWorker Simulator_Worker = new BackgroundWorker();
+
+        Progress_Bar_Window Progress_Window = new Progress_Bar_Window();
 
         //code when the program loads up
         public MainWindow()
@@ -82,6 +85,10 @@ namespace A_level_course_work_Logic_Gate
             InitializeComponent();
             _worker.DoWork += WorkerDoWork;
             _worker.RunWorkerCompleted += WorkerRunWorkerCompleted;
+
+            Simulator_Worker.DoWork += Simulator_Work;
+            Simulator_Worker.RunWorkerCompleted += Simulator_Terminated;
+
         }
 
 
@@ -329,19 +336,45 @@ namespace A_level_course_work_Logic_Gate
 
         private void Run_Button_Click(object sender, RoutedEventArgs e)
         {
+            if(Sim_Running)
+            {
+                Sim_Running = false;
+                Run_Button.Content = "Run";
+
+            }
+            else
+            {
+                Sim_Running = true;
+                Run_Button.Content = "Stop";
+                Simulator_Worker.RunWorkerAsync();
+            }
+        }
+
+
+        private void Simulator_Work(object sender, DoWorkEventArgs e)
+        {
+            bool Finished = false;
+            while(!Finished && Sim_Running)
+            {
+                
+            }
+        }
+
+        private void Simulator_Terminated(object sender, RunWorkerCompletedEventArgs e)
+        {
 
         }
 
 
 
-
         private void System_Clean_Up(object sender, RoutedEventArgs e)
-        {            
+        {
+            Progress_Window.Bar.Minimum = 0;
+            Progress_Window.Bar.Value = 0;
             Progress_Window.Bar.Maximum = Gate_List.Count();
             _worker.RunWorkerAsync();
             Progress_Window.ShowDialog();
-            Progress_Window = new Progress_Bar_Window(0); 
-
+            Progress_Window = new Progress_Bar_Window(); 
         }
 
 
@@ -349,9 +382,7 @@ namespace A_level_course_work_Logic_Gate
         {
 
             for (int i = 0; i < Gate_List.Count; i++)
-            {
-                Thread.Sleep(1000);
-                // remove any dead rectangles, go through list and lower value by 1, if any values matchs the ID make it null.
+            {                
                 if (!Gate_List[i].Alive)
                 {
                     Gate_List.RemoveAt(i);
@@ -401,40 +432,5 @@ namespace A_level_course_work_Logic_Gate
             Progress_Window.Close();
         }
 
-
-
-
-
-
-
-
-        //private void test_method(Progress_Bar_Window _New_Window)
-        //{
-
-        //}
-
-        //private void test_method(Progress_Bar_Window _New_Window,MainWindow _MainWind)
-        //{
-        //    List<Gate_Class> _Gate_List = _MainWind.Gate_List;
-        //    for (int i = 0; i < 10000; i++)
-        //    {
-
-
-
-
-        //        _New_Window.Dispatcher.Invoke(() =>
-        //        {
-        //            _New_Window.Bar.Value = i;
-        //        });
-        //    }
-        //    _New_Window.Dispatcher.Invoke(() =>
-        //    {
-        //        _New_Window.Close();
-        //    });
-        //    _MainWind.Dispatcher.Invoke(() =>
-        //    {
-        //        _MainWind.Gate_List = _Gate_List;
-        //    });
-        //}
     }
 }
