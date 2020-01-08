@@ -1,0 +1,25 @@
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\bin\Debug\A level course work Logic Gate.exe.config
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\A level course work Logic Gate.csprojResolveAssemblyReference.cache
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Resource\And_Gate_F.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Resource\Nand_Gate_F.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Resource\Nor_Gate_F.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Resource\Not_Gate_F.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Resource\Or_Gate_F.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Resource\Transformer.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Resource\Xnor_Gate_F.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Resource\Xor_Gate_F.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\MainWindow.g.cs
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Progress_Bar_Window.g.cs
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\App.g.cs
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\A level course work Logic Gate_MarkupCompile.cache
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\A level course work Logic Gate_MarkupCompile.lref
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\bin\Debug\A level course work Logic Gate.exe
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\bin\Debug\A level course work Logic Gate.pdb
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\App.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\MainWindow.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\Progress_Bar_Window.baml
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\A level course work Logic Gate.g.resources
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\A_level_course_work_Logic_Gate.Properties.Resources.resources
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\A level course work Logic Gate.csproj.GenerateResource.Cache
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\A level course work Logic Gate.exe
+\\Hds-data\3675$\computer scince\course work\Zip File\CourseWork-master\A level course work Logic Gate\obj\Debug\A level course work Logic Gate.pdb

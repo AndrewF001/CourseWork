@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DrawingBrush x:Key="Or_Gate_L" Stretch="Uniform">
+		<DrawingBrush.Drawing>
+			<DrawingGroup>
+				<DrawingGroup.Children>
+					<GeometryDrawing Geometry="F1 M 44.0241,0.999969L 10.0488,0.999969C 19.8975,0.999969 27.8818,13.2002 27.8818,28.25C 27.8818,43.2997 19.8975,55.5 10.0488,55.5L 43.5437,55.5">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 43.0621,1.0043C 62.8025,1.0043 78.8057,13.2045 78.8057,28.2542C 78.8057,43.304 62.8025,55.5042 43.0621,55.5042">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 1.51669,42.0876L 10.259,42.0876">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2.2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 1.10004,16.7542L 9.84229,16.7542">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2.2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 78.6,27.5876L 87.3423,27.5876">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2.2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 26.0545,16.7542L 9.72116,16.7542">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2.2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 25.8878,42.0876L 10.0545,42.0876">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2.2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Brush="#FF000000" Geometry="F1 M 45.1646,33.5962C 43.8452,33.5962 42.7885,33.1622 41.9948,32.2942C 41.201,31.4261 40.8042,30.2969 40.8042,28.9066C 40.8042,27.4122 41.2087,26.2202 42.0177,25.3306C 42.8267,24.441 43.9277,23.9962 45.3208,23.9962C 46.6056,23.9962 47.6406,24.4281 48.426,25.292C 49.2114,26.1559 49.6041,27.2851 49.6041,28.6795C 49.6041,30.1949 49.2017,31.3931 48.3969,32.2743C 47.592,33.1556 46.5146,33.5962 45.1646,33.5962 Z M 45.2417,24.9295C 44.2819,24.9295 43.5024,25.2858 42.9031,25.9983C 42.3038,26.7108 42.0042,27.6469 42.0042,28.8066C 42.0042,29.9649 42.2961,30.8972 42.8802,31.6035C 43.4642,32.3098 44.2264,32.6629 45.1666,32.6629C 46.1694,32.6629 46.9597,32.3261 47.5375,31.6524C 48.1152,30.9789 48.4041,30.0365 48.4041,28.8254C 48.4041,27.5837 48.1236,26.624 47.5625,25.9462C 47.0014,25.2685 46.2278,24.9295 45.2417,24.9295 Z "/>
+					<GeometryDrawing Brush="#FF000000" Geometry="F1 M 58.1375,33.4629L 56.8354,33.4629L 55.2729,30.8275C 55.123,30.5816 54.9774,30.3726 54.8365,30.2004C 54.6955,30.0282 54.5507,29.8872 54.4021,29.7774C 54.2535,29.6678 54.0941,29.5879 53.924,29.5379C 53.7538,29.4879 53.5611,29.4629 53.3459,29.4629L 52.4042,29.4629L 52.4042,33.4629L 51.3376,33.4629L 51.3376,24.1295L 54.1771,24.1295C 54.5938,24.1295 54.9778,24.1806 55.3292,24.2827C 55.6806,24.3847 55.9857,24.5396 56.2448,24.7473C 56.5038,24.9549 56.7063,25.2136 56.8521,25.5233C 56.998,25.833 57.0708,26.1955 57.0708,26.6108C 57.0708,26.9358 57.0205,27.2337 56.9198,27.5045C 56.8191,27.7754 56.6761,28.0167 56.4906,28.2285C 56.3052,28.4403 56.0819,28.6209 55.8208,28.7702C 55.5597,28.9195 55.266,29.0358 54.9396,29.1191L 54.9396,29.1441C 55.1021,29.2136 55.2434,29.2928 55.3636,29.3816C 55.4837,29.4705 55.5979,29.5761 55.7063,29.6983C 55.8146,29.8205 55.9223,29.9587 56.0292,30.1129C 56.1361,30.2671 56.2549,30.4462 56.3854,30.6504L 58.1375,33.4629 Z M 52.4042,25.0629L 52.4042,28.5296L 53.925,28.5296C 54.2042,28.5296 54.4629,28.4872 54.7011,28.4024C 54.9392,28.3177 55.1448,28.1966 55.3177,28.0389C 55.4906,27.8813 55.6261,27.6882 55.724,27.4597C 55.8219,27.2313 55.8709,26.9747 55.8709,26.69C 55.8709,26.1789 55.7052,25.7799 55.374,25.4931C 55.0428,25.2063 54.5639,25.0629 53.9375,25.0629L 52.4042,25.0629 Z "/>
+				</DrawingGroup.Children>
+			</DrawingGroup>
+		</DrawingBrush.Drawing>
+	</DrawingBrush>
+</ResourceDictionary>
