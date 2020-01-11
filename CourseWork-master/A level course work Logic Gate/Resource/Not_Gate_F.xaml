@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DrawingBrush x:Key="Not_Gate_L" Stretch="Uniform">
+		<DrawingBrush.Drawing>
+			<DrawingGroup>
+				<DrawingGroup.Children>
+					<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 72.1677,28.3267L 80.91,28.3267">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2.2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 59.8085,28.2708L 9.29257,1L 9.45117,55.8333L 59.8085,28.2708 Z ">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 65.9711,22.1874C 69.4229,22.1874 72.2211,24.8364 72.2211,28.1041C 72.2211,31.3718 69.4229,34.0208 65.9711,34.0208C 62.5193,34.0208 59.7211,31.3718 59.7211,28.1041C 59.7211,24.8364 62.5193,22.1874 65.9711,22.1874 Z ">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 1.10001,28.3541L 9.84229,28.3541">
+						<GeometryDrawing.Pen>
+							<Pen Thickness="2.2" LineJoin="Round" Brush="#FF000000"/>
+						</GeometryDrawing.Pen>
+					</GeometryDrawing>
+					<GeometryDrawing Brush="#FF000000" Geometry="F1 M 23.1087,32.317L 21.7941,32.317L 16.8712,24.8774C 16.7476,24.6913 16.6455,24.4962 16.5649,24.292L 16.5254,24.292C 16.5587,24.492 16.5753,24.9191 16.5753,25.5733L 16.5753,32.317L 15.5087,32.317L 15.5087,22.9837L 16.9004,22.9837L 21.6899,30.3066C 21.8913,30.6108 22.0205,30.8191 22.0774,30.9316L 22.1045,30.9316C 22.0628,30.6622 22.042,30.2045 22.042,29.5587L 22.042,22.9837L 23.1087,22.9837L 23.1087,32.317 Z "/>
+					<GeometryDrawing Brush="#FF000000" Geometry="F1 M 29.3357,32.4504C 28.0163,32.4504 26.9597,32.0163 26.1659,31.1483C 25.3722,30.2802 24.9753,29.1511 24.9753,27.7608C 24.9753,26.2663 25.3799,25.0743 26.1889,24.1848C 26.9979,23.2952 28.0989,22.8503 29.492,22.8503C 30.7767,22.8503 31.8118,23.2823 32.5972,24.1462C 33.3826,25.0101 33.7753,26.1393 33.7753,27.5337C 33.7753,29.049 33.3729,30.2473 32.568,31.1285C 31.7632,32.0097 30.6858,32.4504 29.3357,32.4504 Z M 29.4128,23.7837C 28.4531,23.7837 27.6736,24.14 27.0743,24.8524C 26.475,25.5649 26.1753,26.501 26.1753,27.6608C 26.1753,28.8191 26.4673,29.7514 27.0514,30.4576C 27.6354,31.1639 28.3976,31.517 29.3378,31.517C 30.3406,31.517 31.1309,31.1802 31.7086,30.5066C 32.2864,29.833 32.5753,28.8906 32.5753,27.6795C 32.5753,26.4379 32.2948,25.4781 31.7336,24.8004C 31.1726,24.1226 30.3989,23.7837 29.4128,23.7837 Z "/>
+					<GeometryDrawing Brush="#FF000000" Geometry="F1 M 40.3087,23.917L 37.642,23.917L 37.642,32.317L 36.5753,32.317L 36.5753,23.917L 33.9087,23.917L 33.9087,22.9837L 40.3087,22.9837L 40.3087,23.917 Z "/>
+				</DrawingGroup.Children>
+			</DrawingGroup>
+		</DrawingBrush.Drawing>
+	</DrawingBrush>
+</ResourceDictionary>
