@@ -66,7 +66,7 @@ namespace A_level_course_work_Logic_Gate
                 case ("Transformer"):
                     Type = 7;
                     //scale factor
-                    Rect.Width = 85;
+                    Rect.Width = 85 * _Scale_Factor ;
                     break;
             }
         }

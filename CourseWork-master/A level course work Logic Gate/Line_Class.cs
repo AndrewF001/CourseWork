@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -9,10 +10,12 @@ namespace A_level_course_work_Logic_Gate
     public class Line_Class
     {
         public Line UI_Line { get; set; } = new Line { StrokeThickness = 4, Stroke = Brushes.Red };
+        public Label Content { get; set; } = new Label { Content = "0", Width = 16, Height = 29, Foreground = Brushes.Black };
         public int Output_ID { get; set; } = -1;
         public int Output_Num { get; set; } = 1; //this should only change if the gate type is the multiple output(type 7)
         public int Input_ID { get; set; } = -1;
         public int Input_Num { get; set; } = -1;
+        public double X1,Y1,  X2,  Y2;
         public MainWindow _MainWind { get; set; }
 
         public Canvas_Class _Sub_Canvas { get; set; }
@@ -21,6 +24,7 @@ namespace A_level_course_work_Logic_Gate
             _MainWind = MainWind;
             _Sub_Canvas = _MainWind.Sub_Canvas;
             _Sub_Canvas.Children.Add(UI_Line);
+            _Sub_Canvas.Children.Add(Content);
             Output_ID = _Output_ID;
         }
 
@@ -29,6 +33,9 @@ namespace A_level_course_work_Logic_Gate
             Point Pos = Mouse.GetPosition(_Sub_Canvas);
             UI_Line.X2 = Pos.X;
             UI_Line.Y2 = Pos.Y;
+            X2 = Pos.X;
+            Y2 = Pos.Y;
+            Move_Label();
         }
 
         public void Change_X1_Y1(double X, double Y)
@@ -42,6 +49,14 @@ namespace A_level_course_work_Logic_Gate
             UI_Line.Y2 = Y;
         }
 
+        public void Move_Label()
+        {
+            double X = (X2 - X1)/2 - 5+X1;
+            double Y = (Y2 - Y1)/2 - 23+Y1;
+            Canvas.SetLeft(Content, X);
+            Canvas.SetTop(Content, Y);
+        }
+
 
         //change this so that the values are generic and then just have it so that the X and Y coords are changed directly and don't need the method to do it.(A lot of work :(
         public void Link_Input_Aline_Line(Gate_Class Gate)
@@ -49,12 +64,18 @@ namespace A_level_course_work_Logic_Gate
             UI_Line.Stroke = Brushes.Black;
             double[] hold = _MainWind.Link_Input_Aline(Gate, Input_Num);
             Change_X2_Y2(hold[0], hold[1]);
+            X2 = hold[0];
+            Y2 = hold[1];
+            Move_Label();
         }
 
         public void Link_Output_Aline_Line(Gate_Class Gate)
         {
             double[] hold = _MainWind.Link_Output_Aline(Gate, Output_Num);
             Change_X1_Y1(hold[0], hold[1]);
+            X1 = hold[0];
+            Y1 = hold[1];
+            Move_Label();
         }
     }
 }

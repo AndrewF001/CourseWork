@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -119,7 +120,10 @@ namespace A_level_course_work_Logic_Gate
         //Whole event for dragging objects in the whole window
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-
+            Console.WriteLine(drag_mode);
+            Console.WriteLine(Drag);
+            Console.WriteLine(Link);
+            Console.WriteLine("\n \n");
             if (Drag)
             {
                 switch (drag_mode)
@@ -193,10 +197,52 @@ namespace A_level_course_work_Logic_Gate
             if (IO_Active)
             {
                 IO_Active = false;
+                for (int i = 0; i < Input_Button_List.Count; i++)
+                {
+                    if (Gate_List[Input_Button_List[i].Input_ID].Input[Input_Button_List[i].Input_Port].Input_Type == IO_Type.IO)
+                    {
+                        Gate_List[Input_Button_List[i].Input_ID].Input[Input_Button_List[i].Input_Port].Input_Type = IO_Type.Null;
+                        Sub_Canvas.Children.Remove(Input_Button_List[i]);
+                    }
+                }
+                for (int i = 0; i < Output_Circle_List.Count; i++)
+                {
+                    if (Gate_List[Output_Circle_List[i].Output_ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.IO)
+                    {
+                        Gate_List[Output_Circle_List[i].Output_ID].Output[Output_Circle_List[i].Output_Port].Output_Type = IO_Type.Null;
+                        Sub_Canvas.Children.Remove(Output_Circle_List[i].Circle);
+                    }
+                }
             }
             else
             {
                 IO_Active = true;
+
+                for (int i = 0; i < Input_Button_List.Count; i++)
+                {
+                    int ID = Input_Button_List[i].Input_ID;
+                    if (Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_Type == IO_Type.Null)
+                    {
+                        Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_Type = IO_Type.IO;
+                        Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_ID = i;
+                        Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_bit = Input_Button_List[i].Bit;
+                        Sub_Canvas.Children.Add(Input_Button_List[i]);
+                        Input_Button_List[i].Aline_Box(Gate_List[Input_Button_List[i].Input_ID]);
+                    }
+
+                }
+                for (int i = 0; i < Output_Circle_List.Count; i++)
+                {
+                    int ID = Output_Circle_List[i].Output_ID;
+                    if (Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.Null)
+                    {
+                        Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type = IO_Type.IO;
+                        Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_ID = i;
+                        Sub_Canvas.Children.Add(Output_Circle_List[i].Circle);
+                        Output_Circle_List[i].Aline_Circle(Gate_List[Output_Circle_List[i].Output_ID]);
+                    }
+                }
+
                 for (int i = 0; i < Gate_List.Count; i++)
                 {
                     if (Gate_List[i].Alive)
@@ -351,12 +397,27 @@ namespace A_level_course_work_Logic_Gate
         }
 
 
-        private void Simulator_Work(object sender, DoWorkEventArgs e)
+        private async void Simulator_Work(object sender, DoWorkEventArgs e)
         {
             bool Finished = false;
+            //error check:
+            //make sure every input and output has a connection
+            
+            
+            // need to make a list of all active Nodes. So at the start I need a loop to find all the active start nodes.
+            
+            
+            //make the rect border red, work out output bit, Change output circle or line to the colour it is.
+            //work out the new list
+            //display the change on the output?
+
+
+
+
             while(!Finished && Sim_Running)
             {
-                
+
+                await(Task.Delay(Delay_Intervals));
             }
         }
 
@@ -409,7 +470,7 @@ namespace A_level_course_work_Logic_Gate
                 {
                     Gate.Input[i].Input_ID -= 1;
                 }
-            }
+            }            
             for (int i = 0; i < 3; i++)
             {
                 if (Gate.Output[i].Output_ID == ID)
