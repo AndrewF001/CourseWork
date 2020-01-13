@@ -120,10 +120,6 @@ namespace A_level_course_work_Logic_Gate
         //Whole event for dragging objects in the whole window
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            Console.WriteLine(drag_mode);
-            Console.WriteLine(Drag);
-            Console.WriteLine(Link);
-            Console.WriteLine("\n \n");
             if (Drag)
             {
                 switch (drag_mode)
@@ -146,36 +142,42 @@ namespace A_level_course_work_Logic_Gate
         {
             if (Drag && !Link)
             {
-                Point Pos_Rect = Mouse.GetPosition(BackGround_Rect);
-                Point Pos_Border = Mouse.GetPosition(Canvas_Border);
-                Point Pos_Sub = Mouse.GetPosition(Sub_Canvas);
-
-                //checks if it's in side the border and if it's inside the area that is allowed in the border.
-                bool check = (Pos_Rect.X < 0 || Pos_Rect.X > 4000 || Pos_Rect.Y < 0 || Pos_Rect.Y > 4000) ||
-                   (Pos_Border.X < 0 || Pos_Border.X > Canvas_Border.ActualWidth || Pos_Border.Y < 0 || Pos_Border.Y > Canvas_Border.ActualHeight)
-                   || (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) ? false : true;
-
-
-                //if (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) check = false;
-
-
-
-                Main_Canvas.Children.Remove(Gate_List[Drag_Num].Rect);
-                Drag_Mode = Drag_State.Null;
-                if (check)
-                {
-                    Gate_List[Drag_Num].Rect.Width = Gate_List[Drag_Num].Rect.Width / Sub_Canvas.Scale_Factor;
-                    Gate_List[Drag_Num].Rect.Height = Gate_List[Drag_Num].Rect.Height / Sub_Canvas.Scale_Factor;
-                    Sub_Canvas.Children.Add(Gate_List[Drag_Num].Rect);
-                    Gate_List[Drag_Num].Rect_Move(Pos_Sub);
-                }
-                else
-                {
-                    Gate_List.RemoveAt(Drag_Num);
-                }
-
+                Add_Rect_Sub_FIX_BUG();
             }
         }
+
+        public void Add_Rect_Sub_FIX_BUG()
+        {
+            Point Pos_Rect = Mouse.GetPosition(BackGround_Rect);
+            Point Pos_Border = Mouse.GetPosition(Canvas_Border);
+            Point Pos_Sub = Mouse.GetPosition(Sub_Canvas);
+
+            //checks if it's in side the border and if it's inside the area that is allowed in the border.
+            bool check = (Pos_Rect.X < 0 || Pos_Rect.X > 4000 || Pos_Rect.Y < 0 || Pos_Rect.Y > 4000) ||
+               (Pos_Border.X < 0 || Pos_Border.X > Canvas_Border.ActualWidth || Pos_Border.Y < 0 || Pos_Border.Y > Canvas_Border.ActualHeight)
+               || (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) ? false : true;
+
+
+            //if (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) check = false;
+
+
+
+            Main_Canvas.Children.Remove(Gate_List[Drag_Num].Rect);
+            Drag_Mode = Drag_State.Null;
+            if (check)
+            {
+                Gate_List[Drag_Num].Rect.Width = Gate_List[Drag_Num].Rect.Width / Sub_Canvas.Scale_Factor;
+                Gate_List[Drag_Num].Rect.Height = Gate_List[Drag_Num].Rect.Height / Sub_Canvas.Scale_Factor;
+                Sub_Canvas.Children.Add(Gate_List[Drag_Num].Rect);
+                Gate_List[Drag_Num].Rect_Move(Pos_Sub);
+            }
+            else
+            {
+                Gate_List.RemoveAt(Drag_Num);
+            }
+
+        }
+
         //Flip between the 2 states of the program
         private void Link_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -402,20 +404,27 @@ namespace A_level_course_work_Logic_Gate
             bool Finished = false;
             //error check:
             //make sure every input and output has a connection
-            
-            
+
+
             // need to make a list of all active Nodes. So at the start I need a loop to find all the active start nodes.
-            
-            
+            for (int i = 0; i < Input_Button_List.Count; i++)
+            {
+                if (Gate_List[Input_Button_List[i].Input_ID].Alive)
+                {
+
+                }
+            }
             //make the rect border red, work out output bit, Change output circle or line to the colour it is.
             //work out the new list
             //display the change on the output?
-
-
-
+            
 
             while(!Finished && Sim_Running)
             {
+
+
+
+                
 
                 await(Task.Delay(Delay_Intervals));
             }
@@ -430,18 +439,20 @@ namespace A_level_course_work_Logic_Gate
 
         private void System_Clean_Up(object sender, RoutedEventArgs e)
         {
+            Progress_Window = new Progress_Bar_Window();
             Progress_Window.Bar.Minimum = 0;
             Progress_Window.Bar.Value = 0;
             Progress_Window.Bar.Maximum = Gate_List.Count();
             _worker.RunWorkerAsync();
             Progress_Window.ShowDialog();
-            Progress_Window = new Progress_Bar_Window(); 
         }
 
 
         private void WorkerDoWork(object sender, DoWorkEventArgs e)
-        {
+        {         
 
+
+            //removes dead gates
             for (int i = 0; i < Gate_List.Count; i++)
             {                
                 if (!Gate_List[i].Alive)

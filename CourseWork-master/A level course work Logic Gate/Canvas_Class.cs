@@ -128,6 +128,7 @@ namespace A_level_course_work_Logic_Gate
                 else
                 {
                     Children.Remove(_MainWind.Line_List[_MainWind.Drag_Num].UI_Line);
+                    Children.Remove(_MainWind.Line_List[_MainWind.Drag_Num].Content);
                     _MainWind.Line_List.RemoveAt(_MainWind.Drag_Num);
                 }
 
@@ -137,6 +138,11 @@ namespace A_level_course_work_Logic_Gate
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             MovingCanvas = false;
+            if(_MainWind.Drag && !_MainWind.Link && _MainWind.Drag_Mode == Drag_State.Main_Can)
+            {
+                _MainWind.Add_Rect_Sub_FIX_BUG();
+            }
+
             if (_MainWind.Drag && !_MainWind.Link)
             {
                 _MainWind.Drag_Mode = Drag_State.Null;
@@ -322,6 +328,7 @@ namespace A_level_course_work_Logic_Gate
                             { //removes the line "connecting" the 2 gates.
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Output[i].Line_ID].UI_Line);
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Output[i].Line_ID].Content);
+                                _MainWind.Line_List.RemoveAt(_MainWind.Gate_List[detection].Output[i].Line_ID);
                                 for (int x = 0; x < 2; x++) // this is to determin which input the gate is connected to
                                 {
                                     if (_MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_ID == detection && _MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type == IO_Type.Gate)
@@ -341,6 +348,7 @@ namespace A_level_course_work_Logic_Gate
                             {
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Input[i].Line_ID].UI_Line);
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Input[i].Line_ID].Content);
+                                _MainWind.Line_List.RemoveAt(_MainWind.Gate_List[detection].Input[i].Line_ID);
                                 for (int x = 0; x < 3; x++)
                                 {
                                     if (_MainWind.Gate_List[_MainWind.Gate_List[detection].Input[i].Input_ID].Output[x].Output_ID == detection)
