@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Progress_Bar_Window" WindowStyle="None" Height="188.943" Width="248.187" Loaded="Window_Loaded">
     <Grid>
-        <ProgressBar Name="Bar" Minimum="0"  HorizontalAlignment="Left" Height="18" Margin="67,72,0,0" VerticalAlignment="Top" Width="106"/>
+        <ProgressBar Name="Bar" Minimum="0"  HorizontalAlignment="Left" Height="18" Margin="67,72,0,0" VerticalAlignment="Top" Width="106" Maximum="1"/>
         <TextBlock Text="Reorganizing logic gates and UI Elements" TextWrapping="Wrap" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" Width="221" Height="21"/>
 
     </Grid>

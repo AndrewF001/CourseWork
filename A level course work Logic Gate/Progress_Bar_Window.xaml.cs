@@ -19,7 +19,6 @@ namespace A_level_course_work_Logic_Gate
     /// </summary>
     public partial class Progress_Bar_Window : Window
     {
-        public int Max { get; set; } = 0;
         public int Value
         {
             set
@@ -27,20 +26,17 @@ namespace A_level_course_work_Logic_Gate
                 Bar.Value = value;
             }
         }
-        public int _Value;
 
 
-        public Progress_Bar_Window(int _Max, int value)
+        public Progress_Bar_Window()
         {
-            _Value = value;
-            Max = _Max;            
+         
             InitializeComponent();
         }        
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Bar.Maximum = Max;
-            Value = _Value;
+            Bar.Maximum = 0;
         }
 
        

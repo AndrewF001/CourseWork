@@ -11,7 +11,14 @@ namespace A_level_course_work_Logic_Gate
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
+    /// 
+
     public partial class App : Application
     {
+        public App()
+        {
+            //ShutdownMode = ShutdownMode.OnExplicitShutdown;
+        }
     }
+
 }

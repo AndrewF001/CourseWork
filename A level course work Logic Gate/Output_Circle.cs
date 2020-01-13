@@ -11,7 +11,7 @@ namespace A_level_course_work_Logic_Gate
 {
     public class Output_Circle
     {
-        private Ellipse Circle = new Ellipse { Height = 20, Width = 20, Fill = Brushes.Black, Stroke = Brushes.Black, StrokeThickness = 1 };
+        public Ellipse Circle = new Ellipse { Height = 20, Width = 20, Fill = Brushes.Black, Stroke = Brushes.Black, StrokeThickness = 1 };
         private bool _bit = false;
 
         public int Output_ID { get; }

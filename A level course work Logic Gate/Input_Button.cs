@@ -27,7 +27,7 @@ namespace A_level_course_work_Logic_Gate
             Width = 20;
 
         }
-
+        //make this bit depend. So when the bit variable changes so does everything else.
         protected override void OnClick()
         {
             if (!Bit)
@@ -36,12 +36,14 @@ namespace A_level_course_work_Logic_Gate
                 Bit = true;
                 Content = 0;
                 Foreground = Brushes.Black;
+                _MainWind.Gate_List[Input_ID].Input[Input_Port].Input_bit = true;
             }
             else
             {                
                 Background = Brushes.Black;
                 Bit = false;
                 Content = 1;
+                _MainWind.Gate_List[Input_ID].Input[Input_Port].Input_bit = false;
                 Foreground = Brushes.White;
             }
         }
