@@ -218,59 +218,63 @@ namespace A_level_course_work_Logic_Gate
             }
             else
             {
-                IO_Active = true;
+                Add_IO_Method();
+            }
+        }
 
-                for (int i = 0; i < Input_Button_List.Count; i++)
+        private void Add_IO_Method()
+        {
+            IO_Active = true;
+            for (int i = 0; i < Input_Button_List.Count; i++)
+            {
+                int ID = Input_Button_List[i].Input_ID;
+                if (Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_Type == IO_Type.Null)
                 {
-                    int ID = Input_Button_List[i].Input_ID;
-                    if (Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_Type == IO_Type.Null)
-                    {
-                        Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_Type = IO_Type.IO;
-                        Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_ID = i;
-                        Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_bit = Input_Button_List[i].Bit;
-                        Sub_Canvas.Children.Add(Input_Button_List[i]);
-                        Input_Button_List[i].Aline_Box(Gate_List[Input_Button_List[i].Input_ID]);
-                    }
-
-                }
-                for (int i = 0; i < Output_Circle_List.Count; i++)
-                {
-                    int ID = Output_Circle_List[i].Output_ID;
-                    if (Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.Null)
-                    {
-                        Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type = IO_Type.IO;
-                        Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_ID = i;
-                        Sub_Canvas.Children.Add(Output_Circle_List[i].Circle);
-                        Output_Circle_List[i].Aline_Circle(Gate_List[Output_Circle_List[i].Output_ID]);
-                    }
+                    Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_Type = IO_Type.IO;
+                    Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_ID = i;
+                    Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_bit = Input_Button_List[i].Bit;
+                    Sub_Canvas.Children.Add(Input_Button_List[i]);
+                    Input_Button_List[i].Aline_Box(Gate_List[Input_Button_List[i].Input_ID]);
                 }
 
-                for (int i = 0; i < Gate_List.Count; i++)
+            }
+            for (int i = 0; i < Output_Circle_List.Count; i++)
+            {
+                int ID = Output_Circle_List[i].Output_ID;
+                if (Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.Null)
                 {
-                    if (Gate_List[i].Alive)
+                    Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type = IO_Type.IO;
+                    Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_ID = i;
+                    Sub_Canvas.Children.Add(Output_Circle_List[i].Circle);
+                    Output_Circle_List[i].Aline_Circle(Gate_List[Output_Circle_List[i].Output_ID]);
+                }
+            }
+
+            for (int i = 0; i < Gate_List.Count; i++)
+            {
+                if (Gate_List[i].Alive)
+                {
+                    if (Gate_List[i].Input[0].Input_Type == IO_Type.Null)
                     {
-                        if (Gate_List[i].Input[0].Input_Type == IO_Type.Null)
-                        {
-                            Input_Assignment(i, 0);
-                        }
-                        if (Gate_List[i].Input[1].Input_Type == IO_Type.Null && Gate_List[i].Type != 2 && Gate_List[i].Type != 7)
-                        {
-                            Input_Assignment(i, 1);
-                        }
+                        Input_Assignment(i, 0);
+                    }
+                    if (Gate_List[i].Input[1].Input_Type == IO_Type.Null && Gate_List[i].Type != 2 && Gate_List[i].Type != 7)
+                    {
+                        Input_Assignment(i, 1);
+                    }
 
 
-                        if (Gate_List[i].Output[0].Output_Type == IO_Type.Null)
-                        {
-                            Output_Assignment(i, 0);
-                        }
-                        if (Gate_List[i].Output[1].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
-                        {
-                            Output_Assignment(i, 1);
-                        }
-                        if (Gate_List[i].Output[2].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
-                        {
-                            Output_Assignment(i, 2);
-                        }
+                    if (Gate_List[i].Output[0].Output_Type == IO_Type.Null)
+                    {
+                        Output_Assignment(i, 0);
+                    }
+                    if (Gate_List[i].Output[1].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
+                    {
+                        Output_Assignment(i, 1);
+                    }
+                    if (Gate_List[i].Output[2].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
+                    {
+                        Output_Assignment(i, 2);
                     }
                 }
             }
@@ -394,6 +398,8 @@ namespace A_level_course_work_Logic_Gate
             {
                 Sim_Running = true;
                 Run_Button.Content = "Stop";
+                Clean_Up_Method();
+                Add_IO_Method();
                 Simulator_Worker.RunWorkerAsync();
             }
         }
@@ -402,16 +408,31 @@ namespace A_level_course_work_Logic_Gate
         private async void Simulator_Work(object sender, DoWorkEventArgs e)
         {
             bool Finished = false;
-            //error check:
-            //make sure every input and output has a connection
 
+            List<int> Active_Gates = new List<int>();
 
             // need to make a list of all active Nodes. So at the start I need a loop to find all the active start nodes.
             for (int i = 0; i < Input_Button_List.Count; i++)
             {
                 if (Gate_List[Input_Button_List[i].Input_ID].Alive)
                 {
-
+                    Active_Gates.Add(Input_Button_List[i].Input_ID);
+                }
+            }
+            for (int i = 0; i < Active_Gates.Count-1; i++)
+            {
+                bool OverLap = false;
+                for (int x = i+1; x < Active_Gates.Count; x++)
+                {
+                    if(Active_Gates[x]==Active_Gates[i])
+                    {
+                        OverLap = true;
+                    }
+                }
+                if (OverLap)
+                {
+                    Active_Gates.RemoveAt(i);
+                    i -= 1;
                 }
             }
             //make the rect border red, work out output bit, Change output circle or line to the colour it is.
@@ -421,12 +442,39 @@ namespace A_level_course_work_Logic_Gate
 
             while(!Finished && Sim_Running)
             {
+                List<int> Next_Gate = new List<int>();
 
 
 
-                
 
-                await(Task.Delay(Delay_Intervals));
+
+
+
+
+
+                //Dispatcher.Invoke(() => { Progress_Window.Value = i; });
+                for (int i = 0; i < Next_Gate.Count - 1; i++)
+                {
+                    bool OverLap = false;
+                    for (int x = i + 1; x < Next_Gate.Count; x++)
+                    {
+                        if (Next_Gate[x] == Next_Gate[i])
+                        {
+                            OverLap = true;
+                        }
+                    }
+                    if (OverLap)
+                    {
+                        Next_Gate.RemoveAt(i);
+                        i -= 1;
+                    }
+                }
+                Active_Gates = Next_Gate;
+                if(Active_Gates.Count==0)
+                {
+                    Finished = true;
+                }
+                await (Task.Delay(Delay_Intervals));
             }
         }
 
@@ -439,6 +487,11 @@ namespace A_level_course_work_Logic_Gate
 
         private void System_Clean_Up(object sender, RoutedEventArgs e)
         {
+            Clean_Up_Method();
+        }
+
+        public void Clean_Up_Method()
+        {
             Progress_Window = new Progress_Bar_Window();
             Progress_Window.Bar.Minimum = 0;
             Progress_Window.Bar.Value = 0;
@@ -447,17 +500,50 @@ namespace A_level_course_work_Logic_Gate
             Progress_Window.ShowDialog();
         }
 
-
         private void WorkerDoWork(object sender, DoWorkEventArgs e)
-        {         
+        {
+            //remove unused input and output
+            for (int i = 0; i < Output_Circle_List.Count; i++)
+            {
+                if (Gate_List[Output_Circle_List[i].Output_ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.Gate || Gate_List[Output_Circle_List[i].Output_ID].Alive == false)
+                {                    
+                    Output_Circle_List.RemoveAt(i);
+                    i -= 1;
+                }
+            }
+            for (int i = 0; i < Line_List.Count; i++)
+            {
+                if (Gate_List[Line_List[i].Input_ID].Input[Line_List[i].Input_Num].Input_Type != IO_Type.Gate || Gate_List[Line_List[i].Input_ID].Alive == false)
+                {
+                    Line_List.RemoveAt(i);
+                    i -= 1;
+                }
+                for (int x = 0; x < Gate_List.Count; x++)
+                {
+                    for (int y = 0; y < 3; y++)
+                    {
+                        if(Gate_List[x].Output[y].Output_ID>i)
+                        {
+                            Gate_List[x].Output[y].Output_ID -= 1;
+                        }
+                    }
+                    for (int z = 0; z < 2; z++)
+                    {
+                        if (Gate_List[x].Input[z].Input_ID > i)
+                        {
+                            Gate_List[x].Input[z].Input_ID -= 1;
+                        }
+                    }
 
-
+                }
+            }
             //removes dead gates
             for (int i = 0; i < Gate_List.Count; i++)
             {                
                 if (!Gate_List[i].Alive)
                 {
                     Gate_List.RemoveAt(i);
+                    i -= 1;
                     for (int x = 0; x < Gate_List.Count; x++)
                     {
                         ShiftGate(i, Gate_List[x]);

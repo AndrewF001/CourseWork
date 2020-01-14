@@ -316,7 +316,8 @@ namespace A_level_course_work_Logic_Gate
             {
                 //sees if you acutally right click on something
                 int detection = Rect_detection(0, 0, -1);
-                if (detection!=-1)
+                //int[] Line_ID_Remove = { -1, -1, -1,-1,-1 };
+                if (detection != -1)
                 { //see which mode of the program you're in because each one will have a different action
                     if(!_MainWind.Link)
                     {    //completely romoves the gate.
@@ -328,7 +329,6 @@ namespace A_level_course_work_Logic_Gate
                             { //removes the line "connecting" the 2 gates.
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Output[i].Line_ID].UI_Line);
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Output[i].Line_ID].Content);
-                                _MainWind.Line_List.RemoveAt(_MainWind.Gate_List[detection].Output[i].Line_ID);
                                 for (int x = 0; x < 2; x++) // this is to determin which input the gate is connected to
                                 {
                                     if (_MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_ID == detection && _MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type == IO_Type.Gate)
@@ -336,9 +336,11 @@ namespace A_level_course_work_Logic_Gate
                                         _MainWind.Gate_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type = IO_Type.Null;
                                     }
                                 }
+                                _MainWind.Gate_List[detection].Output[i].Output_Type = IO_Type.Null;
                             }
                             else if(_MainWind.Gate_List[detection].Output[i].Output_Type == IO_Type.IO)
                             {
+                                _MainWind.Sub_Canvas.Children.Remove(_MainWind.Output_Circle_List[_MainWind.Gate_List[detection].Output[i].Output_ID].Circle);                                
                                 //remove the ellipses from the canvas in the output_Circle list with the ID in the 
                             }
                         }
@@ -348,7 +350,8 @@ namespace A_level_course_work_Logic_Gate
                             {
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Input[i].Line_ID].UI_Line);
                                 _MainWind.Sub_Canvas.Children.Remove(_MainWind.Line_List[_MainWind.Gate_List[detection].Input[i].Line_ID].Content);
-                                _MainWind.Line_List.RemoveAt(_MainWind.Gate_List[detection].Input[i].Line_ID);
+                                //Line_ID_Remove[i+3] = _MainWind.Gate_List[detection].Input[i].Line_ID;
+                                //_MainWind.Line_List.RemoveAt(_MainWind.Gate_List[detection].Input[i].Line_ID);
                                 for (int x = 0; x < 3; x++)
                                 {
                                     if (_MainWind.Gate_List[_MainWind.Gate_List[detection].Input[i].Input_ID].Output[x].Output_ID == detection)
@@ -359,7 +362,7 @@ namespace A_level_course_work_Logic_Gate
                             }
                             else if (_MainWind.Gate_List[detection].Input[i].Input_Type == IO_Type.IO)
                             {
-                                //remove the button from the canvas in the input_button list with the ID in the 
+                                _MainWind.Sub_Canvas.Children.Remove(_MainWind.Input_Button_List[_MainWind.Gate_List[detection].Input[i].Input_ID]);
                             }
                         }
                     }

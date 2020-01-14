@@ -68,6 +68,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Canvas_Class.cs" />
+    <Compile Include="Gate_SubClasses.cs" />
     <Compile Include="Output_Circle.cs" />
     <Compile Include="Input_Button.cs" />
     <Compile Include="Input_Class.cs" />
