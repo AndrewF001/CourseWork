@@ -10,7 +10,7 @@ namespace A_level_course_work_Logic_Gate
     public class Line_Class
     {
         public Line UI_Line { get; set; } = new Line { StrokeThickness = 4, Stroke = Brushes.Red };
-        public Label Content { get; set; } = new Label { Content = "0", Width = 16, Height = 29, Foreground = Brushes.Black };
+        public Label Line_Lable { get; set; } = new Label { Content = "0", Width = 16, Height = 29, Foreground = Brushes.Black };
         public int Output_ID { get; set; } = -1;
         public int Output_Num { get; set; } = 1; //this should only change if the gate type is the multiple output(type 7)
         public int Input_ID { get; set; } = -1;
@@ -24,7 +24,7 @@ namespace A_level_course_work_Logic_Gate
             _MainWind = MainWind;
             _Sub_Canvas = _MainWind.Sub_Canvas;
             _Sub_Canvas.Children.Add(UI_Line);
-            _Sub_Canvas.Children.Add(Content);
+            _Sub_Canvas.Children.Add(Line_Lable);
             Output_ID = _Output_ID;
         }
 
@@ -53,8 +53,8 @@ namespace A_level_course_work_Logic_Gate
         {
             double X = (X2 - X1)/2 - 5+X1;
             double Y = (Y2 - Y1)/2 - 23+Y1;
-            Canvas.SetLeft(Content, X);
-            Canvas.SetTop(Content, Y);
+            Canvas.SetLeft(Line_Lable, X);
+            Canvas.SetTop(Line_Lable, Y);
         }
 
 

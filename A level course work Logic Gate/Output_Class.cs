@@ -11,6 +11,7 @@ namespace A_level_course_work_Logic_Gate
         private int _output_ID = -1;
         private IO_Type _output_Type = IO_Type.Null;
         private int _line_ID = -1;
+        public int Output_Port { get; set; }
         public int Output_ID {
             get {return _output_ID ; }
             set {_output_ID =value; } }

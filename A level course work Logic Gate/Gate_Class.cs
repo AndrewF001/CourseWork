@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Collections.Generic;
 using System;
+using System.Windows.Threading;
 
 namespace A_level_course_work_Logic_Gate
 {
@@ -22,10 +23,10 @@ namespace A_level_course_work_Logic_Gate
 
         //Gate output Bit
         private bool _Gate_Bit;
-        public bool Gate_Bit {
+        public  bool Gate_Bit {
             get
             { return _Gate_Bit; }
-            set 
+             set 
             {
                 _Gate_Bit = value;
                 for (int i = 0; i < 3; i++)
@@ -39,6 +40,17 @@ namespace A_level_course_work_Logic_Gate
                         else
                         {
                             _MainWind.Output_Circle_List[Output[i].Output_ID].Bit = false;
+                        }
+                    }
+                    else if(Output[i].Output_Type == IO_Type.Gate)
+                    {
+                        if(_Gate_Bit==true)
+                        {
+                            Set_Label_1(i);
+                        }
+                        else
+                        {
+                            Set_Label_0(i); 
                         }
                     }
                 }
@@ -153,6 +165,15 @@ namespace A_level_course_work_Logic_Gate
             Console.WriteLine("\n       Output 2");
             Output[2].Output_Status();
             Console.WriteLine("\n\n\n\n");
+        }
+
+        public async void Set_Label_0(int i)
+        {
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => _MainWind.Line_List[Output[i].Line_ID].Line_Lable.Content = "0"));
+        }
+        public async void Set_Label_1(int i)
+        {
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => _MainWind.Line_List[Output[i].Line_ID].Line_Lable.Content = "1"));
         }
     }
 }

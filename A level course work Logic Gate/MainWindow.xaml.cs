@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace A_level_course_work_Logic_Gate
 {
@@ -88,7 +89,7 @@ namespace A_level_course_work_Logic_Gate
             _worker.RunWorkerCompleted += WorkerRunWorkerCompleted;
 
             Simulator_Worker.DoWork += Simulator_Work;
-            Simulator_Worker.RunWorkerCompleted += Simulator_Terminated;
+            //Simulator_Worker.RunWorkerCompleted += Simulator_Terminated;
 
         }
 
@@ -475,15 +476,21 @@ namespace A_level_course_work_Logic_Gate
             {
                 List<int> Next_Gate = new List<int>();
 
-
-
-
-
-
-
-
-
-                //Dispatcher.Invoke(() => { Progress_Window.Value = i; });
+                for (int i = 0; i < Active_Gates.Count; i++)
+                {
+                    Gate_List[Active_Gates[i]].Gate_Output_Calc();
+                    await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Gate_List[Active_Gates[i]].Rect.Stroke = Brushes.Red));
+                    for (int x = 0; x < 3; x++)
+                    {
+                        if(Gate_List[Active_Gates[i]].Output[x].Output_Type==IO_Type.Gate)
+                        {
+                            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Line_List[Gate_List[Active_Gates[i]].Output[x].Line_ID].UI_Line.Stroke = Brushes.Red));
+                            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Line_List[Gate_List[Active_Gates[i]].Output[x].Line_ID].Line_Lable.Foreground = Brushes.Red));
+                            Gate_List[Line_List[Gate_List[Active_Gates[i]].Output[x].Line_ID].Input_ID].Input[Line_List[Gate_List[Active_Gates[i]].Output[x].Line_ID].Input_Num].Input_bit = Gate_List[Active_Gates[i]].Gate_Bit;
+                            Next_Gate.Add(Line_List[Gate_List[Active_Gates[i]].Output[x].Line_ID].Input_ID);
+                        }
+                    }
+                }
                 for (int i = 0; i < Next_Gate.Count - 1; i++)
                 {
                     bool OverLap = false;
@@ -500,19 +507,41 @@ namespace A_level_course_work_Logic_Gate
                         i -= 1;
                     }
                 }
-                Active_Gates = Next_Gate;
+
+                await Task.Delay(Delay_Intervals);
+
+                for (int i = 0; i < Active_Gates.Count; i++)
+                {
+                    await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Gate_List[Active_Gates[i]].Rect.Stroke = Brushes.Black));
+                    for (int x = 0; x < 3; x++)
+                    {
+                        if (Gate_List[Active_Gates[i]].Output[x].Output_Type == IO_Type.Gate)
+                        {
+                            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Line_List[Gate_List[Active_Gates[i]].Output[x].Line_ID].UI_Line.Stroke = Brushes.Black));
+                            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Line_List[Gate_List[Active_Gates[i]].Output[x].Line_ID].Line_Lable.Foreground = Brushes.Black));
+                        }
+                    }
+                }
+
+                Active_Gates = Next_Gate.ToList();
+                Next_Gate.RemoveRange(0, Next_Gate.Count);
                 if(Active_Gates.Count==0)
                 {
                     Finished = true;
                 }
-                await (Task.Delay(Delay_Intervals));
+                              
             }
+            Sim_Running = false;
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,new Action(() => Run_Button.Content = "Run"));
         }
 
-        private void Simulator_Terminated(object sender, RunWorkerCompletedEventArgs e)
-        {
-
-        }
+//        private void Simulator_Terminated(object sender, RunWorkerCompletedEventArgs e)
+//        {
+//            Sim_Running = false;
+//            Application.Current.Dispatcher.BeginInvoke(
+//DispatcherPriority.Background,
+//new Action(() => Run_Button.Content = "Run"));
+//        }
 
 
 
@@ -542,32 +571,40 @@ namespace A_level_course_work_Logic_Gate
                     i -= 1;
                 }
             }
-            for (int i = 0; i < Line_List.Count; i++)
+            for (int i = 0; i < Input_Button_List.Count; i++)
             {
-                if (Gate_List[Line_List[i].Input_ID].Input[Line_List[i].Input_Num].Input_Type != IO_Type.Gate || Gate_List[Line_List[i].Input_ID].Alive == false)
+                if(!Gate_List[Input_Button_List[i].Input_ID].Alive)
                 {
-                    Line_List.RemoveAt(i);
+                    Input_Button_List.RemoveAt(i);
                     i -= 1;
                 }
-                for (int x = 0; x < Gate_List.Count; x++)
-                {
-                    for (int y = 0; y < 3; y++)
-                    {
-                        if(Gate_List[x].Output[y].Output_ID>i)
-                        {
-                            Gate_List[x].Output[y].Output_ID -= 1;
-                        }
-                    }
-                    for (int z = 0; z < 2; z++)
-                    {
-                        if (Gate_List[x].Input[z].Input_ID > i)
-                        {
-                            Gate_List[x].Input[z].Input_ID -= 1;
-                        }
-                    }
-
-                }
             }
+            //for (int i = 0; i < Line_List.Count; i++)
+            //{
+            //    if (Gate_List[Line_List[i].Input_ID].Input[Line_List[i].Input_Num].Input_Type != IO_Type.Gate || Gate_List[Line_List[i].Input_ID].Alive == false)
+            //    {
+            //        Line_List.RemoveAt(i);
+            //        i -= 1;
+            //    }
+            //    for (int x = 0; x < Gate_List.Count; x++)
+            //    {
+            //        for (int y = 0; y < 3; y++)
+            //        {
+            //            if (Gate_List[x].Output[y].Output_ID > i)
+            //            {
+            //                Gate_List[x].Output[y].Output_ID -= 1;
+            //            }
+            //        }
+            //        for (int z = 0; z < 2; z++)
+            //        {
+            //            if (Gate_List[x].Input[z].Input_ID > i)
+            //            {
+            //                Gate_List[x].Input[z].Input_ID -= 1;
+            //            }
+            //        }
+
+            //    }
+            //}
             //removes dead gates
             for (int i = 0; i < Gate_List.Count; i++)
             {                

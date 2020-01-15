@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace A_level_course_work_Logic_Gate
 {
     public class Output_Circle
     {
-        public Ellipse Circle = new Ellipse { Height = 20, Width = 20, Fill = Brushes.Black, Stroke = Brushes.Black, StrokeThickness = 1 };
+        public Ellipse Circle = new Ellipse { Height = 20, Width = 20, Fill = Brushes.White, Stroke = Brushes.Black, StrokeThickness = 1 };
         private bool _bit = false;
 
         public int Output_ID { get; }
@@ -33,9 +35,9 @@ namespace A_level_course_work_Logic_Gate
             {
                 _bit = value;
                 if (value == false)
-                    Circle.Fill = Brushes.Black;
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Circle.Fill = Brushes.White));                
                 else
-                    Circle.Fill = Brushes.White;
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,new Action(() => Circle.Fill = Brushes.Black));
             }
         }
         public void Set_Coors(double x, double y)
