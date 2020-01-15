@@ -113,8 +113,38 @@ namespace A_level_course_work_Logic_Gate
             if (!Drag && !Link)
             {
                 Drag_Mode = Drag_State.Main_Can;
-                Gate_List.Add(new Gate_Class(Convert.ToString((sender as Rectangle).Tag), this, Sub_Canvas.Scale_Factor));
+                //Gate_List.Add(new Gate_Class(Convert.ToString((sender as Rectangle).Tag), this, Sub_Canvas.Scale_Factor));
+                
+                switch((sender as Rectangle).Tag)
+                {
+                    case "And":
+                        Gate_List.Add(new And_Gate_Class(this,Sub_Canvas.Scale_Factor));
+                        break;
+                    case "Nand":
+                        Gate_List.Add(new Nand_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case "Not":
+                        Gate_List.Add(new Not_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case "Or":
+                        Gate_List.Add(new Or_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case "Nor":
+                        Gate_List.Add(new Nor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case "Xor":
+                        Gate_List.Add(new Xor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case "Xnor":
+                        Gate_List.Add(new Xnor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case "Transformer":
+                        Gate_List.Add(new Transformer_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                }
+
                 Drag_Num = Gate_List.Count() - 1;
+
             }
         }
         //Whole event for dragging objects in the whole window
@@ -228,7 +258,7 @@ namespace A_level_course_work_Logic_Gate
             for (int i = 0; i < Input_Button_List.Count; i++)
             {
                 int ID = Input_Button_List[i].Input_ID;
-                if (Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_Type == IO_Type.Null)
+                if (Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_Type == IO_Type.Null && Gate_List[ID].Alive)
                 {
                     Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_Type = IO_Type.IO;
                     Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_ID = i;
@@ -241,7 +271,7 @@ namespace A_level_course_work_Logic_Gate
             for (int i = 0; i < Output_Circle_List.Count; i++)
             {
                 int ID = Output_Circle_List[i].Output_ID;
-                if (Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.Null)
+                if (Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.Null && Gate_List[ID].Alive)
                 {
                     Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type = IO_Type.IO;
                     Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_ID = i;
@@ -276,6 +306,7 @@ namespace A_level_course_work_Logic_Gate
                     {
                         Output_Assignment(i, 2);
                     }
+                    Gate_List[i].Gate_Output_Calc();
                 }
             }
         }

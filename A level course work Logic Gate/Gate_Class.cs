@@ -8,68 +8,94 @@ using System;
 
 namespace A_level_course_work_Logic_Gate
 {
-    public class Gate_Class
+    public abstract class Gate_Class
     {
-        //public int ID { get; set; }
         public int Type { get; set; }
         public Rectangle Rect { get; set; }
         public bool Alive { get; set; } = true;
-        public MainWindow _MainWind { get; set; }
+        protected MainWindow _MainWind { get; set; }
 
         //data storages for the input and output
 
-        public Input_Class[] Input { get; set; } = new Input_Class[] { new Input_Class(), new Input_Class() }; 
+        public Input_Class[] Input = new Input_Class[] { new Input_Class(), new Input_Class() };
+
 
         //Gate output Bit
-        public bool Gate_Bit { get; set; } = false;
+        private bool _Gate_Bit;
+        public bool Gate_Bit {
+            get
+            { return _Gate_Bit; }
+            set 
+            {
+                _Gate_Bit = value;
+                for (int i = 0; i < 3; i++)
+                {
+                    if(Output[i].Output_Type==IO_Type.IO)
+                    {
+                        if (_Gate_Bit == true)
+                        {
+                            _MainWind.Output_Circle_List[Output[i].Output_ID].Bit = true;
+                        }
+                        else
+                        {
+                            _MainWind.Output_Circle_List[Output[i].Output_ID].Bit = false;
+                        }
+                    }
+                }
+            } 
+        }
 
         public Output_Class[] Output { get; set; } = new Output_Class[] { new Output_Class(), new Output_Class(), new Output_Class() };
 
 
 
-        public Gate_Class(string Tag,MainWindow MainWind,double _Scale_Factor)
+        public Gate_Class(MainWindow MainWind, double _Scale_Factor)
         {
             _MainWind = MainWind;
-            Setup(Tag,_Scale_Factor);
-            _MainWind.Main_Canvas.Children.Add(Rect);
-            Rect_Move(Mouse.GetPosition(MainWind.Main_Grid));
+            //Setup(Tag,_Scale_Factor);
+            //_MainWind.Main_Canvas.Children.Add(Rect);     
+            Gate_Output_Calc();
         }
+
+        public abstract void Gate_Output_Calc();
+
+
         //Basically the constructor
-        public void Setup(string _Tag,double _Scale_Factor)
-        {
-            //scale factor
-            Rect = new Rectangle { Height = 75*_Scale_Factor, Width = 115*_Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources[_Tag] as Brush };
-            //Calc Tag
-            switch(_Tag)
-            {
-                case ("And_Gate_L"):
-                    Type = 0;
-                    break;
-                case ("Nand_Gate_L"):
-                    Type = 1;
-                    break;
-                case ("Not_Gate_L"):
-                    Type = 2;
-                    break;
-                case ("Or_Gate_L"):
-                    Type = 3;
-                    break;
-                case ("Nor_Gate_L"):
-                    Type = 4;
-                    break;
-                case ("Xor_Gate_L"):
-                    Type = 5;
-                    break;
-                case ("Xnor_Gate_L"):
-                    Type = 6;
-                    break;
-                case ("Transformer"):
-                    Type = 7;
-                    //scale factor
-                    Rect.Width = 85 * _Scale_Factor ;
-                    break;
-            }
-        }
+        //public void Setup(string _Tag,double _Scale_Factor)
+        //{
+        //    //scale factor
+        //    Rect = new Rectangle { Height = 75*_Scale_Factor, Width = 115*_Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources[_Tag] as Brush };
+        //    //Calc Tag
+        //    switch(_Tag)
+        //    {
+        //        case ("And_Gate_L"):
+        //            Type = 0;
+        //            break;
+        //        case ("Nand_Gate_L"):
+        //            Type = 1;
+        //            break;
+        //        case ("Not_Gate_L"):
+        //            Type = 2;
+        //            break;
+        //        case ("Or_Gate_L"):
+        //            Type = 3;
+        //            break;
+        //        case ("Nor_Gate_L"):
+        //            Type = 4;
+        //            break;
+        //        case ("Xor_Gate_L"):
+        //            Type = 5;
+        //            break;
+        //        case ("Xnor_Gate_L"):
+        //            Type = 6;
+        //            break;
+        //        case ("Transformer"):
+        //            Type = 7;
+        //            //scale factor
+        //            Rect.Width = 85 * _Scale_Factor ;
+        //            break;
+        //    }
+        //}
 
         //change Rectangle location.
         public void Rect_Move(Point Pos)
@@ -78,6 +104,13 @@ namespace A_level_course_work_Logic_Gate
             Canvas.SetTop(Rect, Pos.Y);
         }
 
+        public void Border_Change()
+        {
+            if (Rect.Stroke == Brushes.Red)
+                Rect.Stroke = Brushes.Black;
+            else if(Rect.Stroke == Brushes.Black)
+                Rect.Stroke = Brushes.Red;
+        }
 
         public void Move_IO()
         {

@@ -369,7 +369,7 @@ namespace A_level_course_work_Logic_Gate
                     else if(_MainWind.Link) //if in linked mode then it should act as tho you're doing the oppersite of adding a connection.
                     {
                         int Output_Num = Output_Slot(detection);
-                        if (_MainWind.Gate_List[detection].Output[Output_Num].Output_ID != -1)
+                        if (_MainWind.Gate_List[detection].Output[Output_Num].Output_ID != -1 && _MainWind.Gate_List[detection].Output[Output_Num].Output_Type==IO_Type.Gate)
                         {
                             for (int i = 0; i < 2; i++)
                             {
