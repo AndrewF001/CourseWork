@@ -21,9 +21,9 @@
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="_File">
                         <MenuItem Header="_New" />
-                        <MenuItem Header="_Open" />
-                        <MenuItem Header="_Save" />
-                        <MenuItem Header="_Save As" />
+                        <MenuItem Header="_Open" Click="MenuItem_Load_Click" />
+                        <MenuItem Header="_Save" Click="MenuItem_Save_Click" />
+                        <MenuItem Header="_Save As" Click="MenuItem_SaveAs_Click" />
                         <Separator />
                         <MenuItem Header="_Exit"  />
                     </MenuItem>

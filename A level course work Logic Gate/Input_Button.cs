@@ -8,6 +8,7 @@ using System.Windows.Media;
 
 namespace A_level_course_work_Logic_Gate
 {
+    [Serializable]
     public class Input_Button : Button
     {
         private bool _Bit = false;

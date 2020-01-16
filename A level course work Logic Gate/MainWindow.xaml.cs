@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,6 +37,8 @@ namespace A_level_course_work_Logic_Gate
         public int Drag_Num { get; set; } = 0;
         private bool _link = false;
         private bool Sim_Running { get; set; } = false;
+        private bool Saved { get; set; } = false;
+        private string File_Location { get; set; } = "";
         public bool Link
         { get { return _link; }
             set
@@ -650,13 +656,86 @@ namespace A_level_course_work_Logic_Gate
             }
         }
 
-
-
-
         private void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Progress_Window.Close();
         }
 
+        [Serializable]
+        public class File_Class
+        {
+            public List<Gate_Class> Gates { get; set; } = new List<Gate_Class>();
+            public List<Line_Class> Lines { get; set; } = new List<Line_Class>();
+            public List<Input_Button> Inputs { get; set; } = new List<Input_Button>();
+            public List<Output_Circle> Output { get; set; } = new List<Output_Circle>();
+                 
+        }
+
+        private void MenuItem_Load_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                openFileDialog.InitialDirectory = @"C:\Documents";
+                File_Location = openFileDialog.FileName;
+                Stream stream = new FileStream(File_Location, FileMode.Open, FileAccess.Read);
+                IFormatter formatter = new BinaryFormatter();
+                File_Class Loaded_File = (File_Class)formatter.Deserialize(stream);
+            }
+        }
+
+        private void MenuItem_SaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            File_Class Save = File_Creation();               
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                //try
+                //{
+                    saveFileDialog.InitialDirectory = @"C:\Documents";
+                File_Location = saveFileDialog.FileName;
+                Save_File(Save);
+                //}
+                //catch
+                //{
+                //    Console.WriteLine("error ocured");
+                //}
+
+            }
+        }
+        public File_Class File_Creation()
+        {
+            File_Class Save = new File_Class();
+            for (int i = 0; i < Gate_List.Count(); i++)
+            {
+                Save.Gates.Add(Gate_List[i]);
+            }
+            for (int i = 0; i < Line_List.Count; i++)
+            {
+                Save.Lines.Add(Line_List[i]);
+            }
+            for (int i = 0; i < Input_Button_List.Count; i++)
+            {
+                Save.Inputs.Add(Input_Button_List[i]);
+            }
+            for (int i = 0; i < Output_Circle_List.Count; i++)
+            {
+                Save.Output.Add(Output_Circle_List[i]);
+            }
+            return Save;
+        }
+
+        private void MenuItem_Save_Click(object sender, RoutedEventArgs e)
+        {
+            File_Class Save = File_Creation();
+            Save_File(Save);
+        }
+        private void Save_File(File_Class Save)
+        {
+            Stream stream = new FileStream(File_Location, FileMode.Create, FileAccess.Write);
+            IFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(stream, Save);
+            stream.Close();
+        }
     }
 }
