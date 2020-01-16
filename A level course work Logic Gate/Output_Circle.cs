@@ -11,7 +11,6 @@ using System.Windows.Threading;
 
 namespace A_level_course_work_Logic_Gate
 {
-    [Serializable]
     public class Output_Circle
     {
         public Ellipse Circle = new Ellipse { Height = 20, Width = 20, Fill = Brushes.White, Stroke = Brushes.Black, StrokeThickness = 1 };

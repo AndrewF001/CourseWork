@@ -8,8 +8,7 @@ using System;
 using System.Windows.Threading;
 
 namespace A_level_course_work_Logic_Gate
-{
-    [Serializable]
+{    
     public abstract class Gate_Class
     {
         public int Type { get; set; }

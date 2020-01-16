@@ -105,8 +105,11 @@ namespace A_level_course_work_Logic_Gate
         private void Canvas_Border_Loaded(object sender, RoutedEventArgs e)
         {
             Sub_Canvas = new Canvas_Class(this);
+            SetUp_Canvas();
+        }
+        public void SetUp_Canvas()
+        {
             Canvas_Border.Child = Sub_Canvas;
-
             BackGround_Rect = new Rectangle { Height = 4000, Width = 4000, Fill = Brushes.White };
             Sub_Canvas.Children.Add(BackGround_Rect);
             Canvas.SetLeft(BackGround_Rect, -1000);
@@ -664,10 +667,10 @@ namespace A_level_course_work_Logic_Gate
         [Serializable]
         public class File_Class
         {
-            public List<Gate_Class> Gates { get; set; } = new List<Gate_Class>();
-            public List<Line_Class> Lines { get; set; } = new List<Line_Class>();
-            public List<Input_Button> Inputs { get; set; } = new List<Input_Button>();
-            public List<Output_Circle> Output { get; set; } = new List<Output_Circle>();
+            public List<File_Version_Gate> Gates { get; set; } = new List<File_Version_Gate>();
+            public List<File_Version_Line> Lines { get; set; } = new List<File_Version_Line>();
+            public List<File_Version_Input> Inputs { get; set; } = new List<File_Version_Input>();
+            public List<File_Version_Output> Output { get; set; } = new List<File_Version_Output>();
                  
         }
 
@@ -686,21 +689,14 @@ namespace A_level_course_work_Logic_Gate
 
         private void MenuItem_SaveAs_Click(object sender, RoutedEventArgs e)
         {
+            Clean_Up_Method();
             File_Class Save = File_Creation();               
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == true)
             {
-                //try
-                //{
-                    saveFileDialog.InitialDirectory = @"C:\Documents";
+                saveFileDialog.InitialDirectory = @"C:\Documents";
                 File_Location = saveFileDialog.FileName;
                 Save_File(Save);
-                //}
-                //catch
-                //{
-                //    Console.WriteLine("error ocured");
-                //}
-
             }
         }
         public File_Class File_Creation()
@@ -708,19 +704,19 @@ namespace A_level_course_work_Logic_Gate
             File_Class Save = new File_Class();
             for (int i = 0; i < Gate_List.Count(); i++)
             {
-                Save.Gates.Add(Gate_List[i]);
+                Save.Gates.Add(new File_Version_Gate(Gate_List[i].Type, Gate_List[i].Alive, Gate_List[i].Input, Gate_List[i].Gate_Bit, Gate_List[i].Output));
             }
             for (int i = 0; i < Line_List.Count; i++)
             {
-                Save.Lines.Add(Line_List[i]);
+                Save.Lines.Add(new File_Version_Line(Convert.ToString(Line_List[i].Line_Lable.Content), Line_List[i].Output_ID, Line_List[i].Output_Num, Line_List[i].Input_ID, Line_List[i].Input_Num, Line_List[i].X1, Line_List[i].X2, Line_List[i].Y1, Line_List[i].Y2));
             }
             for (int i = 0; i < Input_Button_List.Count; i++)
             {
-                Save.Inputs.Add(Input_Button_List[i]);
+                Save.Inputs.Add(new File_Version_Input(Input_Button_List[i].Bit, Input_Button_List[i].Input_ID, Input_Button_List[i].Input_Port));
             }
             for (int i = 0; i < Output_Circle_List.Count; i++)
             {
-                Save.Output.Add(Output_Circle_List[i]);
+                Save.Output.Add(new File_Version_Output(Output_Circle_List[i].Bit, Output_Circle_List[i].Output_ID, Output_Circle_List[i].Output_Port));
             }
             return Save;
         }
@@ -736,6 +732,130 @@ namespace A_level_course_work_Logic_Gate
             IFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, Save);
             stream.Close();
+        }
+        [Serializable]
+        public class File_Version_Gate
+        {
+            public File_Version_Gate(int _Type, bool _Alive,Input_Class[] _Input, bool Gate_Bit, Output_Class[] _Output )
+            {
+                Type = _Type;
+                Alive = _Alive;                
+                _Gate_Bit = Gate_Bit;
+                for (int i = 0; i < 2; i++)
+                {
+                    Input[i] = new File_Version_GI(_Input[i].Input_bit, _Input[i].Input_ID, _Input[i].Input_Type, _Input[i].Line_ID);
+                }
+                for (int i = 0; i < 3; i++)
+                {
+                    Output[i] = new File_Version_GO(_Output[i].Output_ID, _Output[i].Output_Type, _Output[i].Line_ID);
+                }
+            }
+
+            public int Type { get; set; }
+            public bool Alive { get; set; } = true;
+            public File_Version_GI[] Input { get; set; } = new File_Version_GI[2];
+            public bool _Gate_Bit;          
+            public File_Version_GO[] Output { get; set; } = new File_Version_GO[3];
+        }
+        [Serializable]
+        public class File_Version_Line
+        {
+            public File_Version_Line(string Bit, int O_ID, int O_Num, int I_ID, int I_Num, double _X1, double _X2, double _Y1, double _Y2)
+            {
+                Content_Copy = Bit;
+                Output_ID = O_ID;
+                Output_Num = O_Num;
+                Input_ID = I_ID;
+                Input_Num = I_Num;
+                X1 = _X1;
+                X2 = _X2;
+                Y1 = _Y1;
+                Y2 = _Y2;
+            }
+            public string Content_Copy { get; set; }
+            public int Output_ID { get; set; }
+            public int Output_Num { get; set; }
+            public int Input_ID { get; set; }
+            public int Input_Num { get; set; }
+            public double X1, Y1, X2, Y2;
+        }
+        [Serializable]
+        public class File_Version_Input
+        {
+            public File_Version_Input(bool Bit, int I_ID, int I_Port)
+            {
+                _Bit = Bit;
+                Input_ID = I_ID;
+                Input_Port = I_Port;
+            }
+            public bool _Bit = false;
+            public int Input_ID { get; }
+            public int Input_Port;
+        }
+        [Serializable]
+        public class File_Version_Output
+        {
+            public File_Version_Output(bool Bit, int O_ID, int O_Port)
+            {
+                _Bit = Bit;
+                Output_ID = O_ID;
+                Output_Port = O_Port;
+            }
+            public bool _Bit = false;
+            public int Output_ID { get; }
+            public int Output_Port;
+        }
+        [Serializable]
+        public class File_Version_GO
+        {
+            public File_Version_GO(int O_ID, IO_Type O_Type, int L_I)
+            {
+                _output_ID = O_ID;
+                _output_Type = O_Type;
+                _line_ID = L_I;
+            }
+            private int _output_ID = -1;
+            private IO_Type _output_Type = IO_Type.Null;
+            private int _line_ID = -1;
+        }
+        [Serializable]
+        public class File_Version_GI
+        {
+            public File_Version_GI(bool I_B,int I_ID, IO_Type I_Type, int L_I)
+            {
+                _Input_Bit = I_B;
+                _Input_ID = I_ID;
+                _Input_Type = I_Type;
+                _line_ID = L_I;
+            }
+            private bool _Input_Bit;
+            private int _Input_ID = -1;
+            private IO_Type _Input_Type = IO_Type.Null;
+            private int _line_ID = -1;
+        }
+
+        private void MenuItem_New_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want to remove everything? Nothing will be kept!", "New Window", MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                Gate_List = new List<Gate_Class>();
+                Line_List = new List<Line_Class>();
+                Input_Button_List = new List<Input_Button>();
+                Output_Circle_List = new List<Output_Circle>();
+                Drag = false;
+                Delay_Intervals = 1;
+                Drag_Num = 0;
+                _link = false;
+                Sim_Running = false;
+                Saved = false;
+                File_Location = "";
+                drag_mode = Drag_State.Null;
+                Linking_ID = 0;
+                IO_Active = false;
+                Sub_Canvas = new Canvas_Class(this);
+                SetUp_Canvas();
+            }
         }
     }
 }

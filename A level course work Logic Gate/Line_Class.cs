@@ -7,7 +7,6 @@ using System.Windows.Shapes;
 
 namespace A_level_course_work_Logic_Gate
 {
-    [Serializable]
     public class Line_Class
     {
         public Line UI_Line { get; set; } = new Line { StrokeThickness = 4, Stroke = Brushes.Red };
