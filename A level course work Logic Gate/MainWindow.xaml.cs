@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -676,16 +677,125 @@ namespace A_level_course_work_Logic_Gate
 
         private void MenuItem_Load_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
+            bool CarryOn = true;
+            if (File_Location != "")
             {
-                openFileDialog.InitialDirectory = @"C:\Documents";
-                File_Location = openFileDialog.FileName;
-                Stream stream = new FileStream(File_Location, FileMode.Open, FileAccess.Read);
-                IFormatter formatter = new BinaryFormatter();
-                File_Class Loaded_File = (File_Class)formatter.Deserialize(stream);
+                Save_File(File_Creation());
+                Reset_Program();
+                var result = MessageBox.Show("Your work has been saved", "New File", MessageBoxButton.OK);
+            }
+            else
+            {
+                var result = MessageBox.Show("You haven't saved your work, Do you want to delete it?", "New File", MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.OK)
+                {
+                    Reset_Program();
+                }
+                else
+                {
+                    CarryOn = false;
+                }
+            }
+            if (CarryOn)
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    openFileDialog.InitialDirectory = @"C:\Documents";
+                    File_Location = openFileDialog.FileName;
+                    Stream stream = new FileStream(File_Location, FileMode.Open, FileAccess.Read);
+                    IFormatter formatter = new BinaryFormatter();
+                    File_Class Loaded_File = (File_Class)formatter.Deserialize(stream);
+                    File_Unload(Loaded_File);
+                }
+
             }
         }
+
+        public void File_Unload(File_Class Loaded_File)
+        {
+            for (int i = 0; i < Loaded_File.Gates.Count; i++)
+            {
+                switch(Loaded_File.Gates[i].Type)
+                {
+                    case (0):
+                        Gate_List.Add(new And_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case (1):
+                        Gate_List.Add(new Nand_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case (2):
+                        Gate_List.Add(new Not_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case (3):
+                        Gate_List.Add(new Or_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case (4):
+                        Gate_List.Add(new Nor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case (5):
+                        Gate_List.Add(new Xor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case (6):
+                        Gate_List.Add(new Xnor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    case (7):
+                        Gate_List.Add(new Transformer_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                    default:
+                        Gate_List.Add(new And_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        break;
+                }
+                Gate_List.Last().Alive = Loaded_File.Gates[i].Alive;               
+                Gate_List.Last().Gate_Bit = Loaded_File.Gates[i]._Gate_Bit;
+                for (int x = 0; x < 3; x++)
+                {
+                    Gate_List.Last().Output[x].Output_ID = Loaded_File.Gates[i].Output[x]._output_ID;
+                    Gate_List.Last().Output[x].Line_ID = Loaded_File.Gates[i].Output[x]._line_ID;
+                    Gate_List.Last().Output[x].Output_Port = Loaded_File.Gates[i].Output[x]._output_port;
+                    Gate_List.Last().Output[x].Output_Type = Loaded_File.Gates[i].Output[x]._output_Type;
+                }
+                for (int x = 0; x < 2; x++)
+                {
+                    Gate_List.Last().Input[x].Input_ID = Loaded_File.Gates[i].Input[x]._Input_ID;
+                    Gate_List.Last().Input[x].Line_ID = Loaded_File.Gates[i].Input[x]._line_ID;
+                    Gate_List.Last().Input[x].Input_Type = Loaded_File.Gates[i].Input[x]._Input_Type;
+                }
+                Sub_Canvas.Children.Add(Gate_List.Last().Rect);
+                Canvas.SetLeft(Gate_List.Last().Rect, Loaded_File.Gates[i].X);
+                Canvas.SetTop(Gate_List.Last().Rect, Loaded_File.Gates[i].Y);
+            }
+            for (int x = 0; x < Loaded_File.Inputs.Count; x++)
+            {
+                Input_Button_List.Add(new Input_Button(this, Loaded_File.Inputs[x].Input_ID, Loaded_File.Inputs[x].Input_Port));
+                Input_Button_List.Last().Bit = Loaded_File.Inputs[x]._Bit;
+                Sub_Canvas.Children.Add(Input_Button_List.Last());
+                Canvas.SetLeft(Input_Button_List.Last(), Loaded_File.Inputs[x].X);
+                Canvas.SetTop(Input_Button_List.Last(), Loaded_File.Inputs[x].Y);
+            }
+            for (int x = 0; x < Loaded_File.Output.Count; x++)
+            {
+                Output_Circle_List.Add(new Output_Circle(this, Loaded_File.Output[x].Output_ID, Loaded_File.Output[x].Output_Port));
+                Output_Circle_List.Last().Bit = Loaded_File.Output[x]._Bit;
+                Sub_Canvas.Children.Add(Output_Circle_List.Last().Circle);
+                Canvas.SetLeft(Output_Circle_List.Last().Circle, Loaded_File.Output[x].X);
+                Canvas.SetTop(Output_Circle_List.Last().Circle, Loaded_File.Output[x].Y);
+            }
+            for (int x = 0; x < Loaded_File.Lines.Count; x++)
+            {
+                Line_List.Add(new Line_Class(Loaded_File.Lines[x].Output_ID,this));
+                Line_List.Last().Output_Num = Loaded_File.Lines[x].Output_Num;
+                Line_List.Last().Input_ID = Loaded_File.Lines[x].Input_ID;
+                Line_List.Last().Input_Num = Loaded_File.Lines[x].Input_Num;
+                Line_List.Last().Line_Lable.Content = Loaded_File.Lines[x].Content_Copy;
+                Line_List.Last().UI_Line.X1 = Loaded_File.Lines[x].X1;
+                Line_List.Last().UI_Line.X2 = Loaded_File.Lines[x].X2;
+                Line_List.Last().UI_Line.Y1 = Loaded_File.Lines[x].Y1;
+                Line_List.Last().UI_Line.Y2 = Loaded_File.Lines[x].Y2;
+                Line_List.Last().Move_Label();
+            }
+        }
+
 
         private void MenuItem_SaveAs_Click(object sender, RoutedEventArgs e)
         {
@@ -704,7 +814,7 @@ namespace A_level_course_work_Logic_Gate
             File_Class Save = new File_Class();
             for (int i = 0; i < Gate_List.Count(); i++)
             {
-                Save.Gates.Add(new File_Version_Gate(Gate_List[i].Type, Gate_List[i].Alive, Gate_List[i].Input, Gate_List[i].Gate_Bit, Gate_List[i].Output));
+                Save.Gates.Add(new File_Version_Gate(Gate_List[i].Type, Gate_List[i].Alive, Gate_List[i].Input, Gate_List[i].Gate_Bit, Gate_List[i].Output,Canvas.GetLeft(Gate_List[i].Rect), Canvas.GetTop(Gate_List[i].Rect)));
             }
             for (int i = 0; i < Line_List.Count; i++)
             {
@@ -712,11 +822,11 @@ namespace A_level_course_work_Logic_Gate
             }
             for (int i = 0; i < Input_Button_List.Count; i++)
             {
-                Save.Inputs.Add(new File_Version_Input(Input_Button_List[i].Bit, Input_Button_List[i].Input_ID, Input_Button_List[i].Input_Port));
+                Save.Inputs.Add(new File_Version_Input(Input_Button_List[i].Bit, Input_Button_List[i].Input_ID, Input_Button_List[i].Input_Port, Canvas.GetLeft(Input_Button_List[i]), Canvas.GetTop(Input_Button_List[i])));
             }
             for (int i = 0; i < Output_Circle_List.Count; i++)
             {
-                Save.Output.Add(new File_Version_Output(Output_Circle_List[i].Bit, Output_Circle_List[i].Output_ID, Output_Circle_List[i].Output_Port));
+                Save.Output.Add(new File_Version_Output(Output_Circle_List[i].Bit, Output_Circle_List[i].Output_ID, Output_Circle_List[i].Output_Port,Canvas.GetLeft(Output_Circle_List[i].Circle), Canvas.GetTop(Output_Circle_List[i].Circle)));
             }
             return Save;
         }
@@ -728,26 +838,31 @@ namespace A_level_course_work_Logic_Gate
         }
         private void Save_File(File_Class Save)
         {
-            Stream stream = new FileStream(File_Location, FileMode.Create, FileAccess.Write);
-            IFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(stream, Save);
-            stream.Close();
+            if (Saved)
+            {
+                Stream stream = new FileStream(File_Location, FileMode.Create, FileAccess.Write);
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, Save);
+                stream.Close();
+            }
         }
         [Serializable]
         public class File_Version_Gate
         {
-            public File_Version_Gate(int _Type, bool _Alive,Input_Class[] _Input, bool Gate_Bit, Output_Class[] _Output )
+            public File_Version_Gate(int _Type, bool _Alive,Input_Class[] _Input, bool Gate_Bit, Output_Class[] _Output, double x, double y )
             {
                 Type = _Type;
                 Alive = _Alive;                
                 _Gate_Bit = Gate_Bit;
+                X = x;
+                Y = y;
                 for (int i = 0; i < 2; i++)
                 {
                     Input[i] = new File_Version_GI(_Input[i].Input_bit, _Input[i].Input_ID, _Input[i].Input_Type, _Input[i].Line_ID);
                 }
                 for (int i = 0; i < 3; i++)
                 {
-                    Output[i] = new File_Version_GO(_Output[i].Output_ID, _Output[i].Output_Type, _Output[i].Line_ID);
+                    Output[i] = new File_Version_GO(_Output[i].Output_ID, _Output[i].Output_Type, _Output[i].Line_ID,_Output[i].Output_Port);
                 }
             }
 
@@ -756,6 +871,7 @@ namespace A_level_course_work_Logic_Gate
             public File_Version_GI[] Input { get; set; } = new File_Version_GI[2];
             public bool _Gate_Bit;          
             public File_Version_GO[] Output { get; set; } = new File_Version_GO[3];
+            public double X, Y;
         }
         [Serializable]
         public class File_Version_Line
@@ -782,41 +898,50 @@ namespace A_level_course_work_Logic_Gate
         [Serializable]
         public class File_Version_Input
         {
-            public File_Version_Input(bool Bit, int I_ID, int I_Port)
+            public File_Version_Input(bool Bit, int I_ID, int I_Port,double x, double y)
             {
                 _Bit = Bit;
                 Input_ID = I_ID;
                 Input_Port = I_Port;
+                X = x;
+                Y = y;
             }
             public bool _Bit = false;
             public int Input_ID { get; }
             public int Input_Port;
+            public double X, Y;
         }
         [Serializable]
         public class File_Version_Output
         {
-            public File_Version_Output(bool Bit, int O_ID, int O_Port)
+            public File_Version_Output(bool Bit, int O_ID, int O_Port,double x, double y)
             {
                 _Bit = Bit;
                 Output_ID = O_ID;
                 Output_Port = O_Port;
+                X = x;
+                Y = y;
             }
             public bool _Bit = false;
-            public int Output_ID { get; }
+            public int Output_ID;
             public int Output_Port;
+            public double X, Y;
+
         }
         [Serializable]
         public class File_Version_GO
         {
-            public File_Version_GO(int O_ID, IO_Type O_Type, int L_I)
+            public File_Version_GO(int O_ID, IO_Type O_Type, int L_I,int O_P)
             {
                 _output_ID = O_ID;
                 _output_Type = O_Type;
                 _line_ID = L_I;
+                _output_port = O_P;
             }
-            private int _output_ID = -1;
-            private IO_Type _output_Type = IO_Type.Null;
-            private int _line_ID = -1;
+            public int _output_ID = -1;
+            public IO_Type _output_Type = IO_Type.Null;
+            public int _line_ID = -1;
+            public int _output_port;
         }
         [Serializable]
         public class File_Version_GI
@@ -828,10 +953,10 @@ namespace A_level_course_work_Logic_Gate
                 _Input_Type = I_Type;
                 _line_ID = L_I;
             }
-            private bool _Input_Bit;
-            private int _Input_ID = -1;
-            private IO_Type _Input_Type = IO_Type.Null;
-            private int _line_ID = -1;
+            public bool _Input_Bit;
+            public int _Input_ID = -1;
+            public IO_Type _Input_Type = IO_Type.Null;
+            public int _line_ID = -1;
         }
 
         private void MenuItem_New_Click(object sender, RoutedEventArgs e)
@@ -839,23 +964,27 @@ namespace A_level_course_work_Logic_Gate
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want to remove everything? Nothing will be kept!", "New Window", MessageBoxButton.YesNo);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                Gate_List = new List<Gate_Class>();
-                Line_List = new List<Line_Class>();
-                Input_Button_List = new List<Input_Button>();
-                Output_Circle_List = new List<Output_Circle>();
-                Drag = false;
-                Delay_Intervals = 1;
-                Drag_Num = 0;
-                _link = false;
-                Sim_Running = false;
-                Saved = false;
-                File_Location = "";
-                drag_mode = Drag_State.Null;
-                Linking_ID = 0;
-                IO_Active = false;
-                Sub_Canvas = new Canvas_Class(this);
-                SetUp_Canvas();
+                Reset_Program();
             }
+        }
+        private void Reset_Program()
+        {
+            Gate_List = new List<Gate_Class>();
+            Line_List = new List<Line_Class>();
+            Input_Button_List = new List<Input_Button>();
+            Output_Circle_List = new List<Output_Circle>();
+            Drag = false;
+            Delay_Intervals = 1;
+            Drag_Num = 0;
+            _link = false;
+            Sim_Running = false;
+            Saved = false;
+            File_Location = "";
+            drag_mode = Drag_State.Null;
+            Linking_ID = 0;
+            IO_Active = false;
+            Sub_Canvas = new Canvas_Class(this);
+            SetUp_Canvas();
         }
     }
 }
