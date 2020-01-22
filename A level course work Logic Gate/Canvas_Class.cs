@@ -21,25 +21,11 @@ namespace A_level_course_work_Logic_Gate
         public TransformGroup Transforms_Group { get; set; }
 
         public bool MovingCanvas { get; set; } = false;
-        //variables needed to calculate everything
-        //public int _Last_ID_For_Rect { get; set; }
-        //public List<Gate_Class> _Gate_List { get; set; }
         public Border _Canvas_Border { get; set; }
-        //public bool _Drag { get; set; }
-        //public bool _Link { get; set; }
-        //public int _Drag_Num { get; set; }
-        //public Drag_State _Drag_Mode { get; set; }
-        //public int _Linking_ID { get; set; }
-        //List<Line_Class> _Line_List { get; set; }
-        //public List<Output_Circle> _Output_Circle_List { get; set; }
-        //public List<Input_Button> _Input_Button_List { get; set; }
-
 
         public Canvas_Variables variables;
-
         private MainWindow _MainWind { get; }        
 
-        //public Canvas_Class(ref int Last_ID_For_Rect, ref List<Gate_Class> Gate_List, ref Border Canvas_Border, ref bool Drag, ref bool Link, ref int Drag_Num, ref Drag_State Drag_Mode, ref int Linking_ID, ref List<Line_Class> Line_List, ref List<Output_Circle> Output_Circle_List, ref List<Input_Button> Input_Button_List)
        /// <summary>
        /// This intilaises the canvas class
        /// </summary>
@@ -66,7 +52,6 @@ namespace A_level_course_work_Logic_Gate
             if (hold != variables.Last_ID_For_Rect && hold !=-1)
             {
                 variables.Last_ID_For_Rect = hold;
-                variables.Gate_List[hold].Output_Rect_Status(hold);
             }
 
 
@@ -114,8 +99,6 @@ namespace A_level_course_work_Logic_Gate
         {   
             int detected = Rect_detection(0, 0, -1);
 
-            //if(!_drag) then switch
-
             if(!variables.Drag &&detected==-1)
             {
                 Old_Pos = e.GetPosition(this);
@@ -135,10 +118,7 @@ namespace A_level_course_work_Logic_Gate
             {
                 variables.Linking_ID = detected;
                 variables.Drag_Num = variables.Line_List.Count();
-                variables.Line_List.Add(new Line_Class(detected,this,_MainWind));
-                variables.Line_List.Last().Track_Mouse();
-                variables.Line_List.Last().Input_ID=detected;
-                variables.Line_List.Last().Output_Num = Link_Output_Vaildation(detected);
+                variables.Line_List.Add(new Line_Class(detected,this,_MainWind,detected));
                 //if X == -2 then there was no aviable output for the new link to be made(already deleted the last line)
                 if (variables.Line_List.Last().Output_Num != -2)
                 {
@@ -149,9 +129,6 @@ namespace A_level_course_work_Logic_Gate
                 else
                 {
                     variables.Line_List[variables.Drag_Num].Remove_Class();
-                    //Children.Remove(_Line_List[_Drag_Num].UI_Line);
-                    //Children.Remove(_Line_List[_Drag_Num].Line_Lable);
-                    //_Line_List.RemoveAt(_Drag_Num);
                 }
 
             }
@@ -170,8 +147,7 @@ namespace A_level_course_work_Logic_Gate
                 variables.Drag_Mode = Drag_State.Null;
                 if(Rect_detection(variables.Gate_List[variables.Drag_Num].Rect.Width, variables.Gate_List[variables.Drag_Num].Rect.Height, variables.Drag_Num) !=-1)
                 {
-                    SetLeft(variables.Gate_List[variables.Drag_Num].Rect, Old_Rect.X);
-                    SetTop(variables.Gate_List[variables.Drag_Num].Rect,Old_Rect.Y);
+                    variables.Gate_List[variables.Drag_Num].Rect_Move(Old_Rect);
                     variables.Gate_List[variables.Drag_Num].Move_IO();
                 }
             }
@@ -200,9 +176,6 @@ namespace A_level_course_work_Logic_Gate
                 else if(X==-1)
                 {
                     variables.Line_List[variables.Drag_Num].Remove_Class();
-                    //Children.Remove(_Line_List[_Drag_Num].UI_Line);
-                    //Children.Remove(_Line_List[_Drag_Num].Line_Lable);
-                    //_Line_List.RemoveAt(_Drag_Num);
                 }
             }
         }
@@ -234,13 +207,14 @@ namespace A_level_course_work_Logic_Gate
                 //if the above failed then it will enter this if statement
                 if (Output_pos == -2)
                 {
-                    //this will check each output and try and find a available output                    
-                    if(variables.Gate_List[Clicked].Output[0].Output_ID == -1)
-                        Output_pos = 0;
-                    else if (variables.Gate_List[Clicked].Output[1].Output_ID == -1)
-                        Output_pos = 1;
-                    else if (variables.Gate_List[Clicked].Output[2].Output_ID == -1)
-                        Output_pos = 2;
+                    //this will check each output and try and find a available output  
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (variables.Gate_List[Clicked].Output[i].Output_ID == -1)
+                        {
+                            Output_pos = i;
+                        }
+                    }
                 }
             }
             else
@@ -339,7 +313,6 @@ namespace A_level_course_work_Logic_Gate
             {
                 //sees if you acutally right click on something
                 int detection = Rect_detection(0, 0, -1);
-                //int[] Line_ID_Remove = { -1, -1, -1,-1,-1 };
                 if (detection != -1)
                 { //see which mode of the program you're in because each one will have a different action
                     if(!variables.Link)
@@ -351,8 +324,6 @@ namespace A_level_course_work_Logic_Gate
                             if(variables.Gate_List[detection].Output[i].Output_Type == IO_Type.Gate)
                             { //removes the line "connecting" the 2 gates.
                                 variables.Line_List[variables.Gate_List[detection].Output[i].Line_ID].Remove_UI();
-                                //_Sub_Canvas.Children.Remove(_Line_List[_Gate_List[detection].Output[i].Line_ID].UI_Line);
-                                //_Sub_Canvas.Children.Remove(_Line_List[_Gate_List[detection].Output[i].Line_ID].Line_Lable);
                                 for (int x = 0; x < 2; x++) // this is to determin which input the gate is connected to
                                 {
                                     if (variables.Gate_List[variables.Gate_List[detection].Output[i].Output_ID].Input[x].Input_ID == detection && variables.Gate_List[variables.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type == IO_Type.Gate)
@@ -373,10 +344,6 @@ namespace A_level_course_work_Logic_Gate
                             if (variables.Gate_List[detection].Input[i].Input_Type == IO_Type.Gate)
                             {
                                 variables.Line_List[variables.Gate_List[detection].Input[i].Line_ID].Remove_UI();
-                                //_Sub_Canvas.Children.Remove(_Line_List[_Gate_List[detection].Input[i].Line_ID].UI_Line);
-                                //_Sub_Canvas.Children.Remove(_Line_List[_Gate_List[detection].Input[i].Line_ID].Line_Lable);
-                                //Line_ID_Remove[i+3] = _Gate_List[detection].Input[i].Line_ID;
-                                //_Line_List.RemoveAt(_Gate_List[detection].Input[i].Line_ID);
                                 for (int x = 0; x < 3; x++)
                                 {
                                     if (variables.Gate_List[variables.Gate_List[detection].Input[i].Input_ID].Output[x].Output_ID == detection)
@@ -404,8 +371,6 @@ namespace A_level_course_work_Logic_Gate
                                 }
                             }
                             variables.Line_List[variables.Gate_List[detection].Output[Output_Num].Line_ID].Remove_UI();
-                            //_Sub_Canvas.Children.Remove(_Line_List[_Gate_List[detection].Output[Output_Num].Line_ID].UI_Line);
-                            //_Sub_Canvas.Children.Remove(_Line_List[_Gate_List[detection].Output[Output_Num].Line_ID].Line_Lable);
                             variables.Gate_List[detection].Output[Output_Num].Output_Type = IO_Type.Null;
                         }
                     }

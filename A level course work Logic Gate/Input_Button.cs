@@ -15,6 +15,20 @@ namespace A_level_course_work_Logic_Gate
             set
             {
                 _Bit = value;
+                if(!value)
+                {
+                    Content = 0;
+                    Foreground = Brushes.Black;
+                    Background = Brushes.White;
+                    _Gate_List[Input_ID].Input[Input_Port].Input_bit = false;
+                }
+                else
+                {
+                    Background = Brushes.Black;
+                    _Gate_List[Input_ID].Input[Input_Port].Input_bit = true;
+                    Content = 1;
+                    Foreground = Brushes.White;
+                }
                 _Gate_List[Input_ID].Gate_Output_Calc();
             }
         
@@ -35,26 +49,17 @@ namespace A_level_course_work_Logic_Gate
             Foreground = Brushes.Black;
             Height = 20;
             Width = 20;
-
         }
         //make this bit depend. So when the bit variable changes so does everything else.
         protected override void OnClick()
         {
             if (_Bit)
             {
-                Background = Brushes.White;
-                _Gate_List[Input_ID].Input[Input_Port].Input_bit = false;
                 Bit = false;
-                Content = 0;
-                Foreground = Brushes.Black;
             }
             else
             {                
-                Background = Brushes.Black;
-                _Gate_List[Input_ID].Input[Input_Port].Input_bit = true;
                 Bit = true;
-                Content = 1;
-                Foreground = Brushes.White;
             }
         }
 

@@ -21,7 +21,7 @@ namespace A_level_course_work_Logic_Gate
 
         public Canvas_Class _Sub_Canvas { get; set; }
         private MainWindow _MainWind { get; }
-        public Line_Class(int _Output_ID, Canvas_Class Sub_Canvas, MainWindow MainWind)
+        public Line_Class(int _Output_ID, Canvas_Class Sub_Canvas, MainWindow MainWind,int _Input_ID)
         {
             _Sub_Canvas = Sub_Canvas;
             _MainWind = MainWind;
@@ -29,6 +29,9 @@ namespace A_level_course_work_Logic_Gate
             _Sub_Canvas.Children.Add(Line_Lable);
             Output_ID = _Output_ID;
             _Line_List = MainWind.Line_List;
+            Track_Mouse();
+            Input_ID = _Input_ID;
+            _Sub_Canvas.Link_Output_Vaildation(_Input_ID);
         }
 
         public void Track_Mouse()
@@ -59,7 +62,6 @@ namespace A_level_course_work_Logic_Gate
             Canvas.SetLeft(Line_Lable, X);
             Canvas.SetTop(Line_Lable, Y);
         }
-
 
         //change this so that the values are generic and then just have it so that the X and Y coords are changed directly and don't need the method to do it.(A lot of work :(
         public void Link_Input_Aline_Line(Gate_Class Gate)

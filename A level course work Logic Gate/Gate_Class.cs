@@ -14,7 +14,6 @@ namespace A_level_course_work_Logic_Gate
         public int Type { get; set; }
         public Rectangle Rect { get; set; }
         public bool Alive { get; set; } = true;
-        //protected MainWindow _MainWind { get; set; }
 
         //data storages for the input and output
 
@@ -74,44 +73,6 @@ namespace A_level_course_work_Logic_Gate
 
         public abstract void Gate_Output_Calc();
 
-
-        //Basically the constructor
-        //public void Setup(string _Tag,double _Scale_Factor)
-        //{
-        //    //scale factor
-        //    Rect = new Rectangle { Height = 75*_Scale_Factor, Width = 115*_Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources[_Tag] as Brush };
-        //    //Calc Tag
-        //    switch(_Tag)
-        //    {
-        //        case ("And_Gate_L"):
-        //            Type = 0;
-        //            break;
-        //        case ("Nand_Gate_L"):
-        //            Type = 1;
-        //            break;
-        //        case ("Not_Gate_L"):
-        //            Type = 2;
-        //            break;
-        //        case ("Or_Gate_L"):
-        //            Type = 3;
-        //            break;
-        //        case ("Nor_Gate_L"):
-        //            Type = 4;
-        //            break;
-        //        case ("Xor_Gate_L"):
-        //            Type = 5;
-        //            break;
-        //        case ("Xnor_Gate_L"):
-        //            Type = 6;
-        //            break;
-        //        case ("Transformer"):
-        //            Type = 7;
-        //            //scale factor
-        //            Rect.Width = 85 * _Scale_Factor ;
-        //            break;
-        //    }
-        //}
-
         //change Rectangle location.
         public void Rect_Move(Point Pos)
         {
@@ -122,9 +83,13 @@ namespace A_level_course_work_Logic_Gate
         public void Border_Change()
         {
             if (Rect.Stroke == Brushes.Red)
+            {
                 Rect.Stroke = Brushes.Black;
-            else if(Rect.Stroke == Brushes.Black)
+            }
+            else if (Rect.Stroke == Brushes.Black)
+            {
                 Rect.Stroke = Brushes.Red;
+            }
         }
 
         public void Move_IO()
@@ -151,23 +116,6 @@ namespace A_level_course_work_Logic_Gate
                     _Input_Button_List[Input[i].Input_ID].Aline_Box(this);
                 }
             }
-        }
-
-        //delete
-        public void Output_Rect_Status(int ID)
-        {
-            Console.WriteLine("Rect ID : {0}\nType : {1}\nAlive : {2}\nGate Bit : {3}", ID,Type,Alive,Gate_Bit);
-            Console.WriteLine("\n       Input 0");
-            Input[0].Output_Status();
-            Console.WriteLine("\n       Input 1");
-            Input[1].Output_Status();
-            Console.WriteLine("\n       Output 0");
-            Output[0].Output_Status();
-            Console.WriteLine("\n       Output 1");
-            Output[1].Output_Status();
-            Console.WriteLine("\n       Output 2");
-            Output[2].Output_Status();
-            Console.WriteLine("\n\n\n\n");
         }
 
         public async void Set_Label_0(int i)

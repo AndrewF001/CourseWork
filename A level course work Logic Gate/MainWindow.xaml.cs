@@ -706,9 +706,8 @@ namespace A_level_course_work_Logic_Gate
             }
             for (int x = 0; x < Loaded_File.Lines.Count; x++)
             {
-                Line_List.Add(new Line_Class(Loaded_File.Lines[x].Output_ID,Sub_Canvas,this));
+                Line_List.Add(new Line_Class(Loaded_File.Lines[x].Output_ID,Sub_Canvas,this, Loaded_File.Lines[x].Input_ID));
                 Line_List.Last().Output_Num = Loaded_File.Lines[x].Output_Num;
-                Line_List.Last().Input_ID = Loaded_File.Lines[x].Input_ID;
                 Line_List.Last().Input_Num = Loaded_File.Lines[x].Input_Num;
                 Line_List.Last().Line_Lable.Content = Loaded_File.Lines[x].Content_Copy;
                 Line_List.Last().UI_Line.X1 = Loaded_File.Lines[x].X1;
