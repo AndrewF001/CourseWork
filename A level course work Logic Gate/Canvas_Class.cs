@@ -163,7 +163,7 @@ namespace A_level_course_work_Logic_Gate
 
                 if (X!=-1)
                 {
-
+                    //This a block of code that is only done one time and isn't assocaited with each other so making a method wouldn't make a lot of sense but it's a lot of just nothing.
                     variables.Line_List[variables.Drag_Num].Input_ID = detection;
                     variables.Line_List[variables.Drag_Num].Input_Num = X;
                     variables.Line_List[variables.Drag_Num].Link_Input_Aline_Line(variables.Gate_List[detection]);

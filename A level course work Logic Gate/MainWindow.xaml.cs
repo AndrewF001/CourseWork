@@ -82,7 +82,7 @@ namespace A_level_course_work_Logic_Gate
         private BackgroundWorker _worker = new BackgroundWorker();
         private BackgroundWorker Simulator_Worker = new BackgroundWorker();
 
-        Progress_Bar_Window Progress_Window = new Progress_Bar_Window();
+        Progress_Bar_Window Progress_Window = new Progress_Bar_Window(0);
 
         public MainWindow()
         {
@@ -241,7 +241,7 @@ namespace A_level_course_work_Logic_Gate
                     if (Gate_List[Output_Circle_List[i].Output_ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.IO)
                     {
                         Gate_List[Output_Circle_List[i].Output_ID].Output[Output_Circle_List[i].Output_Port].Output_Type = IO_Type.Null;
-                        Sub_Canvas.Children.Remove(Output_Circle_List[i].Circle);
+                        Output_Circle_List[i].Remove_UI();
                     }
                 }
             }
@@ -274,7 +274,7 @@ namespace A_level_course_work_Logic_Gate
                 {
                     Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type = IO_Type.IO;
                     Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_ID = i;
-                    Sub_Canvas.Children.Add(Output_Circle_List[i].Circle);
+                    Output_Circle_List[i].Add_UI();
                     Output_Circle_List[i].Aline_Circle(Gate_List[Output_Circle_List[i].Output_ID]);
                 }
             }
@@ -541,10 +541,7 @@ namespace A_level_course_work_Logic_Gate
 
         public void Clean_Up_Method()
         {
-            Progress_Window = new Progress_Bar_Window();
-            Progress_Window.Bar.Minimum = 0;
-            Progress_Window.Bar.Value = 0;
-            Progress_Window.Bar.Maximum = Gate_List.Count();
+            Progress_Window = new Progress_Bar_Window(Gate_List.Count());
             _worker.RunWorkerAsync();
             Progress_Window.ShowDialog();
         }
