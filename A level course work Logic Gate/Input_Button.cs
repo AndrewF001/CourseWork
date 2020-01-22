@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace A_level_course_work_Logic_Gate
 {
-    public class Input_Button : Button
+    public class Input_Button : Button 
     {
         private bool _Bit = false;
         public bool Bit { get { return _Bit; }
@@ -38,7 +38,7 @@ namespace A_level_course_work_Logic_Gate
         public List<Gate_Class> _Gate_List = new List<Gate_Class>();
         private MainWindow _MainWind { get; set; }
         public Input_Button(int ID, int Port_Num, List<Gate_Class> Gate_List, Canvas_Class Sub_Canvas, MainWindow MainWind)
-        {
+        {            
             _MainWind = MainWind;
             _Gate_List = Gate_List;
             Input_ID = ID;

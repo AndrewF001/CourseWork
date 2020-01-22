@@ -13,7 +13,7 @@ namespace A_level_course_work_Logic_Gate
         public Line UI_Line { get; set; } = new Line { StrokeThickness = 4, Stroke = Brushes.Red };
         public Label Line_Lable { get; set; } = new Label { Content = "0", Width = 16, Height = 29, Foreground = Brushes.Black };
         public int Output_ID { get; set; } = -1;
-        public int Output_Num { get; set; } = 1; //this should only change if the gate type is the multiple output(type 7)
+        public int Output_Num { get; set; } = -1; //this should only change if the gate type is the multiple output(type 7)
         public int Input_ID { get; set; } = -1;
         public int Input_Num { get; set; } = -1;
         public double X1,Y1,  X2,  Y2;
@@ -31,7 +31,7 @@ namespace A_level_course_work_Logic_Gate
             _Line_List = MainWind.Line_List;
             Track_Mouse();
             Input_ID = _Input_ID;
-            _Sub_Canvas.Link_Output_Vaildation(_Input_ID);
+            Output_Num = _Sub_Canvas.Link_Output_Vaildation(_Input_ID);
         }
 
         public void Track_Mouse()
