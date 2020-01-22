@@ -6,12 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -21,7 +19,7 @@ namespace A_level_course_work_Logic_Gate
     public enum Drag_State  { Null,Main_Can,Sub_Can,Link_Mode_Sub}
     public enum IO_Type  { Null, Gate, IO }
 
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, Canvas_Variables
     {
         //delete this varaible after testing!
         public int Last_ID_For_Rect { get; set; } = -1;
@@ -36,10 +34,10 @@ namespace A_level_course_work_Logic_Gate
         public bool Drag { get; set; } = false;
         public int Delay_Intervals { get; set; } = 1;
         public int Drag_Num { get; set; } = 0;
-        private bool _link = false;
-        private bool Sim_Running { get; set; } = false;
-        private bool Saved { get; set; } = false;
-        private string File_Location { get; set; } = "";
+        public bool _link = false;
+        public bool Sim_Running { get; set; } = false;
+        public bool Saved { get; set; } = false;
+        public string File_Location { get; set; } = "";
         public bool Link
         { get { return _link; }
             set
@@ -56,7 +54,7 @@ namespace A_level_course_work_Logic_Gate
             }
         }
 
-        private Drag_State drag_mode = Drag_State.Null;
+        public Drag_State drag_mode = Drag_State.Null;
         public Drag_State Drag_Mode
         { get { return drag_mode; }
             set
@@ -81,14 +79,11 @@ namespace A_level_course_work_Logic_Gate
         public Rectangle BackGround_Rect { get; set; }
 
 
-
-
         private BackgroundWorker _worker = new BackgroundWorker();
         private BackgroundWorker Simulator_Worker = new BackgroundWorker();
 
         Progress_Bar_Window Progress_Window = new Progress_Bar_Window();
 
-        //code when the program loads up
         public MainWindow()
         {
             InitializeComponent();
@@ -96,8 +91,6 @@ namespace A_level_course_work_Logic_Gate
             _worker.RunWorkerCompleted += WorkerRunWorkerCompleted;
 
             Simulator_Worker.DoWork += Simulator_Work;
-            //Simulator_Worker.RunWorkerCompleted += Simulator_Terminated;
-
         }
 
 
@@ -105,15 +98,16 @@ namespace A_level_course_work_Logic_Gate
 
         private void Canvas_Border_Loaded(object sender, RoutedEventArgs e)
         {
-            Sub_Canvas = new Canvas_Class(this);
+            Sub_Canvas = new Canvas_Class(this, ref Canvas_Border,this);
             SetUp_Canvas();
         }
+
         public void SetUp_Canvas()
         {
             Canvas_Border.Child = Sub_Canvas;
             BackGround_Rect = new Rectangle { Height = 4000, Width = 4000, Fill = Brushes.White };
             Sub_Canvas.Children.Add(BackGround_Rect);
-            Canvas.SetLeft(BackGround_Rect, -1000);
+            Canvas.SetLeft(BackGround_Rect, -1000);            
             Canvas.SetTop(BackGround_Rect, -1000);
         }
 
@@ -124,33 +118,32 @@ namespace A_level_course_work_Logic_Gate
             if (!Drag && !Link)
             {
                 Drag_Mode = Drag_State.Main_Can;
-                //Gate_List.Add(new Gate_Class(Convert.ToString((sender as Rectangle).Tag), this, Sub_Canvas.Scale_Factor));
-                
+                 
                 switch((sender as Rectangle).Tag)
                 {
                     case "And":
-                        Gate_List.Add(new And_Gate_Class(this,Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new And_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor,Output_Circle_List,Line_List,Input_Button_List));
                         break;
                     case "Nand":
-                        Gate_List.Add(new Nand_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Nand_Gate_Class(Main_Canvas,Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case "Not":
-                        Gate_List.Add(new Not_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Not_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case "Or":
-                        Gate_List.Add(new Or_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Or_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case "Nor":
-                        Gate_List.Add(new Nor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Nor_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case "Xor":
-                        Gate_List.Add(new Xor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Xor_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case "Xnor":
-                        Gate_List.Add(new Xnor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Xnor_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case "Transformer":
-                        Gate_List.Add(new Transformer_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Transformer_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                 }
 
@@ -197,12 +190,7 @@ namespace A_level_course_work_Logic_Gate
             bool check = (Pos_Rect.X < 0 || Pos_Rect.X > 4000 || Pos_Rect.Y < 0 || Pos_Rect.Y > 4000) ||
                (Pos_Border.X < 0 || Pos_Border.X > Canvas_Border.ActualWidth || Pos_Border.Y < 0 || Pos_Border.Y > Canvas_Border.ActualHeight)
                || (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) ? false : true;
-
-
-            //if (Sub_Canvas.Rect_detection(Gate_List[Drag_Num].Rect.Width, Gate_List[Drag_Num].Rect.Height, Drag_Num) != -1) check = false;
-
-
-
+            
             Main_Canvas.Children.Remove(Gate_List[Drag_Num].Rect);
             Drag_Mode = Drag_State.Null;
             if (check)
@@ -324,7 +312,8 @@ namespace A_level_course_work_Logic_Gate
 
         public void Input_Assignment(int i, int Port)
         {
-            Input_Button_List.Add(new Input_Button(this, i, Port));
+            Input_Button_List.Add(new Input_Button(i, Port,Gate_List,Sub_Canvas,this));
+            //can't be in constructor because UI_Elemtent isn't loaded until the constructor finished.
             Input_Button_List.Last().Aline_Box(Gate_List[i]);
             Gate_List[i].Input[Port].Input_Type = IO_Type.IO;
             Gate_List[i].Input[Port].Input_ID = Input_Button_List.Count - 1;
@@ -332,7 +321,7 @@ namespace A_level_course_work_Logic_Gate
 
         public void Output_Assignment(int i, int Port)
         {
-            Output_Circle_List.Add(new Output_Circle(this, i, Port));
+            Output_Circle_List.Add(new Output_Circle( i, Port,Sub_Canvas,this));
             Output_Circle_List.Last().Aline_Circle(Gate_List[i]);
             Gate_List[i].Output[Port].Output_Type = IO_Type.IO;
             Gate_List[i].Output[Port].Output_ID = Output_Circle_List.Count - 1;
@@ -344,7 +333,7 @@ namespace A_level_course_work_Logic_Gate
         public double[] Link_Input_Aline(Gate_Class Gate, int Input_Num)
         {
             //UI_Line.Stroke = Brushes.Black;
-            //not input is in the center of the gate compare to the other gates
+            //not gate, input is in the center of the gate compare to the other gates whic has 2 on the side
             if (Gate.Type == 2)
             {
                 return new double[] { Canvas.GetLeft(Gate.Rect) + 5, Canvas.GetTop(Gate.Rect) + 38 };
@@ -354,7 +343,7 @@ namespace A_level_course_work_Logic_Gate
             {
                 return new double[] { Canvas.GetLeft(Gate.Rect) + 12.5, Canvas.GetTop(Gate.Rect) + 38 };
             }
-            //the rest all follow the setup for the and gate
+            //the rest all follow the same setup as the and gate
             else
             {
                 if (Input_Num == 0)
@@ -545,16 +534,6 @@ namespace A_level_course_work_Logic_Gate
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,new Action(() => Run_Button.Content = "Run"));
         }
 
-//        private void Simulator_Terminated(object sender, RunWorkerCompletedEventArgs e)
-//        {
-//            Sim_Running = false;
-//            Application.Current.Dispatcher.BeginInvoke(
-//DispatcherPriority.Background,
-//new Action(() => Run_Button.Content = "Run"));
-//        }
-
-
-
         private void System_Clean_Up(object sender, RoutedEventArgs e)
         {
             Clean_Up_Method();
@@ -589,32 +568,32 @@ namespace A_level_course_work_Logic_Gate
                     i -= 1;
                 }
             }
-            //for (int i = 0; i < Line_List.Count; i++)
-            //{
-            //    if (Gate_List[Line_List[i].Input_ID].Input[Line_List[i].Input_Num].Input_Type != IO_Type.Gate || Gate_List[Line_List[i].Input_ID].Alive == false)
-            //    {
-            //        Line_List.RemoveAt(i);
-            //        i -= 1;
-            //    }
-            //    for (int x = 0; x < Gate_List.Count; x++)
-            //    {
-            //        for (int y = 0; y < 3; y++)
-            //        {
-            //            if (Gate_List[x].Output[y].Output_ID > i)
-            //            {
-            //                Gate_List[x].Output[y].Output_ID -= 1;
-            //            }
-            //        }
-            //        for (int z = 0; z < 2; z++)
-            //        {
-            //            if (Gate_List[x].Input[z].Input_ID > i)
-            //            {
-            //                Gate_List[x].Input[z].Input_ID -= 1;
-            //            }
-            //        }
+            for (int i = 0; i < Line_List.Count; i++)
+            {
+                if (Gate_List[Line_List[i].Input_ID].Input[Line_List[i].Input_Num].Input_Type != IO_Type.Gate || Gate_List[Line_List[i].Input_ID].Alive == false)
+                {
+                    Line_List.RemoveAt(i);
+                    i -= 1;
+                    for (int x = 0; x < Gate_List.Count; x++)
+                    {
+                        for (int y = 0; y < 3; y++)
+                        {
+                            if (Gate_List[x].Output[y].Line_ID > i)
+                            {
+                                Gate_List[x].Output[y].Line_ID -= 1;
+                            }
+                        }
+                        for (int z = 0; z < 2; z++)
+                        {
+                            if (Gate_List[x].Input[z].Line_ID > i)
+                            {
+                                Gate_List[x].Input[z].Line_ID -= 1;
+                            }
+                        }
 
-            //    }
-            //}
+                    }
+                }
+            }
             //removes dead gates
             for (int i = 0; i < Gate_List.Count; i++)
             {                
@@ -714,36 +693,65 @@ namespace A_level_course_work_Logic_Gate
 
         public void File_Unload(File_Class Loaded_File)
         {
+            for (int x = 0; x < Loaded_File.Inputs.Count; x++)
+            {
+                Input_Button_List.Add(new Input_Button(Loaded_File.Inputs[x].Input_ID, Loaded_File.Inputs[x].Input_Port,Gate_List,Sub_Canvas,this));
+                Input_Button_List.Last().Change_X_Y(Loaded_File.Inputs[x].X, Loaded_File.Inputs[x].Y);
+            }
+            for (int x = 0; x < Loaded_File.Output.Count; x++)
+            {
+                Output_Circle_List.Add(new Output_Circle(Loaded_File.Output[x].Output_ID, Loaded_File.Output[x].Output_Port,Sub_Canvas,this));
+                Output_Circle_List.Last().Bit = Loaded_File.Output[x]._Bit;
+                Output_Circle_List.Last().Change_X_Y(Loaded_File.Output[x].X, Loaded_File.Output[x].Y);
+            }
+            for (int x = 0; x < Loaded_File.Lines.Count; x++)
+            {
+                Line_List.Add(new Line_Class(Loaded_File.Lines[x].Output_ID,Sub_Canvas,this));
+                Line_List.Last().Output_Num = Loaded_File.Lines[x].Output_Num;
+                Line_List.Last().Input_ID = Loaded_File.Lines[x].Input_ID;
+                Line_List.Last().Input_Num = Loaded_File.Lines[x].Input_Num;
+                Line_List.Last().Line_Lable.Content = Loaded_File.Lines[x].Content_Copy;
+                Line_List.Last().UI_Line.X1 = Loaded_File.Lines[x].X1;
+                Line_List.Last().UI_Line.X2 = Loaded_File.Lines[x].X2;
+                Line_List.Last().UI_Line.Y1 = Loaded_File.Lines[x].Y1;
+                Line_List.Last().UI_Line.Y2 = Loaded_File.Lines[x].Y2;
+                Line_List.Last().X1 = Loaded_File.Lines[x].X1;
+                Line_List.Last().X2 = Loaded_File.Lines[x].X2;
+                Line_List.Last().Y1 = Loaded_File.Lines[x].Y1;
+                Line_List.Last().Y2 = Loaded_File.Lines[x].Y2;
+                Line_List.Last().UI_Line.Stroke = Brushes.Black;
+                Line_List.Last().Move_Label();
+            }
             for (int i = 0; i < Loaded_File.Gates.Count; i++)
             {
                 switch(Loaded_File.Gates[i].Type)
                 {
                     case (0):
-                        Gate_List.Add(new And_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new And_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case (1):
-                        Gate_List.Add(new Nand_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Nand_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case (2):
-                        Gate_List.Add(new Not_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Not_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case (3):
-                        Gate_List.Add(new Or_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Or_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case (4):
-                        Gate_List.Add(new Nor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Nor_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case (5):
-                        Gate_List.Add(new Xor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Xor_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case (6):
-                        Gate_List.Add(new Xnor_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Xnor_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     case (7):
-                        Gate_List.Add(new Transformer_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new Transformer_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                     default:
-                        Gate_List.Add(new And_Gate_Class(this, Sub_Canvas.Scale_Factor));
+                        Gate_List.Add(new And_Gate_Class(Main_Canvas, Sub_Canvas.Scale_Factor, Output_Circle_List, Line_List, Input_Button_List));
                         break;
                 }
                 Gate_List.Last().Alive = Loaded_File.Gates[i].Alive;               
@@ -761,38 +769,14 @@ namespace A_level_course_work_Logic_Gate
                     Gate_List.Last().Input[x].Line_ID = Loaded_File.Gates[i].Input[x]._line_ID;
                     Gate_List.Last().Input[x].Input_Type = Loaded_File.Gates[i].Input[x]._Input_Type;
                 }
+                Main_Canvas.Children.Remove(Gate_List.Last().Rect);
                 Sub_Canvas.Children.Add(Gate_List.Last().Rect);
                 Canvas.SetLeft(Gate_List.Last().Rect, Loaded_File.Gates[i].X);
                 Canvas.SetTop(Gate_List.Last().Rect, Loaded_File.Gates[i].Y);
             }
             for (int x = 0; x < Loaded_File.Inputs.Count; x++)
             {
-                Input_Button_List.Add(new Input_Button(this, Loaded_File.Inputs[x].Input_ID, Loaded_File.Inputs[x].Input_Port));
                 Input_Button_List.Last().Bit = Loaded_File.Inputs[x]._Bit;
-                Sub_Canvas.Children.Add(Input_Button_List.Last());
-                Canvas.SetLeft(Input_Button_List.Last(), Loaded_File.Inputs[x].X);
-                Canvas.SetTop(Input_Button_List.Last(), Loaded_File.Inputs[x].Y);
-            }
-            for (int x = 0; x < Loaded_File.Output.Count; x++)
-            {
-                Output_Circle_List.Add(new Output_Circle(this, Loaded_File.Output[x].Output_ID, Loaded_File.Output[x].Output_Port));
-                Output_Circle_List.Last().Bit = Loaded_File.Output[x]._Bit;
-                Sub_Canvas.Children.Add(Output_Circle_List.Last().Circle);
-                Canvas.SetLeft(Output_Circle_List.Last().Circle, Loaded_File.Output[x].X);
-                Canvas.SetTop(Output_Circle_List.Last().Circle, Loaded_File.Output[x].Y);
-            }
-            for (int x = 0; x < Loaded_File.Lines.Count; x++)
-            {
-                Line_List.Add(new Line_Class(Loaded_File.Lines[x].Output_ID,this));
-                Line_List.Last().Output_Num = Loaded_File.Lines[x].Output_Num;
-                Line_List.Last().Input_ID = Loaded_File.Lines[x].Input_ID;
-                Line_List.Last().Input_Num = Loaded_File.Lines[x].Input_Num;
-                Line_List.Last().Line_Lable.Content = Loaded_File.Lines[x].Content_Copy;
-                Line_List.Last().UI_Line.X1 = Loaded_File.Lines[x].X1;
-                Line_List.Last().UI_Line.X2 = Loaded_File.Lines[x].X2;
-                Line_List.Last().UI_Line.Y1 = Loaded_File.Lines[x].Y1;
-                Line_List.Last().UI_Line.Y2 = Loaded_File.Lines[x].Y2;
-                Line_List.Last().Move_Label();
             }
         }
 
@@ -800,13 +784,14 @@ namespace A_level_course_work_Logic_Gate
         private void MenuItem_SaveAs_Click(object sender, RoutedEventArgs e)
         {
             Clean_Up_Method();
+            Saved = true;
             File_Class Save = File_Creation();               
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == true)
             {
                 saveFileDialog.InitialDirectory = @"C:\Documents";
                 File_Location = saveFileDialog.FileName;
-                Save_File(Save);
+                Save_File(Save);                
             }
         }
         public File_Class File_Creation()
@@ -834,6 +819,7 @@ namespace A_level_course_work_Logic_Gate
         private void MenuItem_Save_Click(object sender, RoutedEventArgs e)
         {
             File_Class Save = File_Creation();
+            Saved = true;           
             Save_File(Save);
         }
         private void Save_File(File_Class Save)
@@ -983,7 +969,7 @@ namespace A_level_course_work_Logic_Gate
             drag_mode = Drag_State.Null;
             Linking_ID = 0;
             IO_Active = false;
-            Sub_Canvas = new Canvas_Class(this);
+            Sub_Canvas = new Canvas_Class( this, ref Canvas_Border, this);
             SetUp_Canvas();
         }
     }

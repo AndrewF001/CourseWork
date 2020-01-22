@@ -18,13 +18,14 @@ namespace A_level_course_work_Logic_Gate
 
         public int Output_ID { get; }
         public int Output_Port;
-        public MainWindow _MainWind { get; set; }
-        public Output_Circle(MainWindow MainWind, int ID, int Port_Num)
+        private MainWindow _MainWind { get; }
+        public Output_Circle(int ID, int Port_Num, Canvas_Class Sub_Canvas,MainWindow MainWind)
         {
-            _MainWind = MainWind;
+            //_MainWind = MainWind;
             Output_ID = ID;
             Output_Port = Port_Num;
-            _MainWind.Sub_Canvas.Children.Add(Circle);
+            Sub_Canvas.Children.Add(Circle);
+            _MainWind = MainWind;
         }
 
 

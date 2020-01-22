@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,16 +17,18 @@ namespace A_level_course_work_Logic_Gate
         public int Input_ID { get; set; } = -1;
         public int Input_Num { get; set; } = -1;
         public double X1,Y1,  X2,  Y2;
-        public MainWindow _MainWind { get; set; }
+        public List<Line_Class> _Line_List { get; set; }
 
         public Canvas_Class _Sub_Canvas { get; set; }
-        public Line_Class(int _Output_ID, MainWindow MainWind)
+        private MainWindow _MainWind { get; }
+        public Line_Class(int _Output_ID, Canvas_Class Sub_Canvas, MainWindow MainWind)
         {
+            _Sub_Canvas = Sub_Canvas;
             _MainWind = MainWind;
-            _Sub_Canvas = _MainWind.Sub_Canvas;
             _Sub_Canvas.Children.Add(UI_Line);
             _Sub_Canvas.Children.Add(Line_Lable);
             Output_ID = _Output_ID;
+            _Line_List = MainWind.Line_List;
         }
 
         public void Track_Mouse()
@@ -76,6 +79,18 @@ namespace A_level_course_work_Logic_Gate
             X1 = hold[0];
             Y1 = hold[1];
             Move_Label();
+        }
+
+        public void Remove_UI()
+        {
+            _Sub_Canvas.Children.Remove(UI_Line);
+            _Sub_Canvas.Children.Remove(Line_Lable);
+        }
+
+        public void Remove_Class()
+        {
+            Remove_UI();
+            _Line_List.Remove(this);
         }
     }
 }

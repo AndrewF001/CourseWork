@@ -14,11 +14,14 @@ namespace A_level_course_work_Logic_Gate
         public int Type { get; set; }
         public Rectangle Rect { get; set; }
         public bool Alive { get; set; } = true;
-        protected MainWindow _MainWind { get; set; }
+        //protected MainWindow _MainWind { get; set; }
 
         //data storages for the input and output
 
         public Input_Class[] Input = new Input_Class[] { new Input_Class(), new Input_Class() };
+        List<Output_Circle> _Output_Circle_List { get; set; }
+        List<Line_Class> _Line_List { get; set; }
+        List<Input_Button> _Input_Button_List { get; set; }
 
 
         //Gate output Bit
@@ -35,11 +38,11 @@ namespace A_level_course_work_Logic_Gate
                     {
                         if (_Gate_Bit == true)
                         {
-                            _MainWind.Output_Circle_List[Output[i].Output_ID].Bit = true;
+                            _Output_Circle_List[Output[i].Output_ID].Bit = true;
                         }
                         else
                         {
-                            _MainWind.Output_Circle_List[Output[i].Output_ID].Bit = false;
+                            _Output_Circle_List[Output[i].Output_ID].Bit = false;
                         }
                     }
                     else if(Output[i].Output_Type == IO_Type.Gate)
@@ -61,11 +64,11 @@ namespace A_level_course_work_Logic_Gate
 
 
 
-        public Gate_Class(MainWindow MainWind, double _Scale_Factor)
+        public Gate_Class(List<Output_Circle> Output_Circle_List,List<Line_Class> Line_List,List<Input_Button> Input_Button_List)
         {
-            _MainWind = MainWind;
-            //Setup(Tag,_Scale_Factor);
-            //_MainWind.Main_Canvas.Children.Add(Rect);     
+            _Output_Circle_List = Output_Circle_List;
+            _Line_List = Line_List;
+            _Input_Button_List = Input_Button_List;
             Gate_Output_Calc();
         }
 
@@ -130,22 +133,22 @@ namespace A_level_course_work_Logic_Gate
             {
                 if(Output[i].Output_Type == IO_Type.Gate)
                 {
-                    _MainWind.Line_List[Output[i].Line_ID].Link_Output_Aline_Line(this);
+                    _Line_List[Output[i].Line_ID].Link_Output_Aline_Line(this);
                 }
                 else if(Output[i].Output_Type == IO_Type.IO)
                 {
-                    _MainWind.Output_Circle_List[Output[i].Output_ID].Aline_Circle(this);
+                    _Output_Circle_List[Output[i].Output_ID].Aline_Circle(this);
                 }
             }
             for (int i = 0; i < 2; i++)
             {
                 if (Input[i].Input_Type==IO_Type.Gate)
                 {
-                    _MainWind.Line_List[Input[i].Line_ID].Link_Input_Aline_Line(this);
+                    _Line_List[Input[i].Line_ID].Link_Input_Aline_Line(this);
                 }
                 else if(Input[i].Input_Type == IO_Type.IO)
                 {
-                    _MainWind.Input_Button_List[Input[i].Input_ID].Aline_Box(this);
+                    _Input_Button_List[Input[i].Input_ID].Aline_Box(this);
                 }
             }
         }
@@ -169,11 +172,11 @@ namespace A_level_course_work_Logic_Gate
 
         public async void Set_Label_0(int i)
         {
-            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => _MainWind.Line_List[Output[i].Line_ID].Line_Lable.Content = "0"));
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => _Line_List[Output[i].Line_ID].Line_Lable.Content = "0"));
         }
         public async void Set_Label_1(int i)
         {
-            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => _MainWind.Line_List[Output[i].Line_ID].Line_Lable.Content = "1"));
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => _Line_List[Output[i].Line_ID].Line_Lable.Content = "1"));
         }
     }
 }

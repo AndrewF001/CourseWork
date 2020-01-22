@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -12,11 +13,11 @@ namespace A_level_course_work_Logic_Gate
 {
     public class And_Gate_Class : Gate_Class
     {
-        public And_Gate_Class(MainWindow MainWind, double _Scale_Factor) : base(MainWind, _Scale_Factor)
+        public And_Gate_Class(Canvas Main_Canvas, double _Scale_Factor, List<Output_Circle> Output_Circle_List, List<Line_Class> Line_List, List<Input_Button> Input_Button_List) : base(Output_Circle_List,Line_List,Input_Button_List)
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 115 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["And_Gate_L"] as Brush };
-            MainWind.Main_Canvas.Children.Add(Rect);
-            Point Pos = Mouse.GetPosition(MainWind.Main_Canvas);
+            Main_Canvas.Children.Add(Rect);
+            Point Pos = Mouse.GetPosition(Main_Canvas);
             Rect_Move(Pos);
             Type = 0;
         }
@@ -35,11 +36,11 @@ namespace A_level_course_work_Logic_Gate
     }
     public class Nand_Gate_Class : Gate_Class
     {
-        public Nand_Gate_Class(MainWindow MainWind, double _Scale_Factor) : base(MainWind, _Scale_Factor)
+        public Nand_Gate_Class(Canvas Main_Canvas, double _Scale_Factor, List<Output_Circle> Output_Circle_List, List<Line_Class> Line_List, List<Input_Button> Input_Button_List) : base(Output_Circle_List, Line_List, Input_Button_List)
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 115 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Nand_Gate_L"] as Brush };
-            MainWind.Main_Canvas.Children.Add(Rect);
-            Point Pos = Mouse.GetPosition(MainWind.Main_Canvas);
+            Main_Canvas.Children.Add(Rect);
+            Point Pos = Mouse.GetPosition(Main_Canvas);
             Rect_Move(Pos);
             Type = 1;
         }
@@ -59,11 +60,11 @@ namespace A_level_course_work_Logic_Gate
     
     public class Not_Gate_Class : Gate_Class
     {
-        public Not_Gate_Class(MainWindow MainWind, double _Scale_Factor) : base(MainWind, _Scale_Factor)
+        public Not_Gate_Class(Canvas Main_Canvas, double _Scale_Factor, List<Output_Circle> Output_Circle_List, List<Line_Class> Line_List, List<Input_Button> Input_Button_List) : base(Output_Circle_List, Line_List, Input_Button_List)
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 115 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Not_Gate_L"] as Brush };
-            MainWind.Main_Canvas.Children.Add(Rect);
-            Point Pos = Mouse.GetPosition(MainWind.Main_Canvas);
+            Main_Canvas.Children.Add(Rect);
+            Point Pos = Mouse.GetPosition(Main_Canvas);
             Rect_Move(Pos);
             Type = 2;
         }
@@ -81,11 +82,11 @@ namespace A_level_course_work_Logic_Gate
     }
     public class Or_Gate_Class : Gate_Class
     {
-        public Or_Gate_Class(MainWindow MainWind, double _Scale_Factor) : base(MainWind, _Scale_Factor)
+        public Or_Gate_Class(Canvas Main_Canvas, double _Scale_Factor, List<Output_Circle> Output_Circle_List, List<Line_Class> Line_List, List<Input_Button> Input_Button_List) : base(Output_Circle_List, Line_List, Input_Button_List)
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 115 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Or_Gate_L"] as Brush };
-            MainWind.Main_Canvas.Children.Add(Rect);
-            Point Pos = Mouse.GetPosition(MainWind.Main_Canvas);
+            Main_Canvas.Children.Add(Rect);
+            Point Pos = Mouse.GetPosition(Main_Canvas);
             Rect_Move(Pos);
             Type = 3;
         }
@@ -103,11 +104,11 @@ namespace A_level_course_work_Logic_Gate
     }
     public class Xor_Gate_Class : Gate_Class
     {
-        public Xor_Gate_Class(MainWindow MainWind, double _Scale_Factor) : base(MainWind, _Scale_Factor)
+        public Xor_Gate_Class(Canvas Main_Canvas, double _Scale_Factor, List<Output_Circle> Output_Circle_List, List<Line_Class> Line_List, List<Input_Button> Input_Button_List) : base(Output_Circle_List, Line_List, Input_Button_List)
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 115 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Xor_Gate_L"] as Brush };
-            MainWind.Main_Canvas.Children.Add(Rect);
-            Point Pos = Mouse.GetPosition(MainWind.Main_Canvas);
+            Main_Canvas.Children.Add(Rect);
+            Point Pos = Mouse.GetPosition(Main_Canvas);
             Rect_Move(Pos);
             Type = 5;
         }
@@ -125,11 +126,11 @@ namespace A_level_course_work_Logic_Gate
     }
     public class Nor_Gate_Class : Gate_Class
     {
-        public Nor_Gate_Class(MainWindow MainWind, double _Scale_Factor) : base(MainWind, _Scale_Factor)
+        public Nor_Gate_Class(Canvas Main_Canvas, double _Scale_Factor, List<Output_Circle> Output_Circle_List, List<Line_Class> Line_List, List<Input_Button> Input_Button_List) : base(Output_Circle_List, Line_List, Input_Button_List)
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 115 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Nor_Gate_L"] as Brush };
-            MainWind.Main_Canvas.Children.Add(Rect);
-            Point Pos = Mouse.GetPosition(MainWind.Main_Canvas);
+            Main_Canvas.Children.Add(Rect);
+            Point Pos = Mouse.GetPosition(Main_Canvas);
             Rect_Move(Pos);
             Type = 4;
         }
@@ -147,11 +148,11 @@ namespace A_level_course_work_Logic_Gate
     }
     public class Xnor_Gate_Class : Gate_Class
     {
-        public Xnor_Gate_Class(MainWindow MainWind, double _Scale_Factor) : base(MainWind, _Scale_Factor)
+        public Xnor_Gate_Class(Canvas Main_Canvas, double _Scale_Factor, List<Output_Circle> Output_Circle_List, List<Line_Class> Line_List, List<Input_Button> Input_Button_List) : base(Output_Circle_List, Line_List, Input_Button_List)
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 115 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Xnor_Gate_L"] as Brush };
-            MainWind.Main_Canvas.Children.Add(Rect);
-            Point Pos = Mouse.GetPosition(MainWind.Main_Canvas);
+            Main_Canvas.Children.Add(Rect);
+            Point Pos = Mouse.GetPosition(Main_Canvas);
             Rect_Move(Pos);
             Type = 6;
         }
@@ -169,11 +170,11 @@ namespace A_level_course_work_Logic_Gate
     }
     public class Transformer_Class : Gate_Class
     {
-        public Transformer_Class(MainWindow MainWind, double _Scale_Factor) : base(MainWind, _Scale_Factor)
+        public Transformer_Class(Canvas Main_Canvas, double _Scale_Factor, List<Output_Circle> Output_Circle_List, List<Line_Class> Line_List, List<Input_Button> Input_Button_List) : base(Output_Circle_List, Line_List, Input_Button_List)
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 85 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Transformer"] as Brush };
-            MainWind.Main_Canvas.Children.Add(Rect);
-            Point Pos = Mouse.GetPosition(MainWind.Main_Canvas);
+            Main_Canvas.Children.Add(Rect);
+            Point Pos = Mouse.GetPosition(Main_Canvas);
             Rect_Move(Pos);
             Type = 7;
         }

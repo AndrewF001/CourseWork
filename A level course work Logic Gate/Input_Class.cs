@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace A_level_course_work_Logic_Gate
 {
-    [Serializable]
     public class Input_Class
     {
         private bool _input_bit = false;

@@ -15,19 +15,21 @@ namespace A_level_course_work_Logic_Gate
             set
             {
                 _Bit = value;
-                _MainWind.Gate_List[Input_ID].Gate_Output_Calc();
+                _Gate_List[Input_ID].Gate_Output_Calc();
             }
         
         }
         public int Input_ID { get;}
         public int Input_Port;
-        public MainWindow _MainWind { get; set; }
-        public Input_Button(MainWindow MainWind,int ID, int Port_Num)
+        public List<Gate_Class> _Gate_List = new List<Gate_Class>();
+        private MainWindow _MainWind { get; set; }
+        public Input_Button(int ID, int Port_Num, List<Gate_Class> Gate_List, Canvas_Class Sub_Canvas, MainWindow MainWind)
         {
             _MainWind = MainWind;
+            _Gate_List = Gate_List;
             Input_ID = ID;
             Input_Port = Port_Num;
-            _MainWind.Sub_Canvas.Children.Add(this);
+            Sub_Canvas.Children.Add(this);
             Background = Brushes.White;
             Content = 0;
             Foreground = Brushes.Black;
@@ -41,7 +43,7 @@ namespace A_level_course_work_Logic_Gate
             if (_Bit)
             {
                 Background = Brushes.White;
-                _MainWind.Gate_List[Input_ID].Input[Input_Port].Input_bit = false;
+                _Gate_List[Input_ID].Input[Input_Port].Input_bit = false;
                 Bit = false;
                 Content = 0;
                 Foreground = Brushes.Black;
@@ -49,7 +51,7 @@ namespace A_level_course_work_Logic_Gate
             else
             {                
                 Background = Brushes.Black;
-                _MainWind.Gate_List[Input_ID].Input[Input_Port].Input_bit = true;
+                _Gate_List[Input_ID].Input[Input_Port].Input_bit = true;
                 Bit = true;
                 Content = 1;
                 Foreground = Brushes.White;
