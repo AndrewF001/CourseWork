@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Collections.Generic;
 
 namespace A_level_course_work_Logic_Gate
 {
@@ -26,10 +25,12 @@ namespace A_level_course_work_Logic_Gate
         public Canvas_Variables variables;
         private MainWindow _MainWind { get; }        
 
-       /// <summary>
-       /// This intilaises the canvas class
-       /// </summary>
-       /// <param name="Variables">This contains the values needed for X</param>
+/// <summary>
+///  The constructor just sets the value for the canvas and adds the transformation set up.
+/// </summary>
+/// <param name="Variables"></This a more secure way of accessing and transfering varaibles in a bidirectional way>
+/// <param name="Canvas_Border"></Needed as a reference point for mouse postion>
+/// <param name="MainWind"></Needed to call methods in the class>
         public Canvas_Class( Canvas_Variables Variables, ref Border Canvas_Border, MainWindow MainWind)
         {
             variables = Variables;
@@ -45,16 +46,11 @@ namespace A_level_course_work_Logic_Gate
             Transforms_Group.Children.Add(Scale_Action);
             RenderTransform = Transforms_Group;
         }
-        //Move canvas event
+        /// <Mouse move>
+        /// This is just for if the canvas is being moved around
+        /// </summary>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            int hold = Rect_detection(0, 0, -1);
-            if (hold != variables.Last_ID_For_Rect && hold !=-1)
-            {
-                variables.Last_ID_For_Rect = hold;
-            }
-
-
             if (MovingCanvas)
             {
                 Translate_Action.X += (e.GetPosition(this).X - Old_Pos.X);
@@ -62,9 +58,9 @@ namespace A_level_course_work_Logic_Gate
             }
             Old_Pos = e.GetPosition(this);
         }
-
-        
-        //zoom event
+        /// <summary>
+        /// Controls the zoom in and out for the canvas.
+        /// </summary>                
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             bool change = false;
@@ -94,7 +90,11 @@ namespace A_level_course_work_Logic_Gate
                 Scale_Action.CenterY = Pos.Y;
             }
         }
-        //Re-drag pick up
+        /// <summary>
+        /// 1. Checks and start the canvas drag
+        /// 2.checks to find a gate and start dragging that.
+        /// 3.checks to find a gate and check mode and add new link line for the gate
+        /// </summary>
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {   
             int detected = Rect_detection(0, 0, -1);
@@ -118,7 +118,7 @@ namespace A_level_course_work_Logic_Gate
             {
                 variables.Linking_ID = detected;
                 variables.Drag_Num = variables.Line_List.Count();
-                variables.Line_List.Add(new Line_Class(detected,this,_MainWind,detected));
+                variables.Line_List.Add(new Line_Class(detected,this,_MainWind,detected,true));
                 //if X == -2 then there was no aviable output for the new link to be made(already deleted the last line)
                 if (variables.Line_List.Last().Output_Num != -2)
                 {
@@ -133,7 +133,9 @@ namespace A_level_course_work_Logic_Gate
 
             }
         }
-        //Re-drag drop
+        /// <summary>
+        /// depending on what is happening it will be the end the event.
+        /// </summary>
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             MovingCanvas = false;
@@ -179,7 +181,9 @@ namespace A_level_course_work_Logic_Gate
                 }
             }
         }
-
+        /// <summary>
+        /// Goes through the whole gate list and finds out if you clicked in the range of a gate.
+        /// </summary>        
         public int Rect_detection(double Width, double Height,int Drag_Num)
         {
             int Detected = -1;
@@ -194,7 +198,12 @@ namespace A_level_course_work_Logic_Gate
             }
             return Detected;
         }
-
+        /// <summary>
+        /// Output_Slot works out the output slot that the user clicked on.
+        /// The rest of the method works out if that slot is taken, If so it will try and find the next aviable slot.
+        /// Otherwise it is deleted.
+        /// </summary>
+        /// <param name="Clicked"></the gate number that was clicked on>
         public int Link_Output_Vaildation(int Clicked)
         {
             int Output_pos = Output_Slot(Clicked);
@@ -227,7 +236,9 @@ namespace A_level_course_work_Logic_Gate
 
             return Output_pos;
         }
-
+        /// <summary>
+        ///  Just works out the boundaries for the gate types and what slot it should be.
+        /// </summary>
         public int Output_Slot(int Clicked)
         {
             int Output = 0;
@@ -247,7 +258,9 @@ namespace A_level_course_work_Logic_Gate
             }
             return Output;
         }
-
+        /// <summary>
+        /// same as the output method but for input(2 methods above, Link_Output_Vaildation)
+        /// </summary>
         public int Link_Input_Vaildation(int Clicked)
         {
             int Output = Input_Slot(Clicked);
@@ -282,7 +295,9 @@ namespace A_level_course_work_Logic_Gate
             
             return Output;
         }
-        
+        /// <summary>
+        /// same as the output method but for input(2 methods above, Output_Slot)
+        /// </summary>
         public int Input_Slot(int Clicked)
         {
             int Input_Slot = -1;
@@ -305,7 +320,10 @@ namespace A_level_course_work_Logic_Gate
 
             return Input_Slot;
         }
-
+        /// <summary>
+        /// Depending on what mode the program is in it will delete the UI element from the canvas.
+        /// It will also remove any connections and input/outputs that that gate might of had.
+        /// </summary>
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
             //checks you're not dragging
@@ -335,7 +353,7 @@ namespace A_level_course_work_Logic_Gate
                             }
                             else if(variables.Gate_List[detection].Output[i].Output_Type == IO_Type.IO)
                             {
-                                Children.Remove(variables.Output_Circle_List[variables.Gate_List[detection].Output[i].Output_ID].Circle);                                
+                                variables.Output_Circle_List[variables.Gate_List[detection].Output[i].Output_ID].Remove_UI();                               
                                 //remove the ellipses from the canvas in the output_Circle list with the ID in the 
                             }
                         }

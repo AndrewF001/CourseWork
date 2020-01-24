@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -21,7 +20,7 @@ namespace A_level_course_work_Logic_Gate
 
         public Canvas_Class _Sub_Canvas { get; set; }
         private MainWindow _MainWind { get; }
-        public Line_Class(int _Output_ID, Canvas_Class Sub_Canvas, MainWindow MainWind,int _Input_ID)
+        public Line_Class(int _Output_ID, Canvas_Class Sub_Canvas, MainWindow MainWind,int _Input_ID,bool New_Class)
         {
             _Sub_Canvas = Sub_Canvas;
             _MainWind = MainWind;
@@ -30,8 +29,11 @@ namespace A_level_course_work_Logic_Gate
             Output_ID = _Output_ID;
             _Line_List = MainWind.Line_List;
             Track_Mouse();
-            Input_ID = _Input_ID;
-            Output_Num = _Sub_Canvas.Link_Output_Vaildation(_Input_ID);
+            Input_ID = _Input_ID;            
+            if(New_Class)
+            {
+                Output_Num = _Sub_Canvas.Link_Output_Vaildation(_Input_ID);
+            }
         }
 
         public void Track_Mouse()

@@ -2,7 +2,6 @@
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
-using System.Windows.Input;
 using System.Collections.Generic;
 using System;
 using System.Windows.Threading;
@@ -23,7 +22,9 @@ namespace A_level_course_work_Logic_Gate
         List<Input_Button> _Input_Button_List { get; set; }
 
 
-        //Gate output Bit
+        /// <summary>
+        /// depending on what type of output it is it will update and change the corrosonding values.
+        /// </summary>
         private bool _Gate_Bit;
         public  bool Gate_Bit {
             get
@@ -70,7 +71,7 @@ namespace A_level_course_work_Logic_Gate
             _Input_Button_List = Input_Button_List;
             Gate_Output_Calc();
         }
-
+        //overridable method
         public abstract void Gate_Output_Calc();
 
         //change Rectangle location.
@@ -91,7 +92,11 @@ namespace A_level_course_work_Logic_Gate
                 Rect.Stroke = Brushes.Red;
             }
         }
-
+        /// <summary>
+        /// One method that can be called to update everything linked to the gate.
+        /// Most Ideal world would to have an event handler when this gate class is moved in the canvas for this
+        /// method to fire.
+        /// </summary>
         public void Move_IO()
         {
             for (int i = 0; i < 3; i++)

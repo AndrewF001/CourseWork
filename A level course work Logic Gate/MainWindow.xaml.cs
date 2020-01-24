@@ -15,15 +15,12 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace A_level_course_work_Logic_Gate
-{
+{   
     public enum Drag_State  { Null,Main_Can,Sub_Can,Link_Mode_Sub}
     public enum IO_Type  { Null, Gate, IO }
 
     public partial class MainWindow : Window, Canvas_Variables
     {
-        //delete this varaible after testing!
-        public int Last_ID_For_Rect { get; set; } = -1;
-
         //varaibles that need to be accessed all around the code
         public List<Gate_Class> Gate_List { get; set; } = new List<Gate_Class>();
         public List<Line_Class> Line_List { get; set; } = new List<Line_Class>();
@@ -34,7 +31,7 @@ namespace A_level_course_work_Logic_Gate
         public bool Drag { get; set; } = false;
         public int Delay_Intervals { get; set; } = 1;
         public int Drag_Num { get; set; } = 0;
-        public bool _link = false;
+        private bool _link = false;
         public bool Sim_Running { get; set; } = false;
         public bool Saved { get; set; } = false;
         public string File_Location { get; set; } = "";
@@ -54,7 +51,7 @@ namespace A_level_course_work_Logic_Gate
             }
         }
 
-        public Drag_State drag_mode = Drag_State.Null;
+        private Drag_State drag_mode = Drag_State.Null;
         public Drag_State Drag_Mode
         { get { return drag_mode; }
             set
@@ -78,7 +75,7 @@ namespace A_level_course_work_Logic_Gate
         public Canvas_Class Sub_Canvas { get; set; }
         public Rectangle BackGround_Rect { get; set; }
 
-
+        //Threads that do the work simulatnously with the UI element
         private BackgroundWorker _worker = new BackgroundWorker();
         private BackgroundWorker Simulator_Worker = new BackgroundWorker();
 
@@ -93,9 +90,7 @@ namespace A_level_course_work_Logic_Gate
             Simulator_Worker.DoWork += Simulator_Work;
         }
 
-
-
-
+        //Need the UI to load before adding the canvas as it's added in the CS instead of the XAML       
         private void Canvas_Border_Loaded(object sender, RoutedEventArgs e)
         {
             Sub_Canvas = new Canvas_Class(this, ref Canvas_Border,this);
@@ -113,6 +108,10 @@ namespace A_level_course_work_Logic_Gate
 
         //eventhandler that aren't linked to the canvas
         //gate button event
+        /// <New Rect spawner>
+        /// When you press the rect box on the left hand side the sender(The rect) will hold it's tag for which type
+        /// of gate it is. Then Adds that rectangle to the list
+        /// </summary>
         private void Rect_Button_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (!Drag && !Link)
@@ -151,7 +150,10 @@ namespace A_level_course_work_Logic_Gate
 
             }
         }
-        //Whole event for dragging objects in the whole window
+        /// <Mouse move event>
+        ///  So depending on what Drag state the program is in it will respond with the right method.
+        /// </summary>
+
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
             if (Drag)
@@ -179,7 +181,10 @@ namespace A_level_course_work_Logic_Gate
                 Add_Rect_Sub_FIX_BUG();
             }
         }
-
+        /// <rectangle added to subcanvas>
+        /// first check is to make sure it's inside the subcanvas/background_rect border.
+        /// then added it to the subcanvas and set the variables.
+        /// </summary>
         public void Add_Rect_Sub_FIX_BUG()
         {
             Point Pos_Rect = Mouse.GetPosition(BackGround_Rect);
@@ -222,7 +227,10 @@ namespace A_level_course_work_Logic_Gate
                 }
             }
         }
-
+        /// <this is for the button that adds and remove the input buttons>
+        /// It's just a switch if statement as each time it's pressed it will go between the 2 if statements
+        /// The first if statement removes the current IO buttons from the canvas.
+        /// </summary>
         private void Input_Output_Button_Click(object sender, RoutedEventArgs e)
         {
             if (IO_Active)
@@ -250,7 +258,12 @@ namespace A_level_course_work_Logic_Gate
                 Add_IO_Method();
             }
         }
-
+        /// <Adding IO buttons>
+        /// This is it's own method as when you load a file this part of the method needs to be called to add the gates.
+        /// the first part is just checking already existing gates in the input_button_List and output_Circle_List
+        /// and adding them to the canvas.
+        /// The second part is just find out which gate on the screen still doesn't have any IO and adds it.
+        /// </summary>
         private void Add_IO_Method()
         {
             IO_Active = true;
@@ -309,7 +322,11 @@ namespace A_level_course_work_Logic_Gate
                 }
             }
         }
-
+        /// <summary>
+        /// Adds a new input_Button to input_Button_List and sets the value of the gate to fit the new values it should have.
+        /// </summary>
+        /// <param name="i"></just the position in the list, Gate Num>
+        /// <param name="Port"></which input slot it needs to be allocated it>
         public void Input_Assignment(int i, int Port)
         {
             Input_Button_List.Add(new Input_Button(i, Port,Gate_List,Sub_Canvas,this));
@@ -318,7 +335,7 @@ namespace A_level_course_work_Logic_Gate
             Gate_List[i].Input[Port].Input_Type = IO_Type.IO;
             Gate_List[i].Input[Port].Input_ID = Input_Button_List.Count - 1;
         }
-
+        //Same as input(Above)
         public void Output_Assignment(int i, int Port)
         {
             Output_Circle_List.Add(new Output_Circle( i, Port,Sub_Canvas,this));
@@ -328,11 +345,13 @@ namespace A_level_course_work_Logic_Gate
         }
 
 
-
-
+        /// <summary>
+        /// just returns the alinement value + the gate it's attached to coords.
+        /// </summary>
+        /// <param name="Gate"></just gives easy access to work with the gate it's being linked to>
+        /// <param name="Input_Num"></it's just the input port number.>
         public double[] Link_Input_Aline(Gate_Class Gate, int Input_Num)
         {
-            //UI_Line.Stroke = Brushes.Black;
             //not gate, input is in the center of the gate compare to the other gates whic has 2 on the side
             if (Gate.Type == 2)
             {
@@ -359,7 +378,7 @@ namespace A_level_course_work_Logic_Gate
             return new double[] { -1, -1 };
 
         }
-
+        //Same as input
         public double[] Link_Output_Aline(Gate_Class Gate, int Output_Num)
         {
             //special gate class with 3 exit
@@ -390,7 +409,11 @@ namespace A_level_course_work_Logic_Gate
             }
             return new double[] { -1, -1 };
         }
-
+        /// <summary>
+        /// Just make sure that the input is a valid input, wont allow any string otherwise it will just go back to
+        /// the previous acceptable input.
+        /// If left blank it will just equal 0.
+        /// </summary>
         private void Delay_Lable_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -414,9 +437,6 @@ namespace A_level_course_work_Logic_Gate
         ///  This is the main part of the logical part of the program. It's also the simulator that runs with
         ///  multithreading.
         /// </summary>
-
-
-
         private void Run_Button_Click(object sender, RoutedEventArgs e)
         {
             if(Sim_Running)
@@ -435,7 +455,14 @@ namespace A_level_course_work_Logic_Gate
             }
         }
 
-
+        /// <summary>
+        /// This is the work that the simulator is on.
+        /// first part is just finding all the starting points.(input_Buttons)
+        /// it then removes any dupucating starting points.
+        /// enter while loop where the condition can be broken inside or outside the loop.
+        /// just goes through each of the active gates, and calculate the new output whilst changing it's border colour.
+        /// adds the next gate to next_Gate list. At the end it 
+        /// </summary>
         private async void Simulator_Work(object sender, DoWorkEventArgs e)
         {
             bool Finished = false;
@@ -465,11 +492,7 @@ namespace A_level_course_work_Logic_Gate
                     Active_Gates.RemoveAt(i);
                     i -= 1;
                 }
-            }
-            //make the rect border red, work out output bit, Change output circle or line to the colour it is.
-            //work out the new list
-            //display the change on the output?
-            
+            }            
 
             while(!Finished && Sim_Running)
             {
@@ -532,20 +555,25 @@ namespace A_level_course_work_Logic_Gate
             }
             Sim_Running = false;
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,new Action(() => Run_Button.Content = "Run"));
-        }
-
+        }       
         private void System_Clean_Up(object sender, RoutedEventArgs e)
         {
             Clean_Up_Method();
         }
-
+        /// <summary>
+        /// Creates a new window UI that hold the progress bar.
+        /// Starts the background worker to clean up the system.
+        /// The MainWindow is holded untill the system clean up is complete.
+        /// </summary>
         public void Clean_Up_Method()
         {
             Progress_Window = new Progress_Bar_Window(Gate_List.Count());
             _worker.RunWorkerAsync();
             Progress_Window.ShowDialog();
         }
-
+        /// <summary>
+        /// goes through all the list in the program and removes unused objects and resorts the lists to work with the change.
+        /// </summary>
         private void WorkerDoWork(object sender, DoWorkEventArgs e)
         {
             //remove unused input and output
@@ -554,6 +582,13 @@ namespace A_level_course_work_Logic_Gate
                 if (Gate_List[Output_Circle_List[i].Output_ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.Gate || Gate_List[Output_Circle_List[i].Output_ID].Alive == false)
                 {                    
                     Output_Circle_List.RemoveAt(i);
+                    for (int x = 0; x < Gate_List.Count; x++)
+                    {
+                        if(Gate_List[x].Output[Output_Circle_List[i].Output_Port].Output_ID>i && Gate_List[x].Output[Output_Circle_List[i].Output_Port].Output_Type==IO_Type.IO )
+                        {
+                            Gate_List[x].Output[Output_Circle_List[i].Output_Port].Output_ID -= 1;
+                        }
+                    }
                     i -= 1;
                 }
             }
@@ -562,6 +597,13 @@ namespace A_level_course_work_Logic_Gate
                 if(!Gate_List[Input_Button_List[i].Input_ID].Alive)
                 {
                     Input_Button_List.RemoveAt(i);
+                    for (int x = 0; x < Gate_List.Count; x++)
+                    {
+                        if (Gate_List[x].Input[Input_Button_List[i].Input_Port].Input_ID > i && Gate_List[x].Input[Input_Button_List[i].Input_Port].Input_Type == IO_Type.IO)
+                        {
+                            Gate_List[x].Input[Input_Button_List[i].Input_Port].Input_ID -= 1;
+                        }
+                    }
                     i -= 1;
                 }
             }
@@ -635,12 +677,12 @@ namespace A_level_course_work_Logic_Gate
                 }
             }
         }
-
+        //Resuesmes the mainwindow.
         private void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Progress_Window.Close();
         }
-
+        //the main file to be saved
         [Serializable]
         public class File_Class
         {
@@ -650,7 +692,9 @@ namespace A_level_course_work_Logic_Gate
             public List<File_Version_Output> Output { get; set; } = new List<File_Version_Output>();
                  
         }
-
+        /// <summary>
+        /// checks if files already been saved, saves it or cancles, Reset the programe and load in the file.
+        /// </summary>
         private void MenuItem_Load_Click(object sender, RoutedEventArgs e)
         {
             bool CarryOn = true;
@@ -687,7 +731,10 @@ namespace A_level_course_work_Logic_Gate
 
             }
         }
-
+        /// <summary>
+        /// converts the Serializable file class to fit the program classes. Also sets up everything to be ready to used.
+        /// </summary>
+        /// <param name="Loaded_File"></File taht needs to be unloaded>
         public void File_Unload(File_Class Loaded_File)
         {
             for (int x = 0; x < Loaded_File.Inputs.Count; x++)
@@ -703,7 +750,7 @@ namespace A_level_course_work_Logic_Gate
             }
             for (int x = 0; x < Loaded_File.Lines.Count; x++)
             {
-                Line_List.Add(new Line_Class(Loaded_File.Lines[x].Output_ID,Sub_Canvas,this, Loaded_File.Lines[x].Input_ID));
+                Line_List.Add(new Line_Class(Loaded_File.Lines[x].Output_ID,Sub_Canvas,this, Loaded_File.Lines[x].Input_ID,false));
                 Line_List.Last().Output_Num = Loaded_File.Lines[x].Output_Num;
                 Line_List.Last().Input_Num = Loaded_File.Lines[x].Input_Num;
                 Line_List.Last().Line_Lable.Content = Loaded_File.Lines[x].Content_Copy;
@@ -776,7 +823,7 @@ namespace A_level_course_work_Logic_Gate
             }
         }
 
-
+        //Save file setup
         private void MenuItem_SaveAs_Click(object sender, RoutedEventArgs e)
         {
             Clean_Up_Method();
@@ -790,6 +837,7 @@ namespace A_level_course_work_Logic_Gate
                 Save_File(Save);                
             }
         }
+        //just maps the current class vairables into the File Classes
         public File_Class File_Creation()
         {
             File_Class Save = new File_Class();
@@ -828,6 +876,10 @@ namespace A_level_course_work_Logic_Gate
                 stream.Close();
             }
         }
+        /// <File Classes>
+        ///  These classes are created to map and be the same as the classes that the program uses.
+        ///  These are required as WPF objects can't be serialized.
+        /// </summary>
         [Serializable]
         public class File_Version_Gate
         {

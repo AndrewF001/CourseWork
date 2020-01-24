@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F6B37528-1F7F-43CA-ACD1-BEF929DAF16F}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>A_level_course_work_Logic_Gate</RootNamespace>
     <AssemblyName>A level course work Logic Gate</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>

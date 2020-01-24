@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,6 +7,17 @@ using System.Windows.Shapes;
 
 namespace A_level_course_work_Logic_Gate
 {
+    /// <summary>
+    /// All these classes are similar structure but they contain the code for the calculation of the gate output.
+    /// The constrcuter are similar but due to new rectangle being slittly different in each one and the base constructor
+    /// fires before the inherted class you can't add :
+    ///             Main_Canvas.Children.Add(Rect);
+    ///             Point Pos = Mouse.GetPosition(Main_Canvas);
+    ///             Rect_Move(Pos);
+    ///             Type = 0;
+    /// to the base class             
+    ///
+    /// </summary>
     public class And_Gate_Class : Gate_Class
     {
         public And_Gate_Class(Canvas Main_Canvas, double _Scale_Factor, List<Output_Circle> Output_Circle_List, List<Line_Class> Line_List, List<Input_Button> Input_Button_List) : base(Output_Circle_List,Line_List,Input_Button_List)

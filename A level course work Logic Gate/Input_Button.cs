@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -11,6 +7,9 @@ namespace A_level_course_work_Logic_Gate
     public class Input_Button : Button 
     {
         private bool _Bit = false;
+        /// <summary>
+        /// Changes the feature of the button for what input bit it is automatically.
+        /// </summary>
         public bool Bit { get { return _Bit; }
             set
             {
