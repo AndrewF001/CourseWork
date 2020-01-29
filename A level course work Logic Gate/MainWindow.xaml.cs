@@ -17,7 +17,7 @@ namespace A_level_course_work_Logic_Gate
     public enum Drag_State  { Null,Main_Can,Sub_Can,Link_Mode_Sub}
     public enum IO_Type  { Null, Gate, IO }
     public enum Detection_State { Null, Detected }
-
+    
     public partial class MainWindow : Window, Canvas_Variables
     {
         //varaibles that need to be accessed all around the code
@@ -720,51 +720,6 @@ namespace A_level_course_work_Logic_Gate
             }
         }
 
-
-        //private void Remove_Unsed_Gate()
-        //{
-        //    for (int i = 0; i < Gate_List.Count; i++)
-        //    {
-        //        if (!Gate_List[i].Alive)
-        //        {
-        //            Gate_List.RemoveAt(i);
-        //            i -= 1;
-        //            for (int x = 0; x < Gate_List.Count; x++)
-        //            {
-        //                ShiftGate(i, Gate_List[x]);
-        //            }
-        //        }
-        //        Dispatcher.Invoke(() => { Progress_Window.Value = i; });
-        //    }
-        //}
-        //private void ShiftGate(int ID, Gate_Class Gate)
-        //{
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        if (Gate.Input[i].Input_ID == ID)
-        //        {
-        //            Gate.Input[i].Input_ID = 0;
-        //            Gate.Input[i].Input_Type = IO_Type.Null;
-        //            Gate.Input[i].Input_bit = false;
-        //        }
-        //        else if (Gate.Input[i].Input_ID > ID)
-        //        {
-        //            Gate.Input[i].Input_ID -= 1;
-        //        }
-        //    }
-        //    for (int i = 0; i < 3; i++)
-        //    {
-        //        if (Gate.Output[i].Output_ID == ID)
-        //        {
-        //            Gate.Output[i].Output_ID = 0;
-        //            Gate.Output[i].Output_Type = IO_Type.Null;
-        //        }
-        //        else if (Gate.Output[i].Output_ID > ID)
-        //        {
-        //            Gate.Output[i].Output_ID -= 1;
-        //        }
-        //    }
-        //}
         //Resuesmes the mainwindow.
         private void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
