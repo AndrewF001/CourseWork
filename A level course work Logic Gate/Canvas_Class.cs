@@ -8,7 +8,7 @@ using System.Windows.Media;
 namespace A_level_course_work_Logic_Gate
 {
     public class Canvas_Class : Canvas
-    {        
+    {       
         //variabls for the class
         public Point Old_Pos { get; set; } = new Point();
         public double Scale_Factor { get; set; } = 1;
@@ -97,9 +97,9 @@ namespace A_level_course_work_Logic_Gate
         /// </summary>
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {   
-            int detected = Rect_detection(0, 0, -1);
+            (Detection_State State, int detected) = Rect_detection(0, 0, -1);
 
-            if(!variables.Drag &&detected==-1)
+            if(!variables.Drag &&State == Detection_State.Null)
             {
                 Old_Pos = e.GetPosition(this);
                 MovingCanvas = true;
@@ -107,30 +107,33 @@ namespace A_level_course_work_Logic_Gate
 
             if (!variables.Drag && !variables.Link)
             {
-                if (detected != -1)
+                if (State == Detection_State.Detected)
                 {
                     variables.Drag_Num = detected;
                     variables.Drag_Mode = Drag_State.Sub_Can;
                     Old_Rect = new Point(Convert.ToDouble(Canvas.GetLeft(variables.Gate_List[variables.Drag_Num].Rect)), Convert.ToDouble(Canvas.GetTop(variables.Gate_List[variables.Drag_Num].Rect)));
                 }
             }
-            else if (!variables.Drag && variables.Link && detected!=-1)
+            else if (!variables.Drag && variables.Link && State == Detection_State.Detected)
             {
-                variables.Linking_ID = detected;
-                variables.Drag_Num = variables.Line_List.Count();
-                variables.Line_List.Add(new Line_Class(detected,this,_MainWind,detected,true));
-                //if X == -2 then there was no aviable output for the new link to be made(already deleted the last line)
-                if (variables.Line_List.Last().Output_Num != -2)
-                {
-                    variables.Drag_Mode = Drag_State.Link_Mode_Sub;
-                    variables.Gate_List[detected].Output[variables.Line_List.Last().Output_Num].Line_ID = variables.Drag_Num;
-                    variables.Line_List[variables.Drag_Num].Link_Output_Aline_Line(variables.Gate_List[detected]);
-                }
-                else
-                {
-                    variables.Line_List[variables.Drag_Num].Remove_Class();
-                }
-
+                Line_M1_Down( detected);
+            }
+        }
+        private void Line_M1_Down(int detected)
+        {
+            variables.Linking_ID = detected;
+            variables.Drag_Num = variables.Line_List.Count();
+            variables.Line_List.Add(new Line_Class(detected, this, _MainWind, detected, true));
+            //if X == -2 then there was no aviable output for the new link to be made(already deleted the last line)
+            if (variables.Line_List.Last().Output_Num != -2)
+            {
+                variables.Drag_Mode = Drag_State.Link_Mode_Sub;
+                variables.Gate_List[detected].Output[variables.Line_List.Last().Output_Num].Line_ID = variables.Drag_Num;
+                variables.Line_List[variables.Drag_Num].Link_Output_Aline_Line(variables.Gate_List[detected]);
+            }
+            else
+            {
+                variables.Line_List[variables.Drag_Num].Remove_Class();
             }
         }
         /// <summary>
@@ -147,7 +150,8 @@ namespace A_level_course_work_Logic_Gate
             if (variables.Drag && !variables.Link)
             {
                 variables.Drag_Mode = Drag_State.Null;
-                if(Rect_detection(variables.Gate_List[variables.Drag_Num].Rect.Width, variables.Gate_List[variables.Drag_Num].Rect.Height, variables.Drag_Num) !=-1)
+                (Detection_State State, int Null) = Rect_detection(variables.Gate_List[variables.Drag_Num].Rect.Width, variables.Gate_List[variables.Drag_Num].Rect.Height, variables.Drag_Num);
+                if (State == Detection_State.Detected)
                 {
                     variables.Gate_List[variables.Drag_Num].Rect_Move(Old_Rect);
                     variables.Gate_List[variables.Drag_Num].Move_IO();
@@ -155,37 +159,42 @@ namespace A_level_course_work_Logic_Gate
             }
             else if(variables.Drag && variables.Link)
             {
-                int X = -1;
-                int detection = Rect_detection(0, 0, -1);
-                variables.Drag_Mode = Drag_State.Null;
-                if (detection != -1 && detection != variables.Linking_ID)
-                {
-                    X = Link_Input_Vaildation(detection);
-                }
+                Line_M1_Up();
+            }
+        }
+        private void Line_M1_Up()
+        {
+            int X = -1;
+            (Detection_State State, int detection) = Rect_detection(0, 0, -1);
+            variables.Drag_Mode = Drag_State.Null;
+            if (State == Detection_State.Detected && detection != variables.Linking_ID)
+            {
+                X = Link_Input_Vaildation(detection);
+            }
 
-                if (X!=-1)
-                {
-                    //This a block of code that is only done one time and isn't assocaited with each other so making a method wouldn't make a lot of sense but it's a lot of just nothing.
-                    variables.Line_List[variables.Drag_Num].Input_ID = detection;
-                    variables.Line_List[variables.Drag_Num].Input_Num = X;
-                    variables.Line_List[variables.Drag_Num].Link_Input_Aline_Line(variables.Gate_List[detection]);
-                    variables.Gate_List[detection].Input[X].Input_Type = IO_Type.Gate;
-                    variables.Gate_List[detection].Input[X].Input_ID = variables.Linking_ID;
-                    variables.Gate_List[detection].Input[X].Line_ID = variables.Drag_Num;
-                    variables.Gate_List[variables.Linking_ID].Output[variables.Line_List.Last().Output_Num].Output_ID = detection;
-                    variables.Gate_List[variables.Linking_ID].Output[variables.Line_List.Last().Output_Num].Output_Type = IO_Type.Gate;
-                }
-                else if(X==-1)
-                {
-                    variables.Line_List[variables.Drag_Num].Remove_Class();
-                }
+            if (X != -1)
+            {
+                //This a block of code that is only done one time and isn't assocaited with each other so making a method wouldn't make a lot of sense but it's a lot of just nothing.
+                variables.Line_List[variables.Drag_Num].Input_ID = detection;
+                variables.Line_List[variables.Drag_Num].Input_Num = X;
+                variables.Line_List[variables.Drag_Num].Link_Input_Aline_Line(variables.Gate_List[detection]);
+                variables.Gate_List[detection].Input[X].Input_Type = IO_Type.Gate;
+                variables.Gate_List[detection].Input[X].Input_ID = variables.Linking_ID;
+                variables.Gate_List[detection].Input[X].Line_ID = variables.Drag_Num;
+                variables.Gate_List[variables.Linking_ID].Output[variables.Line_List.Last().Output_Num].Output_ID = detection;
+                variables.Gate_List[variables.Linking_ID].Output[variables.Line_List.Last().Output_Num].Output_Type = IO_Type.Gate;
+            }
+            else if (X == -1)
+            {
+                variables.Line_List[variables.Drag_Num].Remove_Class();
             }
         }
         /// <summary>
         /// Goes through the whole gate list and finds out if you clicked in the range of a gate.
         /// </summary>        
-        public int Rect_detection(double Width, double Height,int Drag_Num)
+        public (Detection_State,  int) Rect_detection(double Width, double Height,int Drag_Num)
         {
+            Detection_State State = Detection_State.Null;
             int Detected = -1;
             Point Pos_Sub = Mouse.GetPosition(this);
             for (int i = 0; i < variables.Gate_List.Count(); i++)
@@ -193,10 +202,13 @@ namespace A_level_course_work_Logic_Gate
                 Gate_Class Rect = variables.Gate_List[i];
                 double Rect_X = GetLeft(variables.Gate_List[i].Rect);
                 double Rect_Y = GetTop(variables.Gate_List[i].Rect);
-                if (Pos_Sub.X+Width > Rect_X && Pos_Sub.X < Rect_X + Rect.Rect.Width && Pos_Sub.Y+Height > Rect_Y && Pos_Sub.Y < Rect_Y + Rect.Rect.Height&&i!=Drag_Num && Rect.Alive)
+                if (Pos_Sub.X + Width > Rect_X && Pos_Sub.X < Rect_X + Rect.Rect.Width && Pos_Sub.Y + Height > Rect_Y && Pos_Sub.Y < Rect_Y + Rect.Rect.Height && i != Drag_Num && Rect.Alive)
+                {
                     Detected = i;
+                    State = Detection_State.Detected;
+                }
             }
-            return Detected;
+            return (State, Detected);
         }
         /// <summary>
         /// Output_Slot works out the output slot that the user clicked on.
@@ -330,70 +342,79 @@ namespace A_level_course_work_Logic_Gate
             if(!variables.Drag)
             {
                 //sees if you acutally right click on something
-                int detection = Rect_detection(0, 0, -1);
-                if (detection != -1)
+                (Detection_State State, int detection) = Rect_detection(0, 0, -1);
+                if (State == Detection_State.Detected)
                 { //see which mode of the program you're in because each one will have a different action
                     if(!variables.Link)
                     {    //completely romoves the gate.
-                        variables.Gate_List[detection].Alive = false;
-                        Children.Remove(variables.Gate_List[detection].Rect);
-                        for (int i = 0; i < 3; i++)  //this is for each output of the gate after it's been removed
-                        {
-                            if(variables.Gate_List[detection].Output[i].Output_Type == IO_Type.Gate)
-                            { //removes the line "connecting" the 2 gates.
-                                variables.Line_List[variables.Gate_List[detection].Output[i].Line_ID].Remove_UI();
-                                for (int x = 0; x < 2; x++) // this is to determin which input the gate is connected to
-                                {
-                                    if (variables.Gate_List[variables.Gate_List[detection].Output[i].Output_ID].Input[x].Input_ID == detection && variables.Gate_List[variables.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type == IO_Type.Gate)
-                                    { //changes the state of the gate it's connected to too null so that it can accept another input.
-                                        variables.Gate_List[variables.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type = IO_Type.Null;
-                                    }
-                                }
-                                variables.Gate_List[detection].Output[i].Output_Type = IO_Type.Null;
-                            }
-                            else if(variables.Gate_List[detection].Output[i].Output_Type == IO_Type.IO)
-                            {
-                                variables.Output_Circle_List[variables.Gate_List[detection].Output[i].Output_ID].Remove_UI();                               
-                                //remove the ellipses from the canvas in the output_Circle list with the ID in the 
-                            }
-                        }
-                        for (int i = 0; i < 2; i++) //does the same but for input
-                        {
-                            if (variables.Gate_List[detection].Input[i].Input_Type == IO_Type.Gate)
-                            {
-                                variables.Line_List[variables.Gate_List[detection].Input[i].Line_ID].Remove_UI();
-                                for (int x = 0; x < 3; x++)
-                                {
-                                    if (variables.Gate_List[variables.Gate_List[detection].Input[i].Input_ID].Output[x].Output_ID == detection)
-                                    {
-                                        variables.Gate_List[variables.Gate_List[detection].Input[i].Input_ID].Output[x].Output_Type = IO_Type.Null;
-                                    }
-                                }
-                            }
-                            else if (variables.Gate_List[detection].Input[i].Input_Type == IO_Type.IO)
-                            {
-                                Children.Remove(variables.Input_Button_List[variables.Gate_List[detection].Input[i].Input_ID]);
-                            }
-                        }
+                        Remove_Gate(detection);
                     }
                     else if(variables.Link) //if in linked mode then it should act as tho you're doing the oppersite of adding a connection.
                     {
-                        int Output_Num = Output_Slot(detection);
-                        if (variables.Gate_List[detection].Output[Output_Num].Output_ID != -1 && variables.Gate_List[detection].Output[Output_Num].Output_Type==IO_Type.Gate)
-                        {
-                            for (int i = 0; i < 2; i++)
-                            {
-                                if(variables.Gate_List[variables.Gate_List[detection].Output[Output_Num].Output_ID].Input[i].Input_ID==detection)
-                                {
-                                    variables.Gate_List[variables.Gate_List[detection].Output[Output_Num].Output_ID].Input[i].Input_Type = IO_Type.Null;
-                                }
-                            }
-                            variables.Line_List[variables.Gate_List[detection].Output[Output_Num].Line_ID].Remove_UI();
-                            variables.Gate_List[detection].Output[Output_Num].Output_Type = IO_Type.Null;
-                        }
+                        Remove_Line(detection);
                     }
 
                 }
+            }
+        }
+        private void Remove_Gate(int detection)
+        {
+            variables.Gate_List[detection].Alive = false;
+            Children.Remove(variables.Gate_List[detection].Rect);
+            for (int i = 0; i < 3; i++)  //this is for each output of the gate after it's been removed
+            {
+                if (variables.Gate_List[detection].Output[i].Output_Type == IO_Type.Gate)
+                { //removes the line "connecting" the 2 gates.
+                    variables.Line_List[variables.Gate_List[detection].Output[i].Line_ID].Remove_UI();
+                    for (int x = 0; x < 2; x++) // this is to determin which input the gate is connected to
+                    {
+                        if (variables.Gate_List[variables.Gate_List[detection].Output[i].Output_ID].Input[x].Input_ID == detection && variables.Gate_List[variables.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type == IO_Type.Gate)
+                        { //changes the state of the gate it's connected to too null so that it can accept another input.
+                            variables.Gate_List[variables.Gate_List[detection].Output[i].Output_ID].Input[x].Input_Type = IO_Type.Null;
+                        }
+                    }
+                    variables.Gate_List[detection].Output[i].Output_Type = IO_Type.Null;
+                }
+                else if (variables.Gate_List[detection].Output[i].Output_Type == IO_Type.IO)
+                {
+                    variables.Output_Circle_List[variables.Gate_List[detection].Output[i].Output_ID].Remove_UI();
+                    //remove the ellipses from the canvas in the output_Circle list with the ID in the 
+                }
+            }
+            for (int i = 0; i < 2; i++) //does the same but for input
+            {
+                if (variables.Gate_List[detection].Input[i].Input_Type == IO_Type.Gate)
+                {
+                    variables.Line_List[variables.Gate_List[detection].Input[i].Line_ID].Remove_UI();
+                    for (int x = 0; x < 3; x++)
+                    {
+                        if (variables.Gate_List[variables.Gate_List[detection].Input[i].Input_ID].Output[x].Output_ID == detection)
+                        {
+                            variables.Gate_List[variables.Gate_List[detection].Input[i].Input_ID].Output[x].Output_Type = IO_Type.Null;
+                        }
+                    }
+                }
+                else if (variables.Gate_List[detection].Input[i].Input_Type == IO_Type.IO)
+                {
+                    Children.Remove(variables.Input_Button_List[variables.Gate_List[detection].Input[i].Input_ID]);
+                }
+            }
+        }
+
+        private void Remove_Line(int detection)
+        {
+            int Output_Num = Output_Slot(detection);
+            if (variables.Gate_List[detection].Output[Output_Num].Output_ID != -1 && variables.Gate_List[detection].Output[Output_Num].Output_Type == IO_Type.Gate)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    if (variables.Gate_List[variables.Gate_List[detection].Output[Output_Num].Output_ID].Input[i].Input_ID == detection)
+                    {
+                        variables.Gate_List[variables.Gate_List[detection].Output[Output_Num].Output_ID].Input[i].Input_Type = IO_Type.Null;
+                    }
+                }
+                variables.Line_List[variables.Gate_List[detection].Output[Output_Num].Line_ID].Remove_UI();
+                variables.Gate_List[detection].Output[Output_Num].Output_Type = IO_Type.Null;
             }
         }
     }

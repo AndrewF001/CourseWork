@@ -52,14 +52,7 @@ namespace A_level_course_work_Logic_Gate
         //make this bit depend. So when the bit variable changes so does everything else.
         protected override void OnClick()
         {
-            if (_Bit)
-            {
-                Bit = false;
-            }
-            else
-            {                
-                Bit = true;
-            }
+            Bit = !Bit;
         }
 
         public void Aline_Box(Gate_Class Gate)

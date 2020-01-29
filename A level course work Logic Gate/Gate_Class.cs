@@ -5,6 +5,7 @@ using System.Windows;
 using System.Collections.Generic;
 using System;
 using System.Windows.Threading;
+using System.Windows.Input;
 
 namespace A_level_course_work_Logic_Gate
 {    
@@ -70,6 +71,13 @@ namespace A_level_course_work_Logic_Gate
             _Line_List = Line_List;
             _Input_Button_List = Input_Button_List;
             Gate_Output_Calc();
+        }
+
+        protected void Part_Constructor(Canvas Main_Canvas)
+        {
+            Main_Canvas.Children.Add(Rect);
+            Point Pos = Mouse.GetPosition(Main_Canvas);
+            Rect_Move(Pos);
         }
         //overridable method
         public abstract void Gate_Output_Calc();

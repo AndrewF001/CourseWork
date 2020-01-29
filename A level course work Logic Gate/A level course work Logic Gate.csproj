@@ -59,6 +59,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="File_Classes\File_Creation_Class.cs" />
+    <Compile Include="File_Classes\File_Class.cs" />
+    <Compile Include="File_Classes\File_Gates.cs" />
+    <Compile Include="File_Classes\File_Gate_Input.cs" />
+    <Compile Include="File_Classes\File_Gate_Output.cs" />
+    <Compile Include="File_Classes\File_Inputs.cs" />
+    <Compile Include="File_Classes\File_Lines.cs" />
+    <Compile Include="File_Classes\File_Output.cs" />
+    <Compile Include="Gate_Arguments.cs" />
+    <Compile Include="MainWindow_Variables.cs" />
+    <Compile Include="SubGate_Classes\Nand_Gate.cs" />
+    <Compile Include="SubGate_Classes\Nor_Gate.cs" />
+    <Compile Include="SubGate_Classes\Not_Gate.cs" />
+    <Compile Include="SubGate_Classes\Or_Gate.cs" />
+    <Compile Include="SubGate_Classes\Transformer_Gate.cs" />
+    <Compile Include="SubGate_Classes\Xnor_Gate.cs" />
+    <Compile Include="SubGate_Classes\Xor_Gate.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -69,7 +86,7 @@
     </Compile>
     <Compile Include="Canvas_Class.cs" />
     <Compile Include="Canvas_Variables.cs" />
-    <Compile Include="Gate_SubClasses.cs" />
+    <Compile Include="SubGate_Classes\And_Gate.cs" />
     <Compile Include="Output_Circle.cs" />
     <Compile Include="Input_Button.cs" />
     <Compile Include="Input_Class.cs" />

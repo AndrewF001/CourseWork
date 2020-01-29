@@ -96,5 +96,17 @@ namespace A_level_course_work_Logic_Gate
             Remove_UI();
             _Line_List.Remove(this);
         }
+
+        public void Change_UI_Black()
+        {
+            UI_Line.Stroke = Brushes.Black;
+            Line_Lable.Foreground = Brushes.Black;
+        }
+
+        public void Change_UI_Red()
+        {
+            UI_Line.Stroke = Brushes.Red;
+            Line_Lable.Foreground = Brushes.Red;
+        }
     }
 }

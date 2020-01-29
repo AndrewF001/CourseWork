@@ -35,17 +35,27 @@ namespace A_level_course_work_Logic_Gate
                 _bit = value;
                 if (value == false)
                 {
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Circle.Fill = Brushes.White));
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Output_Lab.Foreground = Brushes.Black));
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Output_Lab.Content = "0"));
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Circle_0()));
                 }
                 else
                 {
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Circle.Fill = Brushes.Black));
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Output_Lab.Foreground = Brushes.White));
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Output_Lab.Content = "1"));
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Circle_1()));
                 }
             }
+        }
+        private void Circle_0()
+        {
+            Circle.Fill = Brushes.White;
+            Output_Lab.Foreground = Brushes.Black;
+            Output_Lab.Content = "0";
+
+        }
+
+        private void Circle_1()
+        {
+            Circle.Fill = Brushes.Black;
+            Output_Lab.Foreground = Brushes.White;
+            Output_Lab.Content = "1";
         }
 
         public void Add_UI()
