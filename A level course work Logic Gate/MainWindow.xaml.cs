@@ -607,7 +607,6 @@ namespace A_level_course_work_Logic_Gate
             {
                 if (Gate_List[Output_Circle_List[i].Output_ID].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.Gate || Gate_List[Output_Circle_List[i].Output_ID].Alive == false)
                 {
-                    Output_Circle_List.RemoveAt(i);
                     for (int x = 0; x < Gate_List.Count; x++)
                     {
                         if (Gate_List[x].Output[Output_Circle_List[i].Output_Port].Output_ID > i && Gate_List[x].Output[Output_Circle_List[i].Output_Port].Output_Type == IO_Type.IO)
@@ -615,6 +614,7 @@ namespace A_level_course_work_Logic_Gate
                             Gate_List[x].Output[Output_Circle_List[i].Output_Port].Output_ID -= 1;
                         }
                     }
+                    Output_Circle_List.RemoveAt(i);
                     i -= 1;
                 }
             }
@@ -625,7 +625,6 @@ namespace A_level_course_work_Logic_Gate
             {
                 if (!Gate_List[Input_Button_List[i].Input_ID].Alive)
                 {
-                    Input_Button_List.RemoveAt(i);
                     for (int x = 0; x < Gate_List.Count; x++)
                     {
                         if (Gate_List[x].Input[Input_Button_List[i].Input_Port].Input_ID > i && Gate_List[x].Input[Input_Button_List[i].Input_Port].Input_Type == IO_Type.IO)
@@ -633,6 +632,7 @@ namespace A_level_course_work_Logic_Gate
                             Gate_List[x].Input[Input_Button_List[i].Input_Port].Input_ID -= 1;
                         }
                     }
+                    Input_Button_List.RemoveAt(i);
                     i -= 1;
                 }
             }
@@ -643,8 +643,6 @@ namespace A_level_course_work_Logic_Gate
             {
                 if (Gate_List[Line_List[i].Input_ID].Input[Line_List[i].Input_Num].Input_Type != IO_Type.Gate || Gate_List[Line_List[i].Input_ID].Alive == false)
                 {
-                    Line_List.RemoveAt(i);
-                    i -= 1;
                     for (int x = 0; x < Gate_List.Count; x++)
                     {
                         for (int y = 0; y < 3; y++)
@@ -661,55 +659,112 @@ namespace A_level_course_work_Logic_Gate
                                 Gate_List[x].Input[z].Line_ID -= 1;
                             }
                         }
-
                     }
+                    Line_List.RemoveAt(i);
+                    i -= 1;
                 }
             }
         }
+
         private void Remove_Unsed_Gate()
         {
             for (int i = 0; i < Gate_List.Count; i++)
             {
-                if (!Gate_List[i].Alive)
+                if(!Gate_List[i].Alive)
                 {
-                    Gate_List.RemoveAt(i);
-                    i -= 1;
                     for (int x = 0; x < Gate_List.Count; x++)
                     {
-                        ShiftGate(i, Gate_List[x]);
+                        for (int z = 0; z < 3; z++)
+                        {
+                            if (Gate_List[x].Output[z].Output_Type==IO_Type.Gate && Gate_List[x].Output[z].Output_ID>i)
+                            {
+                                Gate_List[x].Output[z].Output_ID -= 1;
+                            }
+                        }
+                        for (int z = 0; z < 2; z++)
+                        {
+                            if (Gate_List[x].Input[z].Input_Type == IO_Type.Gate && Gate_List[x].Input[z].Input_ID > i)
+                            {
+                                Gate_List[x].Input[z].Input_ID -= 1;
+                            }
+                        }                        
                     }
-                }
-                Dispatcher.Invoke(() => { Progress_Window.Value = i; });
-            }
-        }
-        private void ShiftGate(int ID, Gate_Class Gate)
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                if (Gate.Input[i].Input_ID == ID)
-                {
-                    Gate.Input[i].Input_ID = 0;
-                    Gate.Input[i].Input_Type = IO_Type.Null;
-                    Gate.Input[i].Input_bit = false;
-                }
-                else if (Gate.Input[i].Input_ID > ID)
-                {
-                    Gate.Input[i].Input_ID -= 1;
-                }
-            }
-            for (int i = 0; i < 3; i++)
-            {
-                if (Gate.Output[i].Output_ID == ID)
-                {
-                    Gate.Output[i].Output_ID = 0;
-                    Gate.Output[i].Output_Type = IO_Type.Null;
-                }
-                else if (Gate.Output[i].Output_ID > ID)
-                {
-                    Gate.Output[i].Output_ID -= 1;
+                    for (int z = 0; z < Input_Button_List.Count; z++)
+                    {
+                        if(Input_Button_List[z].Input_ID>i)
+                        {
+                            Input_Button_List[z].Input_ID -= 1;
+                        }
+                    }
+                    for (int z = 0; z < Output_Circle_List.Count; z++)
+                    {
+                        if(Output_Circle_List[z].Output_ID >i)
+                        {
+                            Output_Circle_List[z].Output_ID -= 1;
+                        }
+                    }
+                    for (int z = 0; z < Line_List.Count; z++)
+                    {
+                        if(Line_List[z].Output_ID>i)
+                        {
+                            Line_List[z].Output_ID -= 1;
+                        }
+                        if(Line_List[z].Input_ID>i)
+                        {
+                            Line_List[z].Input_ID -= 1;
+                        }
+                    }
+                    Gate_List.RemoveAt(i);
+                    i -= 1;
                 }
             }
         }
+
+
+        //private void Remove_Unsed_Gate()
+        //{
+        //    for (int i = 0; i < Gate_List.Count; i++)
+        //    {
+        //        if (!Gate_List[i].Alive)
+        //        {
+        //            Gate_List.RemoveAt(i);
+        //            i -= 1;
+        //            for (int x = 0; x < Gate_List.Count; x++)
+        //            {
+        //                ShiftGate(i, Gate_List[x]);
+        //            }
+        //        }
+        //        Dispatcher.Invoke(() => { Progress_Window.Value = i; });
+        //    }
+        //}
+        //private void ShiftGate(int ID, Gate_Class Gate)
+        //{
+        //    for (int i = 0; i < 2; i++)
+        //    {
+        //        if (Gate.Input[i].Input_ID == ID)
+        //        {
+        //            Gate.Input[i].Input_ID = 0;
+        //            Gate.Input[i].Input_Type = IO_Type.Null;
+        //            Gate.Input[i].Input_bit = false;
+        //        }
+        //        else if (Gate.Input[i].Input_ID > ID)
+        //        {
+        //            Gate.Input[i].Input_ID -= 1;
+        //        }
+        //    }
+        //    for (int i = 0; i < 3; i++)
+        //    {
+        //        if (Gate.Output[i].Output_ID == ID)
+        //        {
+        //            Gate.Output[i].Output_ID = 0;
+        //            Gate.Output[i].Output_Type = IO_Type.Null;
+        //        }
+        //        else if (Gate.Output[i].Output_ID > ID)
+        //        {
+        //            Gate.Output[i].Output_ID -= 1;
+        //        }
+        //    }
+        //}
         //Resuesmes the mainwindow.
         private void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -751,6 +806,11 @@ namespace A_level_course_work_Logic_Gate
             Sub_Canvas = new Canvas_Class(this, ref Canvas_Border, this);
             SetUp_Canvas();
 
+        }
+
+        private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

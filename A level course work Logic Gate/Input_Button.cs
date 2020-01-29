@@ -32,7 +32,7 @@ namespace A_level_course_work_Logic_Gate
             }
         
         }
-        public int Input_ID { get;}
+        public int Input_ID { get; set; }
         public int Input_Port;
         public List<Gate_Class> _Gate_List = new List<Gate_Class>();
         private MainWindow _MainWind { get; set; }
