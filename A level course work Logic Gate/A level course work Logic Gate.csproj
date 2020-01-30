@@ -67,8 +67,6 @@
     <Compile Include="File_Classes\File_Inputs.cs" />
     <Compile Include="File_Classes\File_Lines.cs" />
     <Compile Include="File_Classes\File_Output.cs" />
-    <Compile Include="Gate_Arguments.cs" />
-    <Compile Include="MainWindow_Variables.cs" />
     <Compile Include="SubGate_Classes\Nand_Gate.cs" />
     <Compile Include="SubGate_Classes\Nor_Gate.cs" />
     <Compile Include="SubGate_Classes\Not_Gate.cs" />

@@ -30,7 +30,7 @@ namespace A_level_course_work_Logic_Gate
 
         //program info
         public bool Drag { get; set; } = false;
-        public int Delay_Intervals { get; set; } = 1;
+        public uint Delay_Intervals { get; set; } = 1;
         public int Drag_Num { get; set; } = 0;
         private bool _link = false;
         public bool Sim_Running { get; set; } = false;
@@ -429,12 +429,13 @@ namespace A_level_course_work_Logic_Gate
                     Delay_Intervals = 0;
                     Delay_Lable.Text = "0";
                 }
-                Delay_Intervals = Convert.ToInt32(Delay_Lable.Text);
+                Delay_Intervals = Convert.ToUInt32(Delay_Lable.Text);
             }
             catch
             {
-                Delay_Lable.Text = Convert.ToString(Delay_Intervals);
             }
+            Delay_Lable.Text = Convert.ToString(Delay_Intervals);
+            Delay_Lable.CaretIndex = Delay_Lable.Text.Length;
         }
 
 
@@ -496,7 +497,7 @@ namespace A_level_course_work_Logic_Gate
 
                 Next_Gate = Remove_Duplicats(Next_Gate);
 
-                await Task.Delay(Delay_Intervals);
+                await Task.Delay(Convert.ToInt32(Delay_Intervals));
 
                 Set_Input_Back(Active_Gates);
 

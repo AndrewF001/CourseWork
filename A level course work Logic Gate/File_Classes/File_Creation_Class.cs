@@ -156,12 +156,16 @@ namespace A_level_course_work_Logic_Gate.File_Classes
         //Save file setup
         public void MenuItem_SaveAs_Click_Method()
         {
+            Save_AS();
+        }
+        private void Save_AS()
+        {
             MainWind.Clean_Up_Method();
-            MainWind.Saved = true;
             File_Class Save = File_Creation();
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == true)
             {
+                MainWind.Saved = true;
                 saveFileDialog.InitialDirectory = @"C:\Documents";
                 MainWind.File_Location = saveFileDialog.FileName;
                 Save_File(Save);
@@ -199,11 +203,16 @@ namespace A_level_course_work_Logic_Gate.File_Classes
         {
             if (MainWind.Saved)
             {
+                MainWind.Clean_Up_Method();
                 Stream stream = new FileStream(MainWind.File_Location, FileMode.Create, FileAccess.Write);
                 IFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(stream, Save);
                 stream.Close();
                 MainWind.Saved = true;
+            }
+            else
+            {
+                Save_AS();
             }
         }
 
