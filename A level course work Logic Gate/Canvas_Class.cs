@@ -23,7 +23,8 @@ namespace A_level_course_work_Logic_Gate
         public Border _Canvas_Border { get; set; }
 
         public Canvas_Variables variables;
-        private MainWindow _MainWind { get; }        
+        private MainWindow _MainWind { get; }
+        private int Last_Rect { get; set; } = -1;
 
 /// <summary>
 ///  The constructor just sets the value for the canvas and adds the transformation set up.
@@ -51,6 +52,24 @@ namespace A_level_course_work_Logic_Gate
         /// </summary>
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            Detection_State State;
+            int ID;
+            (State, ID) = Rect_detection(0, 0, -1);
+            if(State == Detection_State.Detected)
+            {
+                if (Last_Rect != -1)
+                {
+                    variables.Gate_List[Last_Rect].Rect.Stroke = Brushes.Black;
+                }
+                variables.Gate_List[ID].Rect.Stroke = Brushes.LightGreen;
+                Last_Rect = ID;
+            }
+            else if(State == Detection_State.Detected && Last_Rect!=-1)
+            {
+                variables.Gate_List[Last_Rect].Rect.Stroke = Brushes.Black;
+                Last_Rect = -1;
+            }
+            
             if (MovingCanvas)
             {
                 Translate_Action.X += (e.GetPosition(this).X - Old_Pos.X);
