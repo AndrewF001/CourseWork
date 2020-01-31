@@ -17,7 +17,7 @@ namespace A_level_course_work_Logic_Gate
     {
         public App()
         {
-            ShutdownMode = ShutdownMode.OnMainWindowClose;
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
         }
     }
 
