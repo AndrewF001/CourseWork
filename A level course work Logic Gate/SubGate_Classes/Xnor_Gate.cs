@@ -16,7 +16,7 @@ namespace A_level_course_work_Logic_Gate.SubGate_Classes
         }
         public override void Gate_Output_Calc()
         {
-            if ((Input[0].Input_bit && Input[1].Input_bit == true) || (Input[0].Input_bit && Input[1].Input_bit == false))
+            if ((Input[0].Input_bit == true && Input[1].Input_bit == true) || (Input[0].Input_bit == false && Input[1].Input_bit == false))
             {
                 Gate_Bit = true;
             }
