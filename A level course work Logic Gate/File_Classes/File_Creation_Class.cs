@@ -30,7 +30,7 @@ namespace A_level_course_work_Logic_Gate.File_Classes
             bool CarryOn = true;
             if (MainWind.File_Location != "")
             {
-                Save_File(File_Creation());
+                Save_File();
                 MainWind.Reset_Program();
                 var result = MessageBox.Show("Your work has been saved", "New File", MessageBoxButton.OK);
             }
@@ -55,8 +55,15 @@ namespace A_level_course_work_Logic_Gate.File_Classes
                     MainWind.File_Location = openFileDialog.FileName;
                     Stream stream = new FileStream(MainWind.File_Location, FileMode.Open, FileAccess.Read);
                     IFormatter formatter = new BinaryFormatter();
-                    File_Class Loaded_File = (File_Class)formatter.Deserialize(stream);
-                    File_Unload(Loaded_File);
+                    try
+                    {
+                        File_Class Loaded_File = (File_Class)formatter.Deserialize(stream);
+                        File_Unload(Loaded_File);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The file you tried to open doesn't work with this program", "Failed", MessageBoxButton.OK);
+                    }
                 }
 
             }
@@ -99,28 +106,28 @@ namespace A_level_course_work_Logic_Gate.File_Classes
             {
                 switch (Loaded_File.Gates[i].Type)
                 {
-                    case (0):
+                    case (Gate_Type.And):
                         MainWind.Gate_List.Add(new And_Gate_Class(MainWind.Main_Canvas, MainWind.Sub_Canvas.Scale_Factor, MainWind.Output_Circle_List, MainWind.Line_List, MainWind.Input_Button_List));
                         break;
-                    case (1):
+                    case (Gate_Type.Nand):
                         MainWind.Gate_List.Add(new Nand_Gate_Class(MainWind.Main_Canvas, MainWind.Sub_Canvas.Scale_Factor, MainWind.Output_Circle_List, MainWind.Line_List, MainWind.Input_Button_List));
                         break;
-                    case (2):
+                    case (Gate_Type.Not):
                         MainWind.Gate_List.Add(new Not_Gate_Class(MainWind.Main_Canvas, MainWind.Sub_Canvas.Scale_Factor, MainWind.Output_Circle_List, MainWind.Line_List, MainWind.Input_Button_List));
                         break;
-                    case (3):
+                    case (Gate_Type.Or):
                         MainWind.Gate_List.Add(new Or_Gate_Class(MainWind.Main_Canvas, MainWind.Sub_Canvas.Scale_Factor, MainWind.Output_Circle_List, MainWind.Line_List, MainWind.Input_Button_List));
                         break;
-                    case (4):
+                    case (Gate_Type.Nor):
                         MainWind.Gate_List.Add(new Nor_Gate_Class(MainWind.Main_Canvas, MainWind.Sub_Canvas.Scale_Factor, MainWind.Output_Circle_List, MainWind.Line_List, MainWind.Input_Button_List));
                         break;
-                    case (5):
+                    case (Gate_Type.Xor):
                         MainWind.Gate_List.Add(new Xor_Gate_Class(MainWind.Main_Canvas, MainWind.Sub_Canvas.Scale_Factor, MainWind.Output_Circle_List, MainWind.Line_List, MainWind.Input_Button_List));
                         break;
-                    case (6):
+                    case (Gate_Type.Xnor):
                         MainWind.Gate_List.Add(new Xnor_Gate_Class(MainWind.Main_Canvas, MainWind.Sub_Canvas.Scale_Factor, MainWind.Output_Circle_List, MainWind.Line_List, MainWind.Input_Button_List));
                         break;
-                    case (7):
+                    case (Gate_Type.Transformer):
                         MainWind.Gate_List.Add(new Transformer_Class(MainWind.Main_Canvas, MainWind.Sub_Canvas.Scale_Factor, MainWind.Output_Circle_List, MainWind.Line_List, MainWind.Input_Button_List));
                         break;
                     default:
@@ -159,16 +166,14 @@ namespace A_level_course_work_Logic_Gate.File_Classes
             Save_AS();
         }
         private void Save_AS()
-        {
-            MainWind.Clean_Up_Method();
-            File_Class Save = File_Creation();
+        {           
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == true)
             {
                 MainWind.Saved = true;
                 saveFileDialog.InitialDirectory = @"C:\Documents";
                 MainWind.File_Location = saveFileDialog.FileName;
-                Save_File(Save);
+                Save_File();
             }
         }
         //just maps the current class vairables into the File Classes
@@ -196,19 +201,18 @@ namespace A_level_course_work_Logic_Gate.File_Classes
 
         public void MenuItem_Save_Click_Method()
         {
-            File_Class Save = File_Creation();
-            Save_File(Save);
+            Save_File();
         }
-        public void Save_File(File_Class Save)
+        public void Save_File()
         {
             if (MainWind.Saved)
             {
                 MainWind.Clean_Up_Method();
+                File_Class Save = File_Creation();
                 Stream stream = new FileStream(MainWind.File_Location, FileMode.Create, FileAccess.Write);
                 IFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(stream, Save);
                 stream.Close();
-                MainWind.Saved = true;
             }
             else
             {

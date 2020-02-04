@@ -9,7 +9,7 @@ namespace A_level_course_work_Logic_Gate.File_Classes
     [Serializable]
     public class File_Version_Gate
     {
-        public File_Version_Gate(int _Type, bool _Alive, Input_Class[] _Input, bool Gate_Bit, Output_Class[] _Output, double x, double y)
+        public File_Version_Gate(Gate_Type _Type, bool _Alive, Input_Class[] _Input, bool Gate_Bit, Output_Class[] _Output, double x, double y)
         {
             Type = _Type;
             Alive = _Alive;
@@ -26,7 +26,7 @@ namespace A_level_course_work_Logic_Gate.File_Classes
             }
         }
 
-        public int Type { get; set; }
+        public Gate_Type Type { get; set; }
         public bool Alive { get; set; } = true;
         public File_Version_GI[] Input { get; set; } = new File_Version_GI[2];
         public bool _Gate_Bit;

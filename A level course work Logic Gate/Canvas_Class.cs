@@ -21,10 +21,10 @@ namespace A_level_course_work_Logic_Gate
 
         public bool MovingCanvas { get; set; } = false;
         public Border _Canvas_Border { get; set; }
+        public int Last_Rect { get; set; } = -1;
 
         public Canvas_Variables variables;
         private MainWindow _MainWind { get; }
-        private int Last_Rect { get; set; } = -1;
 
 /// <summary>
 ///  The constructor just sets the value for the canvas and adds the transformation set up.
@@ -55,7 +55,7 @@ namespace A_level_course_work_Logic_Gate
             Detection_State State;
             int ID;
             (State, ID) = Rect_detection(0, 0, -1);
-            if(State == Detection_State.Detected)
+            if (State == Detection_State.Detected)
             {
                 if (Last_Rect != -1)
                 {
@@ -63,11 +63,6 @@ namespace A_level_course_work_Logic_Gate
                 }
                 variables.Gate_List[ID].Rect.Stroke = Brushes.LightGreen;
                 Last_Rect = ID;
-            }
-            else if(State == Detection_State.Detected && Last_Rect!=-1)
-            {
-                variables.Gate_List[Last_Rect].Rect.Stroke = Brushes.Black;
-                Last_Rect = -1;
             }
             
             if (MovingCanvas)
@@ -124,18 +119,15 @@ namespace A_level_course_work_Logic_Gate
                 MovingCanvas = true;
             }
 
-            if (!variables.Drag && !variables.Link)
+            if (!variables.Drag && !variables.Link && State == Detection_State.Detected)
             {
-                if (State == Detection_State.Detected)
-                {
-                    variables.Drag_Num = detected;
-                    variables.Drag_Mode = Drag_State.Sub_Can;
-                    Old_Rect = new Point(Convert.ToDouble(Canvas.GetLeft(variables.Gate_List[variables.Drag_Num].Rect)), Convert.ToDouble(Canvas.GetTop(variables.Gate_List[variables.Drag_Num].Rect)));
-                }
+                variables.Drag_Num = detected;
+                variables.Drag_Mode = Drag_State.Sub_Can;
+                Old_Rect = new Point(Convert.ToDouble(Canvas.GetLeft(variables.Gate_List[variables.Drag_Num].Rect)), Convert.ToDouble(Canvas.GetTop(variables.Gate_List[variables.Drag_Num].Rect)));
             }
             else if (!variables.Drag && variables.Link && State == Detection_State.Detected)
             {
-                Line_M1_Down( detected);
+                Line_M1_Down(detected);
             }
         }
         private void Line_M1_Down(int detected)
@@ -238,7 +230,7 @@ namespace A_level_course_work_Logic_Gate
         public int Link_Output_Vaildation(int Clicked)
         {
             int Output_pos = Output_Slot(Clicked);
-            if (variables.Gate_List[Clicked].Type == 7)
+            if (variables.Gate_List[Clicked].Type == Gate_Type.Transformer)
             {
                 if (variables.Gate_List[Clicked].Output[Output_pos].Output_ID != -1)
                 {
@@ -274,7 +266,7 @@ namespace A_level_course_work_Logic_Gate
         {
             int Output = 0;
             Point Pos = Mouse.GetPosition(this);
-            if (variables.Gate_List[Clicked].Type == 7)
+            if (variables.Gate_List[Clicked].Type == Gate_Type.Transformer)
             {
                 if (Pos.Y < GetTop(variables.Gate_List[Clicked].Rect) + 29)
                     Output = 0;                    
@@ -296,7 +288,7 @@ namespace A_level_course_work_Logic_Gate
         {
             int Output = Input_Slot(Clicked);
             Point Pos = Mouse.GetPosition(this);
-            if(variables.Gate_List[Clicked].Type==2|| variables.Gate_List[Clicked].Type == 7)
+            if(variables.Gate_List[Clicked].Type==Gate_Type.Not|| variables.Gate_List[Clicked].Type == Gate_Type.Transformer)
             {
                 if(variables.Gate_List[Clicked].Input[0].Input_ID!=-1)
                 {
@@ -333,7 +325,7 @@ namespace A_level_course_work_Logic_Gate
         {
             int Input_Slot = -1;
             Point Pos = Mouse.GetPosition(this);
-            if (variables.Gate_List[Clicked].Type == 2 || variables.Gate_List[Clicked].Type == 7)
+            if (variables.Gate_List[Clicked].Type == Gate_Type.Not || variables.Gate_List[Clicked].Type == Gate_Type.Transformer)
             {
                     Input_Slot = 0;
             }
@@ -357,28 +349,30 @@ namespace A_level_course_work_Logic_Gate
         /// </summary>
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
-            //checks you're not dragging
-            if(!variables.Drag)
+            (Detection_State State, int detection) = Rect_detection(0, 0, -1);
+            //checks you're not dragging and that you clicked on a gate.
+            if (!variables.Drag && State == Detection_State.Detected)
             {
-                //sees if you acutally right click on something
-                (Detection_State State, int detection) = Rect_detection(0, 0, -1);
-                if (State == Detection_State.Detected)
-                { //see which mode of the program you're in because each one will have a different action
-                    if(!variables.Link)
-                    {    //completely romoves the gate.
-                        Remove_Gate(detection);
-                    }
-                    else if(variables.Link) //if in linked mode then it should act as tho you're doing the oppersite of adding a connection.
-                    {
-                        Remove_Line(detection);
-                    }
-
+                //see which mode of the program you're in because each one will have a different action
+                if (!variables.Link)
+                {    //completely romoves the gate.
+                    Remove_Gate(detection);
+                }
+                else if (variables.Link) //if in linked mode then it should act as tho you're doing the oppersite of adding a connection.
+                {
+                    Remove_Line(detection);
                 }
             }
         }
         private void Remove_Gate(int detection)
         {
             variables.Gate_List[detection].Alive = false;
+
+            if(detection == Last_Rect)
+            {
+                Last_Rect = -1;
+            }
+
             Children.Remove(variables.Gate_List[detection].Rect);
             for (int i = 0; i < 3; i++)  //this is for each output of the gate after it's been removed
             {

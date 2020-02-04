@@ -17,6 +17,7 @@ namespace A_level_course_work_Logic_Gate
     public enum Drag_State  { Null,Main_Can,Sub_Can,Link_Mode_Sub}
     public enum IO_Type  { Null, Gate, IO }
     public enum Detection_State { Null, Detected }
+    public enum Gate_Type { And, Nand, Not, Or, Nor, Xor, Xnor, Transformer }
     
     public partial class MainWindow : Window, Canvas_Variables
     {
@@ -34,6 +35,7 @@ namespace A_level_course_work_Logic_Gate
         public int Drag_Num { get; set; } = 0;
         private bool _link = false;
         public bool Sim_Running { get; set; } = false;
+        public bool Sim_Busy { get; set; } = false;
         public bool Saved { get; set; } = false;
         public string File_Location { get; set; } = "";
         public bool Link
@@ -278,7 +280,7 @@ namespace A_level_course_work_Logic_Gate
                     {
                         Input_Assignment(i, 0);
                     }
-                    if (Gate_List[i].Input[1].Input_Type == IO_Type.Null && Gate_List[i].Type != 2 && Gate_List[i].Type != 7)
+                    if (Gate_List[i].Input[1].Input_Type == IO_Type.Null && Gate_List[i].Type != Gate_Type.Not && Gate_List[i].Type != Gate_Type.Transformer)
                     {
                         Input_Assignment(i, 1);
                     }
@@ -288,11 +290,11 @@ namespace A_level_course_work_Logic_Gate
                     {
                         Output_Assignment(i, 0);
                     }
-                    if (Gate_List[i].Output[1].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
+                    if (Gate_List[i].Output[1].Output_Type == IO_Type.Null && Gate_List[i].Type == Gate_Type.Transformer)
                     {
                         Output_Assignment(i, 1);
                     }
-                    if (Gate_List[i].Output[2].Output_Type == IO_Type.Null && Gate_List[i].Type == 7)
+                    if (Gate_List[i].Output[2].Output_Type == IO_Type.Null && Gate_List[i].Type == Gate_Type.Transformer)
                     {
                         Output_Assignment(i, 2);
                     }
@@ -359,12 +361,12 @@ namespace A_level_course_work_Logic_Gate
         public double[] Link_Input_Aline(Gate_Class Gate, int Input_Num)
         {
             //not gate, input is in the center of the gate compare to the other gates whic has 2 on the side
-            if (Gate.Type == 2)
+            if (Gate.Type == Gate_Type.Not)
             {
                 return new double[] { Canvas.GetLeft(Gate.Rect) + 5, Canvas.GetTop(Gate.Rect) + 38 };
             }
             //this is similar to the not gate but because it's a sqaure not a rectangle it needed to be moved in the X axis more
-            else if (Gate.Type == 7)
+            else if (Gate.Type == Gate_Type.Transformer)
             {
                 return new double[] { Canvas.GetLeft(Gate.Rect) + 12.5, Canvas.GetTop(Gate.Rect) + 38 };
             }
@@ -388,7 +390,7 @@ namespace A_level_course_work_Logic_Gate
         public double[] Link_Output_Aline(Gate_Class Gate, int Output_Num)
         {
             //special gate class with 3 exit
-            if (Gate.Type == 7)
+            if (Gate.Type == Gate_Type.Transformer)
             {
                 if (Output_Num == 0)
                 {
@@ -404,7 +406,7 @@ namespace A_level_course_work_Logic_Gate
                 }
             }
             //not gate
-            else if (Gate.Type == 2)
+            else if (Gate.Type == Gate_Type.Not)
             {
                 return new double[] { Canvas.GetLeft(Gate.Rect) + 109.5, Canvas.GetTop(Gate.Rect) + 36 };
             }
@@ -450,10 +452,10 @@ namespace A_level_course_work_Logic_Gate
             {
                 Sim_Running = false;
                 Run_Button.Content = "Run";
-
             }
-            else
+            else if(!Sim_Running && !Sim_Busy)
             {
+                Sim_Busy = true;
                 Sim_Running = true;
                 Run_Button.Content = "Stop";
                 Clean_Up_Method();
@@ -472,11 +474,9 @@ namespace A_level_course_work_Logic_Gate
         /// </summary>
         private async void Simulator_Work(object sender, DoWorkEventArgs e)
         {
-            bool Finished = false;
-
             List<int> Active_Gates = Set_Up_Start_Sim();
 
-            while (!Finished && Sim_Running)
+            while (Sim_Running)
             {
                 List<int> Next_Gate = new List<int>();
 
@@ -505,11 +505,11 @@ namespace A_level_course_work_Logic_Gate
                 Next_Gate.RemoveRange(0, Next_Gate.Count);
                 if (Active_Gates.Count == 0)
                 {
-                    Finished = true;
+                    Sim_Running = false;
                 }
             }
-            Sim_Running = false;
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Run_Button.Content = "Run"));
+            Sim_Busy = false;
         }
 
         private List<int> Set_Up_Start_Sim()
@@ -586,9 +586,12 @@ namespace A_level_course_work_Logic_Gate
         /// </summary>
         public void Clean_Up_Method()
         {
-            Progress_Window = new Progress_Bar_Window(Gate_List.Count());
-            _worker.RunWorkerAsync();
-            Progress_Window.ShowDialog();
+            if (!Sim_Busy)
+            {
+                Progress_Window = new Progress_Bar_Window(Gate_List.Count());
+                _worker.RunWorkerAsync();
+                Progress_Window.ShowDialog();
+            }
         }
         /// <summary>
         /// goes through all the list in the program and removes unused objects and resorts the lists to work with the change.
@@ -714,6 +717,10 @@ namespace A_level_course_work_Logic_Gate
                         {
                             Line_List[z].Input_ID -= 1;
                         }
+                    }
+                    if(Sub_Canvas.Last_Rect>i)
+                    {
+                        Sub_Canvas.Last_Rect -= 1;
                     }
                     Gate_List.RemoveAt(i);
                     i -= 1;

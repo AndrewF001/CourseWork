@@ -12,7 +12,7 @@ namespace A_level_course_work_Logic_Gate.SubGate_Classes
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 115 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Nor_Gate_L"] as Brush };
             Part_Constructor(Main_Canvas);
-            Type = 4;
+            Type = Gate_Type.Nor;
         }
         public override void Gate_Output_Calc()
         {

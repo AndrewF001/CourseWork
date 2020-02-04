@@ -11,7 +11,7 @@ namespace A_level_course_work_Logic_Gate
 {    
     public abstract class Gate_Class
     {
-        public int Type { get; set; }
+        public Gate_Type Type { get; set; }
         public Rectangle Rect { get; set; }
         public bool Alive { get; set; } = true;
 

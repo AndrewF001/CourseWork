@@ -12,7 +12,7 @@ namespace A_level_course_work_Logic_Gate.SubGate_Classes
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 85 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Transformer"] as Brush };
             Part_Constructor(Main_Canvas);
-            Type = 7;
+            Type = Gate_Type.Transformer;
         }
         public override void Gate_Output_Calc()
         {

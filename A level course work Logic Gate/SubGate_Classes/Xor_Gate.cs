@@ -12,7 +12,7 @@ namespace A_level_course_work_Logic_Gate.SubGate_Classes
         {
             Rect = new Rectangle { Height = 75 * _Scale_Factor, Width = 115 * _Scale_Factor, Stroke = Brushes.Black, Fill = Application.Current.Resources["Xor_Gate_L"] as Brush };
             Part_Constructor(Main_Canvas);
-            Type = 5;
+            Type = Gate_Type.Xor;
         }
         public override void Gate_Output_Calc()
         {
