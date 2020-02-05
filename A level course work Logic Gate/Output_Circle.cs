@@ -11,14 +11,12 @@ namespace A_level_course_work_Logic_Gate
     {
         public Ellipse Circle = new Ellipse { Height = 20, Width = 20, Fill = Brushes.White, Stroke = Brushes.Black, StrokeThickness = 1 };
         public Label Output_Lab = new Label { Content = "0", Width = 16, Height = 29, Foreground = Brushes.Black };
-        private bool _bit = false;
-
+        
         public int Output_ID { get; set; }
         public int Output_Port;
         private MainWindow _MainWind { get; }
         public Output_Circle(int ID, int Port_Num, Canvas_Class Sub_Canvas,MainWindow MainWind)
         {
-            //_MainWind = MainWind;
             Output_ID = ID;
             Output_Port = Port_Num;
             Sub_Canvas.Children.Add(Circle);
@@ -29,10 +27,8 @@ namespace A_level_course_work_Logic_Gate
 
         public bool Bit
         {
-            get { return _bit; }
             set
             {
-                _bit = value;
                 if (value == false)
                 {
                     Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Circle_0()));

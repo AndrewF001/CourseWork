@@ -82,7 +82,6 @@ namespace A_level_course_work_Logic_Gate.File_Classes
             for (int x = 0; x < Loaded_File.Output.Count; x++)
             {
                 MainWind.Output_Circle_List.Add(new Output_Circle(Loaded_File.Output[x].Output_ID, Loaded_File.Output[x].Output_Port, MainWind.Sub_Canvas, MainWind));
-                MainWind.Output_Circle_List.Last().Bit = Loaded_File.Output[x]._Bit;
                 MainWind.Output_Circle_List.Last().Change_X_Y(Loaded_File.Output[x].X, Loaded_File.Output[x].Y);
             }
             for (int x = 0; x < Loaded_File.Lines.Count; x++)
@@ -194,7 +193,7 @@ namespace A_level_course_work_Logic_Gate.File_Classes
             }
             for (int i = 0; i < MainWind.Output_Circle_List.Count; i++)
             {
-                Save.Output.Add(new File_Version_Output(MainWind.Output_Circle_List[i].Bit, MainWind.Output_Circle_List[i].Output_ID, MainWind.Output_Circle_List[i].Output_Port, Canvas.GetLeft(MainWind.Output_Circle_List[i].Circle), Canvas.GetTop(MainWind.Output_Circle_List[i].Circle)));
+                Save.Output.Add(new File_Version_Output(MainWind.Output_Circle_List[i].Output_ID, MainWind.Output_Circle_List[i].Output_Port, Canvas.GetLeft(MainWind.Output_Circle_List[i].Circle), Canvas.GetTop(MainWind.Output_Circle_List[i].Circle)));
             }
             return Save;
         }
