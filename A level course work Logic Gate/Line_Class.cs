@@ -66,19 +66,19 @@ namespace A_level_course_work_Logic_Gate
         }
 
         //change this so that the values are generic and then just have it so that the X and Y coords are changed directly and don't need the method to do it.(A lot of work :(
-        public void Link_Input_Aline_Line(Gate_Class Gate)
+        public void Link_Input_Align_Line(Gate_Class Gate)
         {
             UI_Line.Stroke = Brushes.Black;
-            double[] hold = _MainWind.Link_Input_Aline(Gate, Input_Num);
+            double[] hold = _MainWind.Link_Input_Align(Gate, Input_Num);
             Change_X2_Y2(hold[0], hold[1]);
             X2 = hold[0];
             Y2 = hold[1];
             Move_Label();
         }
 
-        public void Link_Output_Aline_Line(Gate_Class Gate)
+        public void Link_Output_Align_Line(Gate_Class Gate)
         {
-            double[] hold = _MainWind.Link_Output_Aline(Gate, Output_Num);
+            double[] hold = _MainWind.Link_Output_Align(Gate, Output_Num);
             Change_X1_Y1(hold[0], hold[1]);
             X1 = hold[0];
             Y1 = hold[1];

@@ -55,9 +55,9 @@ namespace A_level_course_work_Logic_Gate
             Bit = !Bit;
         }
 
-        public void Aline_Box(Gate_Class Gate)
+        public void Align_Box(Gate_Class Gate)
         {
-            double[] hold = _MainWind.Link_Input_Aline(Gate, Input_Port);
+            double[] hold = _MainWind.Link_Input_Align(Gate, Input_Port);
             Change_X_Y(hold[0], hold[1]);
         }
 

@@ -140,7 +140,7 @@ namespace A_level_course_work_Logic_Gate
             {
                 variables.Drag_Mode = Drag_State.Link_Mode_Sub;
                 variables.Gate_List[detected].Output[variables.Line_List.Last().Output_Num].Line_ID = variables.Drag_Num;
-                variables.Line_List[variables.Drag_Num].Link_Output_Aline_Line(variables.Gate_List[detected]);
+                variables.Line_List[variables.Drag_Num].Link_Output_Align_Line(variables.Gate_List[detected]);
             }
             else
             {
@@ -157,10 +157,9 @@ namespace A_level_course_work_Logic_Gate
             {
                 _MainWind.Add_Rect_Sub_FIX_BUG();
             }
-
+            variables.Drag_Mode = Drag_State.Null;
             if (variables.Drag && !variables.Link)
             {
-                variables.Drag_Mode = Drag_State.Null;
                 (Detection_State State, int Null) = Rect_detection(variables.Gate_List[variables.Drag_Num].Rect.Width, variables.Gate_List[variables.Drag_Num].Rect.Height, variables.Drag_Num);
                 if (State == Detection_State.Detected)
                 {
@@ -177,7 +176,6 @@ namespace A_level_course_work_Logic_Gate
         {
             int X = -1;
             (Detection_State State, int detection) = Rect_detection(0, 0, -1);
-            variables.Drag_Mode = Drag_State.Null;
             if (State == Detection_State.Detected && detection != variables.Linking_ID)
             {
                 X = Link_Input_Vaildation(detection);
@@ -188,7 +186,7 @@ namespace A_level_course_work_Logic_Gate
                 //This a block of code that is only done one time and isn't assocaited with each other so making a method wouldn't make a lot of sense but it's a lot of just nothing.
                 variables.Line_List[variables.Drag_Num].Input_ID = detection;
                 variables.Line_List[variables.Drag_Num].Input_Num = X;
-                variables.Line_List[variables.Drag_Num].Link_Input_Aline_Line(variables.Gate_List[detection]);
+                variables.Line_List[variables.Drag_Num].Link_Input_Align_Line(variables.Gate_List[detection]);
                 variables.Gate_List[detection].Input[X].Input_Type = IO_Type.Gate;
                 variables.Gate_List[detection].Input[X].Input_ID = variables.Linking_ID;
                 variables.Gate_List[detection].Input[X].Line_ID = variables.Drag_Num;

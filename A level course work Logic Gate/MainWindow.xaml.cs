@@ -314,7 +314,7 @@ namespace A_level_course_work_Logic_Gate
                     Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_ID = i;
                     Gate_List[ID].Input[Input_Button_List[i].Input_Port].Input_bit = Input_Button_List[i].Bit;
                     Sub_Canvas.Children.Add(Input_Button_List[i]);
-                    Input_Button_List[i].Aline_Box(Gate_List[Input_Button_List[i].Input_ID]);
+                    Input_Button_List[i].Align_Box(Gate_List[Input_Button_List[i].Input_ID]);
                 }
 
             }
@@ -326,7 +326,7 @@ namespace A_level_course_work_Logic_Gate
                     Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_Type = IO_Type.IO;
                     Gate_List[ID].Output[Output_Circle_List[i].Output_Port].Output_ID = i;
                     Output_Circle_List[i].Add_UI();
-                    Output_Circle_List[i].Aline_Circle(Gate_List[Output_Circle_List[i].Output_ID]);
+                    Output_Circle_List[i].Align_Circle(Gate_List[Output_Circle_List[i].Output_ID]);
                 }
             }
         }
@@ -339,7 +339,7 @@ namespace A_level_course_work_Logic_Gate
         {
             Input_Button_List.Add(new Input_Button(i, Port, Gate_List, Sub_Canvas, this));
             //can't be in constructor because UI_Elemtent isn't loaded until the constructor finished.
-            Input_Button_List.Last().Aline_Box(Gate_List[i]);
+            Input_Button_List.Last().Align_Box(Gate_List[i]);
             Gate_List[i].Input[Port].Input_Type = IO_Type.IO;
             Gate_List[i].Input[Port].Input_ID = Input_Button_List.Count - 1;
         }
@@ -347,18 +347,18 @@ namespace A_level_course_work_Logic_Gate
         public void Output_Assignment(int i, int Port)
         {
             Output_Circle_List.Add(new Output_Circle(i, Port, Sub_Canvas, this));
-            Output_Circle_List.Last().Aline_Circle(Gate_List[i]);
+            Output_Circle_List.Last().Align_Circle(Gate_List[i]);
             Gate_List[i].Output[Port].Output_Type = IO_Type.IO;
             Gate_List[i].Output[Port].Output_ID = Output_Circle_List.Count - 1;
         }
 
 
         /// <summary>
-        /// just returns the alinement value + the gate it's attached to coords.
+        /// just returns the Alignment value + the gate it's attached to coords.
         /// </summary>
         /// <param name="Gate"></just gives easy access to work with the gate it's being linked to>
         /// <param name="Input_Num"></it's just the input port number.>
-        public double[] Link_Input_Aline(Gate_Class Gate, int Input_Num)
+        public double[] Link_Input_Align(Gate_Class Gate, int Input_Num)
         {
             //not gate, input is in the center of the gate compare to the other gates whic has 2 on the side
             if (Gate.Type == Gate_Type.Not)
@@ -387,7 +387,7 @@ namespace A_level_course_work_Logic_Gate
 
         }
         //Same as input
-        public double[] Link_Output_Aline(Gate_Class Gate, int Output_Num)
+        public double[] Link_Output_Align(Gate_Class Gate, int Output_Num)
         {
             //special gate class with 3 exit
             if (Gate.Type == Gate_Type.Transformer)
@@ -768,7 +768,6 @@ namespace A_level_course_work_Logic_Gate
             IO_Active = false;
             Sub_Canvas = new Canvas_Class(this, ref Canvas_Border, this);
             SetUp_Canvas();
-
         }
 
         private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)

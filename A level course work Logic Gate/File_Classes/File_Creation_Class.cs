@@ -1,26 +1,19 @@
-﻿using A_level_course_work_Logic_Gate.File_Classes;
-using A_level_course_work_Logic_Gate.SubGate_Classes;
+﻿using A_level_course_work_Logic_Gate.SubGate_Classes;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace A_level_course_work_Logic_Gate.File_Classes
 {
     class File_Creation_Class
     {
-        MainWindow MainWind { get; set; }
+        MainWindow MainWind { get; }
         public File_Creation_Class(MainWindow _MainWind)
         {
             MainWind = _MainWind;
@@ -226,7 +219,6 @@ namespace A_level_course_work_Logic_Gate.File_Classes
             {
                 MainWind.Reset_Program();
             }
-        }
-        
+        }        
     }
 }

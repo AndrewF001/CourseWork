@@ -111,22 +111,22 @@ namespace A_level_course_work_Logic_Gate
             {
                 if(Output[i].Output_Type == IO_Type.Gate)
                 {
-                    _Line_List[Output[i].Line_ID].Link_Output_Aline_Line(this);
+                    _Line_List[Output[i].Line_ID].Link_Output_Align_Line(this);
                 }
                 else if(Output[i].Output_Type == IO_Type.IO)
                 {
-                    _Output_Circle_List[Output[i].Output_ID].Aline_Circle(this);
+                    _Output_Circle_List[Output[i].Output_ID].Align_Circle(this);
                 }
             }
             for (int i = 0; i < 2; i++)
             {
                 if (Input[i].Input_Type==IO_Type.Gate)
                 {
-                    _Line_List[Input[i].Line_ID].Link_Input_Aline_Line(this);
+                    _Line_List[Input[i].Line_ID].Link_Input_Align_Line(this);
                 }
                 else if(Input[i].Input_Type == IO_Type.IO)
                 {
-                    _Input_Button_List[Input[i].Input_ID].Aline_Box(this);
+                    _Input_Button_List[Input[i].Input_ID].Align_Box(this);
                 }
             }
         }

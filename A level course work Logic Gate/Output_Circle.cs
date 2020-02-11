@@ -64,9 +64,9 @@ namespace A_level_course_work_Logic_Gate
             _MainWind.Sub_Canvas.Children.Remove(Circle);
             _MainWind.Sub_Canvas.Children.Remove(Output_Lab);
         }
-        public void Aline_Circle(Gate_Class Gate)
+        public void Align_Circle(Gate_Class Gate)
         {
-            double[] hold = _MainWind.Link_Output_Aline(Gate, Output_Port);
+            double[] hold = _MainWind.Link_Output_Align(Gate, Output_Port);
             Change_X_Y(hold[0], hold[1]);
         }
 
