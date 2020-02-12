@@ -599,13 +599,13 @@ namespace A_level_course_work_Logic_Gate
         private void WorkerDoWork(object sender, DoWorkEventArgs e)
         {
             //remove unused input and output
-            Remove_Unsed_Output();
-            Remove_Unsed_Input();
-            Remove_Unsed_Line();
-            Remove_Unsed_Gate();
+            Remove_Unused_Output();
+            Remove_Unused_Input();
+            Remove_Unused_Line();
+            Remove_Unused_Gate();
         }
 
-        private void Remove_Unsed_Output()
+        private void Remove_Unused_Output()
         {
             for (int i = 0; i < Output_Circle_List.Count; i++)
             {
@@ -623,7 +623,7 @@ namespace A_level_course_work_Logic_Gate
                 }
             }
         }
-        private void Remove_Unsed_Input()
+        private void Remove_Unused_Input()
         {
             for (int i = 0; i < Input_Button_List.Count; i++)
             {
@@ -641,7 +641,7 @@ namespace A_level_course_work_Logic_Gate
                 }
             }
         }
-        private void Remove_Unsed_Line()
+        private void Remove_Unused_Line()
         {
             for (int i = 0; i < Line_List.Count; i++)
             {
@@ -670,7 +670,7 @@ namespace A_level_course_work_Logic_Gate
             }
         }
 
-        private void Remove_Unsed_Gate()
+        private void Remove_Unused_Gate()
         {
             for (int i = 0; i < Gate_List.Count; i++)
             {
