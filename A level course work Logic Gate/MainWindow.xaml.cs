@@ -34,7 +34,7 @@ namespace A_level_course_work_Logic_Gate
         public uint Delay_Intervals { get; set; } = 1;
         public int Drag_Num { get; set; } = 0;
         private bool _link = false;
-        public bool Sim_Running { get; set; } = false;
+        //public bool Sim_Running { get; set; } = false;
         public bool Sim_Busy { get; set; } = false;
         public bool Saved { get; set; } = false;
         public string File_Location { get; set; } = "";
@@ -89,6 +89,10 @@ namespace A_level_course_work_Logic_Gate
         public MainWindow()
         {            
             InitializeComponent();
+        
+            Simulator_Worker.WorkerSupportsCancellation = true;
+            _worker.WorkerSupportsCancellation = true;
+
             _worker.DoWork += WorkerDoWork;
             _worker.RunWorkerCompleted += WorkerRunWorkerCompleted;
 
@@ -448,15 +452,16 @@ namespace A_level_course_work_Logic_Gate
         /// </summary>
         private void Run_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Sim_Running)
+            if (Simulator_Worker.IsBusy)
             {
-                Sim_Running = false;
+                Simulator_Worker.CancelAsync();
+                //Sim_Running = false;
                 Run_Button.Content = "Run";
             }
-            else if(!Sim_Running && !Sim_Busy)
+            else if(!Simulator_Worker.IsBusy && !Sim_Busy)
             {
                 Sim_Busy = true;
-                Sim_Running = true;
+                //Sim_Running = true;
                 Run_Button.Content = "Stop";
                 Clean_Up_Method();
                 Add_IO_Method();
@@ -476,7 +481,7 @@ namespace A_level_course_work_Logic_Gate
         {
             List<int> Active_Gates = Set_Up_Start_Sim();
 
-            while (Sim_Running)
+            while (!Simulator_Worker.CancellationPending)
             {
                 List<int> Next_Gate = new List<int>();
 
@@ -505,12 +510,13 @@ namespace A_level_course_work_Logic_Gate
                 Next_Gate.RemoveRange(0, Next_Gate.Count);
                 if (Active_Gates.Count == 0)
                 {
-                    Sim_Running = false;
+                    Simulator_Worker.CancelAsync();
+                    //Sim_Running = false;
                 }
             }
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Run_Button.Content = "Run"));
             Sim_Busy = false;
-            Simulator_Worker.CancelAsync();
+            //Simulator_Worker.CancelAsync();
         }
 
         private List<int> Set_Up_Start_Sim()
@@ -761,7 +767,8 @@ namespace A_level_course_work_Logic_Gate
             Delay_Intervals = 1;
             Drag_Num = 0;
             _link = false;
-            Sim_Running = false;
+            Simulator_Worker.CancelAsync();
+            //Sim_Running = false;
             Saved = false;
             File_Location = "";
             drag_mode = Drag_State.Null;
@@ -778,14 +785,11 @@ namespace A_level_course_work_Logic_Gate
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (Simulator_Worker.IsBusy)
-            {
-                Simulator_Worker.CancelAsync();
-            }
-            if (_worker.IsBusy)
-            {
-                _worker.CancelAsync();
-            }
+            
+            Simulator_Worker.CancelAsync();
+            _worker.CancelAsync();
+            Environment.Exit(0);
+
         }
     }
 }
