@@ -157,7 +157,6 @@ namespace A_level_course_work_Logic_Gate
             {
                 _MainWind.Add_Rect_Sub_FIX_BUG();
             }
-            variables.Drag_Mode = Drag_State.Null;
             if (variables.Drag && !variables.Link)
             {
                 (Detection_State State, int Null) = Rect_detection(variables.Gate_List[variables.Drag_Num].Rect.Width, variables.Gate_List[variables.Drag_Num].Rect.Height, variables.Drag_Num);
@@ -171,6 +170,7 @@ namespace A_level_course_work_Logic_Gate
             {
                 Line_M1_Up();
             }
+            variables.Drag_Mode = Drag_State.Null;
         }
         private void Line_M1_Up()
         {
