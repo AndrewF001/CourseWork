@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:A_level_course_work_Logic_Gate"
         mc:Ignorable="d"
-             Title="MainWindow" Height="525" Width="950" MinHeight="525" MinWidth="950"  MouseMove="Window_MouseMove" >
+             Title="MainWindow" Height="525" Width="950" MinHeight="525" MinWidth="950" Closing="Window_Closing" MouseMove="Window_MouseMove" >
     <Grid Name="Main_Grid">
 
         <Grid.ColumnDefinitions>

@@ -510,6 +510,7 @@ namespace A_level_course_work_Logic_Gate
             }
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Run_Button.Content = "Run"));
             Sim_Busy = false;
+            Simulator_Worker.CancelAsync();
         }
 
         private List<int> Set_Up_Start_Sim()
@@ -773,6 +774,18 @@ namespace A_level_course_work_Logic_Gate
         private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (Simulator_Worker.IsBusy)
+            {
+                Simulator_Worker.CancelAsync();
+            }
+            if (_worker.IsBusy)
+            {
+                _worker.CancelAsync();
+            }
         }
     }
 }
